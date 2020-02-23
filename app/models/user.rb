@@ -6,7 +6,7 @@ class User < ApplicationRecord
           :recoverable, :rememberable, :validatable
 
   belongs_to :tenant
-  
+
   has_many :user_interests, inverse_of: :user, dependent: :destroy
   has_many :interests, through: :user_interests, source: :reason
 
