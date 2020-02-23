@@ -13,18 +13,35 @@ RSpec.describe TimeSlot, type: :model do
     it { is_expected.to belong_to(:tenant) }
   end
 
+  describe "destroy records - check dependents" do
+    let(:tenant)  { FactoryBot.create :tenant }
+    let(:time_1)  { FactoryBot.create :time_slot, tenant: tenant }
+    let(:time_2)  { FactoryBot.create :time_slot, tenant: tenant }
+    it "#destroy_all" do
+      expect(time_1).to             be
+      expect(time_2).to             be
+      described_class.destroy_all
+      expect(Tenant.all).to         eq [tenant]
+      expect(TimeSlot.all).to       eq []
+    end
+    it "#destroy" do
+      expect(time_1).to             be
+      expect(time_2).to             be
+      time_1.destroy
+      expect(Tenant.all).to         eq [tenant]
+      expect(TimeSlot.all.pluck(:id)).to eq [time_2.id]
+    end
+  end
+
   describe "validations" do
     it { is_expected.to validate_presence_of(:time_slot_name) }
     it { is_expected.to validate_presence_of(:begin_time) }
     it { is_expected.to validate_presence_of(:end_time) }
     it { is_expected.to validate_presence_of(:tenant) }
-    # TODO: * begin / end time checks
-    #       * no time with over lapping ranges
   end
 
   describe "DB settings" do
     it { have_db_index(:time_slot_name) }
-    # it { is_expected.to have_db_column(:reason_description) }
   end
 
   # describe "model methods"
