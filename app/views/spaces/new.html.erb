@@ -1,0 +1,18 @@
+<h1>New Space</h1>
+
+<% if space.errors.any? %>
+  <div id="error_explanation">
+    <h2 style='color: #e84118'><%= pluralize(space.errors.count, "error") %>
+      prohibited this initiative_form from being saved:
+    </h2>
+    <ul>
+    <% space.errors.full_messages.each do |message| %>
+      <li style='color: #e84118'><%= message %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= render 'form', space: @space %>
+
+<%= link_to 'Back', spaces_path %>

@@ -1,0 +1,24 @@
+AllCops:
+  DisabledByDefault: true
+  Exclude:
+    - 'db/**/*'
+    - 'specs/**/*'
+    - 'config/**/*'
+    - 'features/**/*'
+    - 'lib/tasks/**/*'
+    - 'app/views/**/*'
+    - 'bin/{rails,rake}'
+    - 'node_modules/**/*'
+    - !ruby/regexp /old_and_unused\.rb$/
+Bundler/InsecureProtocolSource:
+  Enabled: true
+Security/Eval:
+  Enabled: true
+Security/JSONLoad:
+  Enabled: true
+Security/MarshalLoad:
+  Enabled: true
+Security/Open:
+  Enabled: true
+Security/YAMLLoad:
+  Enabled: true

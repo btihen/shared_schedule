@@ -1,0 +1,26 @@
+body {
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  height:100vh;
+}
+.header {
+  padding:2rem 1.5rem;
+}
+.section {
+  display:flex;
+  flex:1 0 auto;
+}
+.weekday {
+  text-align: center;
+  background-color: #f5f5f5;
+}
+.weekday .notification {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.calendar-day{
+  border-style: solid;
+  border-width: 0.1px;
+  border-color: #cccccc;
+}
