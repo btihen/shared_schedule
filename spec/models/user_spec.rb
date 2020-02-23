@@ -19,6 +19,7 @@ RSpec.describe User, type: :model do
     let(:reason)  { FactoryBot.create :reason, tenant: tenant }
     let(:user_1)  { FactoryBot.create :user, interests: [reason], tenant: tenant }
     let(:user_2)  { FactoryBot.create :user, interests: [reason], tenant: tenant }
+
     before do
       tenant.managers << user_1
       tenant.managers << user_2
@@ -39,7 +40,7 @@ RSpec.describe User, type: :model do
       expect(user_2).to       be
       user_1.destroy
       expect(User.all).to     eq [user_2]
-      expect(Reason.all).to    eq [reason]
+      expect(Reason.all).to   eq [reason]
       expect(Tenant.all).to   eq [tenant]
       expect(UserInterest.all.pluck(:user_id)).to     eq UserInterest.where(user: user_2).all.pluck(:user_id)
       expect(TenantManager.all.pluck(:manager_id)).to eq TenantManager.where(manager: user_2).all.pluck(:manager_id)

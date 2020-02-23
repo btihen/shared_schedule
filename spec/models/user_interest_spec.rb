@@ -19,6 +19,7 @@ RSpec.describe UserInterest, type: :model do
     let(:reason)  { FactoryBot.create :reason, tenant: tenant }
     let(:user_1)  { FactoryBot.create :user, interests: [reason], tenant: tenant }
     let(:user_2)  { FactoryBot.create :user, interests: [reason], tenant: tenant }
+
     before do
       tenant.managers << user_1
       tenant.managers << user_2
@@ -32,7 +33,7 @@ RSpec.describe UserInterest, type: :model do
       expect(Reason.all).to         eq [reason]
       expect(Tenant.all).to         eq [tenant]
       expect(UserInterest.all).to   eq []
-      expect(TenantManager.all.pluck(:manager_id)).to eq [user_1.id, user_2.id]
+      expect(TenantManager.all.pluck(:manager_id).sort).to eq [user_1.id, user_2.id].sort
     end
     it "#destroy" do
       expect(user_1).to       be
