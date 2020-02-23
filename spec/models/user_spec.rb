@@ -16,7 +16,7 @@ RSpec.describe User, type: :model do
 
   describe "destroy records - check dependents" do
     let(:tenant)  { FactoryBot.create :tenant }
-    let(:reason)   { FactoryBot.create :reason, tenant: tenant }
+    let(:reason)  { FactoryBot.create :reason, tenant: tenant }
     let(:user_1)  { FactoryBot.create :user, interests: [reason], tenant: tenant }
     let(:user_2)  { FactoryBot.create :user, interests: [reason], tenant: tenant }
     before do
@@ -27,9 +27,9 @@ RSpec.describe User, type: :model do
     it "#destroy_all" do
       expect(user_1).to             be
       expect(user_2).to             be
-      User.destroy_all
+      described_class.destroy_all
       expect(User.all).to           eq []
-      expect(Reason.all).to          eq [reason]
+      expect(Reason.all).to         eq [reason]
       expect(Tenant.all).to         eq [tenant]
       expect(UserInterest.all).to   eq []
       expect(TenantManager.all).to  eq []

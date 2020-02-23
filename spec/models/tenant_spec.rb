@@ -10,7 +10,6 @@ RSpec.describe Tenant, type: :model do
   end
 
   describe "relationships" do
-    # it { is_expected.to belong_to(:users) }
     it { is_expected.to have_many(:users) }
     it { is_expected.to have_many(:events) }
     it { is_expected.to have_many(:spaces) }
