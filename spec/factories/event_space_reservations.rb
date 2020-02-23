@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :event_space_reservation do
 
     transient do
-      tenant  { FactoryBot.create :tenant }
+      tenant  { FactoryBot.build :tenant }
     end
 
     host      { nil }

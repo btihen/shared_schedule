@@ -15,21 +15,47 @@ RSpec.describe TimeSlot, type: :model do
 
   describe "destroy records - check dependents" do
     let(:tenant)  { FactoryBot.create :tenant }
-    let(:time_1)  { FactoryBot.create :time_slot, tenant: tenant }
-    let(:time_2)  { FactoryBot.create :time_slot, tenant: tenant }
+    let(:space)   { space = FactoryBot.create :space, tenant: tenant
+                    time1 = FactoryBot.create :time_slot, tenant: tenant
+                    time2 = FactoryBot.create :time_slot, tenant: tenant
+                    space.allowed_time_slots << [time1, time2]
+                    space.save
+                    space.reload
+                  }
+    let(:event_1) { event = FactoryBot.create :event, tenant: tenant
+                    time1 = TimeSlot.first
+                    time2 = TimeSlot.last
+                    event.event_space_reservations << EventSpaceReservation.create(date: Date.today, space: space, time_slot: time1)
+                    event.event_space_reservations << EventSpaceReservation.create(date: Date.today, space: space, time_slot: time2)
+                    event.save
+                    event.reload
+                  }
+    let(:event_2) { event = FactoryBot.create :event, tenant: tenant
+                    time1 = TimeSlot.first
+                    time2 = TimeSlot.last
+                    event.event_space_reservations << EventSpaceReservation.create(date: Date.tomorrow, space: space, time_slot: time1)
+                    event.event_space_reservations << EventSpaceReservation.create(date: Date.yesterday, space: space, time_slot: time2)
+                    event.save
+                    event.reload }
     it "#destroy_all" do
-      expect(time_1).to             be
-      expect(time_2).to             be
+      expect(event_1).to            be
+      expect(event_2).to            be
       described_class.destroy_all
-      expect(Tenant.all).to         eq [tenant]
-      expect(TimeSlot.all).to       eq []
+      expect(Space.all).to                  eq [space]
+      expect(TimeSlot.all).to               eq []
+      expect(SpaceTimeSlot.all).to          eq []
+      expect(Event.all.pluck(:id).sort).to  eq [event_1.id, event_2.id].sort
+      expect(EventSpaceReservation.all).to  eq []
     end
     it "#destroy" do
-      expect(time_1).to             be
-      expect(time_2).to             be
-      time_1.destroy
-      expect(Tenant.all).to         eq [tenant]
-      expect(TimeSlot.all.pluck(:id)).to eq [time_2.id]
+      expect(event_1).to      be
+      expect(event_2).to      be
+      TimeSlot.first.destroy
+      expect(Space.all).to                  eq [space]
+      expect(TimeSlot.all.pluck(:id)).to    eq [TimeSlot.last.id]
+      expect(Event.all.pluck(:id).sort).to  eq [event_1.id, event_2.id].sort
+      expect(SpaceTimeSlot.all.pluck(:time_slot_id).sort).to          eq [TimeSlot.last.id]
+      expect(EventSpaceReservation.all.pluck(:time_slot_id).sort).to  eq [TimeSlot.last.id]
     end
   end
 

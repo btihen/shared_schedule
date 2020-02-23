@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :space_time_slot do
 
     transient do
-      tenant    { FactoryBot.create :tenant }
+      tenant    { FactoryBot.build :tenant }
     end
 
     space       { FactoryBot.create :space, tenant: tenant }
