@@ -27,7 +27,6 @@ users << admin
   interests_count = rand(1..(reasons.length-1))
   user.interests  << reasons.sample(interests_count)
   user.save!
-  tenant.managers << user if rand(9) >= 6
   users << user
 end
 tenant.save!

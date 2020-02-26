@@ -10,10 +10,6 @@ class User < ApplicationRecord
   has_many :user_interests, inverse_of: :user, dependent: :destroy
   has_many :interests, through: :user_interests, source: :reason
 
-  has_many :tenant_managers, foreign_key: :manager_id, dependent: :destroy
-  has_many :managers, through: :tenant_managers, source: :user
-
-
   validates :tenant,      presence: true
   validates :last_name,   presence: true
   validates :first_name,  presence: true

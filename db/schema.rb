@@ -73,15 +73,6 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
     t.index ["tenant_id"], name: "index_spaces_on_tenant_id"
   end
 
-  create_table "tenant_managers", force: :cascade do |t|
-    t.bigint "tenant_id", null: false
-    t.bigint "manager_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["manager_id"], name: "index_tenant_managers_on_manager_id"
-    t.index ["tenant_id"], name: "index_tenant_managers_on_tenant_id"
-  end
-
   create_table "tenants", force: :cascade do |t|
     t.string "tenant_name"
     t.string "tenant_tagline"
@@ -155,8 +146,6 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
   add_foreign_key "space_time_slots", "spaces"
   add_foreign_key "space_time_slots", "time_slots"
   add_foreign_key "spaces", "tenants"
-  add_foreign_key "tenant_managers", "tenants"
-  add_foreign_key "tenant_managers", "users", column: "manager_id"
   add_foreign_key "time_slots", "tenants"
   add_foreign_key "user_interests", "reasons"
   add_foreign_key "user_interests", "users"
