@@ -1,9 +1,9 @@
 FactoryBot.define do
   factory :event do
-    event_title         { "MyString" }
-    event_description   { nil }
+    sequence(:event_title)  { |n| "#{Faker::Game.title} #{n}" }
+    event_description       { nil }
 
-    reason               { FactoryBot.create :reason }
-    tenant              { FactoryBot.create :tenant  }
+    reason                  { FactoryBot.create :reason }
+    tenant                  { FactoryBot.create :tenant  }
   end
 end
