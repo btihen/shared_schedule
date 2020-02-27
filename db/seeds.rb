@@ -4,10 +4,7 @@ error_msg = "DataSeeds not allowed in production"
 raise StandarError, error_msg      if Rails.env.production?
 raise StandarError, error_msg  unless Rails.env.development? || Rails.env.test?
 
-User.destroy_all
-Reason.destroy_all
-TimeSlot.destroy_all
-Space.destroy_all
+# Everything belongs to tenant - delete tenant - takes all assosciated records too
 Tenant.destroy_all
 
 tenant  = FactoryBot.create :tenant
