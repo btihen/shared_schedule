@@ -1,14 +1,13 @@
 class TenantsController < ApplicationController
-  before_action :set_tenant, only: [:show, :edit, :update, :destroy]
 
-  # GET /tenants
-  # GET /tenants.json
   def index
-    @tenants = Tenant.all
+    tenants      = Tenant.all
+    tenant_views = TenantView.collection(tenants)
+    respond_to do |format|
+      format.html { render 'tenants/index', locals: {tenants: tenant_views} }
+  end
   end
 
-  # GET /tenants/1
-  # GET /tenants/1.json
   def show
   end
 

@@ -6,15 +6,21 @@ class TenantView < ViewObject
   alias_method :tenant_path, :root_model_path
 
   # delegate to model for attributes needed
-  delegate  :tenant_name, :tenant_tagline, :tenant_site_url,
-            :tenant_logo_url, :tenant_description, to: :tenant
+  delegate  :tenant_name, to: :tenant
 
-  # has_many :events,     inverse_of: :tenant, dependent: :destroy
-  # has_many :spaces,     inverse_of: :tenant, dependent: :destroy
-  # has_many :reasons,    inverse_of: :tenant, dependent: :destroy
-  # has_many :users,      inverse_of: :tenant, dependent: :destroy
-  # has_many :time_slots, inverse_of: :tenant, dependent: :destroy
-
+  # attributes that allow nils
+  def tenant_logo_url
+    tenant.tenant_logo_url || "https://placeimg.com/80/80/arch/sepia"
+  end
+  def tenant_site_url
+    tenant.tenant_site_url || ""
+  end
+  def tenant_tagline
+    tenant.tenant_tagline  || ""
+  end
+  def tenant_description
+    tenant.tenant_description || ""
+  end
 
   # relationships
   def users
