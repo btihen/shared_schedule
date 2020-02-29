@@ -18,8 +18,8 @@ RSpec.describe Reason, type: :model do
     let(:tenant)  { FactoryBot.create :tenant }
     let(:reason1) { FactoryBot.create :reason, tenant: tenant }
     let(:reason2) { FactoryBot.create :reason, tenant: tenant }
-    let(:time1)   { FactoryBot.create :time_slot, tenant: tenant }
-    let(:time2)   { FactoryBot.create :time_slot, tenant: tenant }
+    let(:time1)   { FactoryBot.create :time_slot, begin_time: '08:00', end_time: '12:00', tenant: tenant }
+    let(:time2)   { FactoryBot.create :time_slot, begin_time: '13:00', end_time: '17:00', tenant: tenant }
     let(:space1)  { space = FactoryBot.create :space, tenant: tenant
                     space.allowed_time_slots << [time1, time2]
                     space.save

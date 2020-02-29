@@ -8,7 +8,7 @@ class CreateTimeSlots < ActiveRecord::Migration[6.0]
 
       t.timestamps
     end
-    add_index :time_slots, :time_slot_name,          unique: true
-    add_index :time_slots, [:begin_time, :end_time], unique: true
+    add_index :time_slots, :time_slot_name,                      unique: true
+    add_index :time_slots, [:begin_time, :end_time, :tenant_id], unique: true
   end
 end

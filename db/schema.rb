@@ -91,7 +91,7 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
     t.bigint "tenant_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["begin_time", "end_time"], name: "index_time_slots_on_begin_time_and_end_time", unique: true
+    t.index ["begin_time", "end_time", "tenant_id"], name: "index_time_slots_on_begin_time_and_end_time_and_tenant_id", unique: true
     t.index ["tenant_id"], name: "index_time_slots_on_tenant_id"
     t.index ["time_slot_name"], name: "index_time_slots_on_time_slot_name", unique: true
   end

@@ -18,7 +18,6 @@ RSpec.describe TenantsController, type: :routing do
       expect(:get => "/tenants/1/edit").to route_to("tenants#edit", :id => "1")
     end
 
-
     it "routes to #create" do
       expect(:post => "/tenants").to route_to("tenants#create")
     end
