@@ -5,23 +5,24 @@ class TenantsController < ApplicationController
     tenant_views = TenantView.collection(tenants)
     respond_to do |format|
       format.html { render 'tenants/index', locals: {tenants: tenant_views} }
-  end
+    end
   end
 
   def show
+    tenant      = Tenant.find(params[:id])
+    tenant_view = TenantView.new(tenant)
+    respond_to do |format|
+      format.html { render 'tenants/show', locals: {tenant: tenant} }
+    end
   end
 
-  # GET /tenants/new
   def new
     @tenant = Tenant.new
   end
 
-  # GET /tenants/1/edit
   def edit
   end
 
-  # POST /tenants
-  # POST /tenants.json
   def create
     @tenant = Tenant.new(tenant_params)
 
@@ -36,8 +37,6 @@ class TenantsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /tenants/1
-  # PATCH/PUT /tenants/1.json
   def update
     respond_to do |format|
       if @tenant.update(tenant_params)
@@ -50,8 +49,6 @@ class TenantsController < ApplicationController
     end
   end
 
-  # DELETE /tenants/1
-  # DELETE /tenants/1.json
   def destroy
     @tenant.destroy
     respond_to do |format|
@@ -61,11 +58,6 @@ class TenantsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_tenant
-      @tenant = Tenant.find(params[:id])
-    end
-
     # Only allow a list of trusted parameters through.
     def tenant_params
       params.require(:tenant).permit(:tenant_name)

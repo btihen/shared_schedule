@@ -39,7 +39,7 @@ Tenant.destroy_all
   evening   = TimeSlot.create time_slot_name: "Abend",      begin_time: "18:00", end_time: "22:00", tenant: tenant
 
   spaces = []
-  2.times do |index|
+  (1..rand(1..5)).each do |index|
     double_booking_bool = ((index % 2) == 0)
     space   = FactoryBot.create :space, tenant: tenant, is_double_booking_ok: double_booking_bool
     space.allowed_time_slots << [morning, afternoon, evening]
