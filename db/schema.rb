@@ -65,6 +65,7 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
     t.string "space_name", null: false
     t.string "space_location"
     t.string "time_zone", default: "Europe/Zurich", null: false
+    t.boolean "is_double_booking_ok", default: false, null: false
     t.bigint "tenant_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

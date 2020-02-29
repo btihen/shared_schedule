@@ -82,6 +82,7 @@ RSpec.describe Space, type: :model do
   describe "DB settings" do
     it { have_db_index(:space_name) }
     it { is_expected.to have_db_column(:space_location) }
+    it { is_expected.to have_db_column(:is_double_booking_ok) }
   end
 
   # describe "model methods"
