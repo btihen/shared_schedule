@@ -17,6 +17,10 @@ class Space < ApplicationRecord
   validate :validate_reserved_time_slots_alowed
   validate :vaidate_reserved_time_slots_not_overlapping
 
+  def is_double_booking_ok?
+    is_double_booking_ok
+  end
+
   private
 
   def validate_reserved_time_slots_alowed

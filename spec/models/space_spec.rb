@@ -82,9 +82,32 @@ RSpec.describe Space, type: :model do
   describe "DB settings" do
     it { have_db_index(:space_name) }
     it { is_expected.to have_db_column(:space_location) }
+    it { is_expected.to have_db_column(:is_calendar_public) }
     it { is_expected.to have_db_column(:is_double_booking_ok) }
   end
 
-  # describe "model methods"
+  context "model methods" do
+    describe "#is_calendar_public?" do
+      it "returns false by default" do
+        model = FactoryBot.build :space
+        expect(model.is_calendar_public?).to be_falsey
+      end
+      it "returns true when explicity set to true" do
+        model = FactoryBot.build :space, is_calendar_public: true
+        expect(model.is_calendar_public?).to be_truthy
+      end
+    end
+    describe "#is_double_booking_ok?" do
+      it "returns false by default" do
+        model = FactoryBot.build :space
+        expect(model.is_double_booking_ok?).to be_falsey
+      end
+      it "returns true when explicity set to true" do
+        model = FactoryBot.build :space, is_double_booking_ok: true
+        expect(model.is_double_booking_ok?).to be_truthy
+      end
+    end
+  end
+
 
 end

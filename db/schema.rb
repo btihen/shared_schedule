@@ -31,8 +31,8 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
   end
 
   create_table "events", force: :cascade do |t|
-    t.string "event_description"
     t.string "event_title", null: false
+    t.string "event_description"
     t.bigint "reason_id", null: false
     t.bigint "tenant_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -42,12 +42,12 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
   end
 
   create_table "reasons", force: :cascade do |t|
-    t.string "reason_name", null: false
     t.string "reason_description"
+    t.string "reason_name", null: false
     t.bigint "tenant_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["reason_description"], name: "index_reasons_on_reason_description", unique: true
+    t.index ["reason_description", "tenant_id"], name: "index_reasons_on_reason_description_and_tenant_id", unique: true
     t.index ["tenant_id"], name: "index_reasons_on_tenant_id"
   end
 
@@ -65,6 +65,7 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
     t.string "space_name", null: false
     t.string "space_location"
     t.string "time_zone", default: "Europe/Zurich", null: false
+    t.boolean "is_calendar_public", default: false, null: false
     t.boolean "is_double_booking_ok", default: false, null: false
     t.bigint "tenant_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -75,7 +76,7 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
   end
 
   create_table "tenants", force: :cascade do |t|
-    t.string "tenant_name"
+    t.string "tenant_name", null: false
     t.string "tenant_tagline"
     t.string "tenant_site_url"
     t.string "tenant_logo_url"
@@ -93,7 +94,7 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["begin_time", "end_time", "tenant_id"], name: "index_time_slots_on_begin_time_and_end_time_and_tenant_id", unique: true
     t.index ["tenant_id"], name: "index_time_slots_on_tenant_id"
-    t.index ["time_slot_name"], name: "index_time_slots_on_time_slot_name", unique: true
+    t.index ["time_slot_name", "tenant_id"], name: "index_time_slots_on_time_slot_name_and_tenant_id", unique: true
   end
 
   create_table "user_interests", force: :cascade do |t|
