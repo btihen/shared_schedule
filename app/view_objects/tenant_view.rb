@@ -1,4 +1,4 @@
-class TenantView < ViewObject 
+class TenantView < ViewObject
 
   # alias method allows use to rename view_object to a clear name without the initializer
   alias_method :tenant,      :root_model
@@ -7,7 +7,7 @@ class TenantView < ViewObject
 
   # delegate to model for attributes needed
   delegate  :tenant_name, :tenant_tagline, :tenant_site_url,
-            :tenant_logo_url, :tenant_description to: :tenant
+            :tenant_logo_url, :tenant_description, to: :tenant
 
   # has_many :events,     inverse_of: :tenant, dependent: :destroy
   # has_many :spaces,     inverse_of: :tenant, dependent: :destroy
