@@ -1,9 +1,9 @@
 class CalendarView
 
-  # 1 == Monday & 7 == Sunday
-  def self.day_of_week(date: Date.today)
-    date.cwday
-  end
+  # # 1 == Monday & 7 == Sunday
+  # def self.day_of_week(date: Date.today)
+  #   date.cwday
+  # end
   attr_reader :year_number
 
   def initialize(date: Date.today)
@@ -17,6 +17,22 @@ class CalendarView
     raise StandardError  unless date_last_sunday.sunday?
   end
 
+  def prev_month
+    Date.new(year_number, month_number, 15) - 1.month
+  end
+
+  def next_month
+    Date.new(year_number, month_number, 15) + 1.month
+  end
+
+  def prev_month_string
+    prev_month.strftime("%Y-%m-%d")
+  end
+
+  def next_month_string
+    next_month.strftime("%Y-%m-%d")
+  end
+
   def date_range
     (date_first_monday..date_last_sunday)
   end
@@ -27,6 +43,22 @@ class CalendarView
 
   def abbr_month_name
     I18n.t("date.abbr_month_names")[month_number]
+  end
+
+  def date_item_string(date)
+    strings = ["date-item"]
+    strings << "is-today"      if date == Date.today
+    strings.join(" ")
+  end
+
+  def date_class_string(date)
+    strings = ["calendar-date"]
+    strings << "is-disabled"    if date_outside_month?(date)
+    strings.join(" ")
+  end
+
+  def date_outside_month?(date)
+    date.month != month_number
   end
 
   def date_in_month_of_interest?(date)
