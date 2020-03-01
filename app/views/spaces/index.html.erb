@@ -1,8 +1,8 @@
 <h1 class="title"><small>Spaces for:</small><%= tenant.tenant_name %></h1>
 <br>
 <% spaces.each do |space| %>
-  <h2><%= link_to space.space_name, tenant_space_path(id: space.id) %></h2>
-  <%= render 'calendar_mini', space: space %>
+  <h2><%= link_to space.space_name, tenant_space_path(id: space.id, tenant_id: tenant.id) %></h2>
+  <%= render 'calendar_mini', space: space, tenant: tenant %>
 <% end %>
 
 <br>
