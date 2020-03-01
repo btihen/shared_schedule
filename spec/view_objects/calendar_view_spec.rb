@@ -4,17 +4,24 @@ RSpec.describe CalendarView, type: :model do
 
   let(:subject)   { described_class.new(date: date) }
 
-  context "Given a date get #month_name" do
-    let(:date)    { Date.new(2010, 2, 10) }
-    it "returns the full month name" do
-      expect(subject.month_name).to eq ("February")
-    end
-  end
-
   context "Given a date get #year_number" do
     let(:date)    { Date.new(2010, 2, 10) }
     it "returns the four digit year" do
-      expect(subject.month_name).to eq ("February")
+      expect(subject.year_number).to eq 2010
+    end
+  end
+
+  context "Given a date get #full_month_name" do
+    let(:date)    { Date.new(2010, 2, 10) }
+    it "returns the full month name" do
+      expect(subject.full_month_name).to eq ("February")
+    end
+  end
+
+  context "Given a date get #abbr_month_name" do
+    let(:date)    { Date.new(2010, 2, 10) }
+    it "returns the abbreviated month name" do
+      expect(subject.abbr_month_name).to eq ("Feb")
     end
   end
 
