@@ -12,7 +12,7 @@ Tenant.destroy_all
 # users << admin
 
 # DEMO Tenant
-tenant    = FactoryBot.create :tenant, tenant_name: "DemoGroup", tenant_description: "This schedule will be erased every 24hrs",
+tenant    = FactoryBot.create :tenant, tenant_name: "DemoGroup", tenant_description: "Data reset every 24hrs",
                               tenant_tagline: "Try it out",      tenant_logo_url: "https://loremflickr.com/g/96/96/bern"
 
 breakfast = TimeSlot.create time_slot_name: "Breakfast", begin_time: "06:00", end_time: "10:00", tenant: tenant
