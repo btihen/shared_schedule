@@ -49,10 +49,6 @@ class CalendarView
     strings = ["date-item"]
     strings << "is-today"   if date == Date.today
     strings << "is-active"  if reservations.any?{ |r| r.date == date }
-    # if reservations.any?{ |r| r.date == date }
-    #   strings << "is-active"
-    #   strings << "has-tooltip-active"
-    # end
     strings.join(" ")
   end
 
@@ -62,10 +58,7 @@ class CalendarView
     strings = []
     strings << reservations.select{ |r| r.date == date }
                             .map{ |r| r.event_name.truncate(max_tip_length) }
-    # strings.join("&#013;&#010;")
-    # strings.join("<br>")
-    strings.join("\n")
-    # strings.join(" ")
+    strings.join("\n")      # css hover::after needs 'white-space: pre-wrap;'
   end
 
   def date_class_string(date)
