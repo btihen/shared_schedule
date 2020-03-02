@@ -7,7 +7,8 @@
       <p class="subtitle">
         Where groups come to share their space schedule.
       </p>
-      <%= link_to "Public Groups", tenants_path, class: "button hero-button is-light" %>
+      <%= link_to "Publicly Listed Groups", tenants_path,
+                  class: "button hero-button is-light" %>
     </div>
   </div>
 </section>
@@ -16,11 +17,14 @@
   <div class="hero-body">
     <div class="container">
 
-      <p class="title">
+      <p class="title is-3">
         <%= tenant.tenant_name %>
       </p>
-      <p class="subtitle">
+      <p class="subtitle is-5">
         <%= tenant.tenant_tagline %>
+      </p>
+      <p class="subtitle is-6">
+        <%= tenant.tenant_description %>
       </p>
 
       <div class="columns is-centered is-multiline">
