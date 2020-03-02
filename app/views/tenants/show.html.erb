@@ -3,8 +3,14 @@
 <div class="columns is-multiline">
 <% tenant.spaces.each do |space| %>
   <div class="column is-half-desktop is-one-third-fullhd is-centered">
-    <p class="title is-4"><%= link_to "#{space.space_name}", tenant_space_path(id: space.id, tenant_id: tenant.id), class: "card-footer-item" %></p>
-    <%= render 'spaces/calendar_mini', space: space, tenant: tenant %>
+    <p class="title is-4"><%= link_to "#{space.space_name}",
+                                        tenant_space_path(id: space.id, tenant_id: tenant.id),
+                                        class: "card-footer-item" %></p>
+    <%= render 'spaces/calendar_mini', space: space, tenant: tenant, calendar: calendar,
+                                        prev_month_path: tenant_path( id: space.id, tenant_id: tenant.id,
+                                                                    date: calendar.prev_month_string),
+                                        next_month_path: tenant_path( id: space.id, tenant_id: tenant.id,
+                                                                    date: calendar.next_month_string)   %>
   </div>
 <% end %>
 </div>

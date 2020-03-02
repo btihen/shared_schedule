@@ -2,12 +2,16 @@ class SpacesController < ApplicationController
 
   # show mini-calendars for each space in Tenant
   def index
-    tenant      = Tenant.find(params[:tenant_id])  # replace with user_id ASAP
-    tenant_view = TenantView.new(tenant)
-    spaces      = tenant.spaces.all
-    space_views = SpaceView.collection(spaces)
+    date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
+    calendar_view = CalendarView.new(date: date)
+    tenant        = Tenant.find(params[:tenant_id])  # replace with user_id ASAP
+    tenant_view   = TenantView.new(tenant)
+    spaces        = tenant.spaces.all
+    space_views   = SpaceView.collection(spaces)
     respond_to do |format|
-      format.html { render 'spaces/index', locals: {spaces: space_views, tenant: tenant_view} }
+      format.html { render 'spaces/index', locals: {tenant: tenant_view,
+                                                    spaces: space_views,
+                                                    calendar: calendar_view} }
     end
   end
 

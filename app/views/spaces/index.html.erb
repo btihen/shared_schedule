@@ -1,10 +1,18 @@
 <h1 class="title"><small>Spaces for:</small><%= tenant.tenant_name %></h1>
 <br>
-<% spaces.each do |space| %>
-  <h2><%= link_to space.space_name, tenant_space_path(id: space.id, tenant_id: tenant.id) %></h2>
-  <%= render 'calendar_mini', space: space, tenant: tenant %>
-<% end %>
-
-<br>
-
-<%# link_to 'New Space', new_tenant_space_path %>
+<div class="columns is-centered is-multiline">
+  <% spaces.each do |space| %>
+    <div class="column is-full-mobile is-half-tablet is-one-third-widescreen is-centered">
+      <p class="title is-6">
+        <%= link_to space.space_name,
+                    tenant_space_path(id: space.id, tenant_id: tenant.id),
+                    class: "card-footer-item" %>
+      </p>
+      <%= render 'calendar_mini', space: space, tenant: tenant, calendar: calendar,
+                                  prev_month_path: tenant_spaces_path( tenant_id: tenant.id,
+                                                                      date: calendar.prev_month_string),
+                                  next_month_path: tenant_spaces_path( tenant_id: tenant.id,
+                                                                      date: calendar.next_month_string)  %>
+    </div>
+  <% end %>
+</div>

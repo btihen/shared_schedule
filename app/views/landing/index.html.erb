@@ -26,7 +26,7 @@
       <% tenant.spaces.each do |space| %>
         <div class="column is-full-mobile is-half-tablet is-one-third-widescreen is-centered">
           <p class="title is-5">
-            <%= link_to "#{space.space_name}",
+            <%= link_to space.space_name,
                         tenant_space_path(id: space.id, tenant_id: tenant.id),
                         class: "card-footer-item" %>
           </p>

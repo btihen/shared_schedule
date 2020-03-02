@@ -9,10 +9,18 @@ class TenantsController < ApplicationController
   end
 
   def show
-    tenant      = Tenant.find(params[:id])
-    tenant_view = TenantView.new(tenant)
+    date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
+    calendar_view = CalendarView.new(date: date)
+    tenant        = Tenant.find(params[:id])
+    tenant_view   = TenantView.new(tenant)
+    spaces        = tenant.spaces.all
+    space_views   = SpaceView.collection(spaces)
     respond_to do |format|
-      format.html { render 'tenants/show', locals: {tenant: tenant} }
+      format.html { render 'tenants/show',
+                    locals: { tenant: tenant,
+                              spaces: space_views,
+                              calendar: calendar_view }
+                  }
     end
   end
 
