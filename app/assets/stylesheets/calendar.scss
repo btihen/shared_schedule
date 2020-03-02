@@ -17,7 +17,9 @@
 .calendar .calendar-nav {
   -webkit-align-items: center;
   align-items: center;
-  background: #0c227e;
+  // background: #0c227e; // original background nav color
+  // background: #414bbb;
+  background: #2a42a4;
   color: white;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
@@ -129,26 +131,34 @@
   width: 2.8rem;
 }
 
-.calendar .calendar-date .date-item.is-today {
-  border-color: #00d1b2;
-  color: #00d1b2;
-}
-
+// only use border for is-today
 .calendar .calendar-date .date-item.is-active {
   background: #abf4d8;
-  border-color: #abf4d8;
+  border-width: medium;
   color: #4b4b4b;
+}
+
+.calendar .calendar-date .date-item.is-today {
+  // border-color: #0c227e; // old nav color
+  // border-color: #414bbb;
+  border-color: #2a42a4;
+  border-width: medium;
+  color: #00d1b2;
 }
 
 .calendar .calendar-date .date-item.is-active.is-today {
   background: #abf4d8;
-  border-color: #00bda1;
+  // border-color: #0c227e; // old nav color
+  // border-color: #414bbb;
+  border-color: #2a42a4;
+  border-width: medium;
   color: #4b4b4b;
 }
 
 .calendar .calendar-date .date-item.is-today:focus {
   background: #8fcbff;
   border-color: #00bda1;
+  border-width: medium;
   color: #4b4b4b;
   text-decoration: none;
 }
@@ -156,6 +166,7 @@
 .calendar .calendar-date .date-item.is-today:hover {
   background: #8fcbff;
   border-color: #00bda1;
+  border-width: medium;
   color: #4b4b4b;
   text-decoration: none;
 }
@@ -163,35 +174,16 @@
 .calendar .calendar-date .date-item.is-active.is-today:focus {
   background: #8fcbff;
   border-color: #00bda1;
+  border-width: medium;
   color: #4b4b4b;
   text-decoration: none;
 }
 
 .calendar .calendar-date .date-item.is-active:hover {
   background: #8fcbff;
-  border-color: #00bda1;
+  // border-color: #00bda1;
   color: #4b4b4b;
   text-decoration: none;
-
-  // /* Tool tip */
-  // visibility: hidden;
-  // width: 120px;
-  // background-color: #555;
-  // color: #fff;
-  // text-align: center;
-  // padding: 5px 0;
-  // border-radius: 6px;
-
-  // /* Position the tooltip text */
-  // position: absolute;
-  // z-index: 1;
-  // bottom: 125%;
-  // left: 50%;
-  // margin-left: -60px;
-
-  // /* Fade in tooltip */
-  // opacity: 0;
-  // transition: opacity 0.3s;
 }
 
 // https://www.w3schools.com/howto/howto_css_tooltip.asp
@@ -213,12 +205,12 @@
   color: black ;
   text-align: center;
   padding: 5px 0;
-  line-height: 16px;    // spacing between lines
-  white-space: pre-wrap; // use \n to wrap lines
+  line-height: 16px;      // spacing between lines
+  white-space: pre-wrap;  // use \n to wrap lines
 
   // /* Position the tooltip text */
-  margin-top: -35px;
-  margin-left: -60px;
+  margin-top: -40px;
+  margin-left: -50px;
 }
 
 .calendar .calendar-date .date-item.is-active.is-today:hover {
