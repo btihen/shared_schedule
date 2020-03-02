@@ -51,8 +51,7 @@
 }
 
 .calendar .calendar-nav .calendar-nav-left .button:hover, .calendar .calendar-nav .calendar-nav-right .button:hover {
-  background: transparent;
-  color: #dbdbdb;
+  background: #35d3bc;
 }
 
 .calendar .calendar-nav .calendar-nav-left {
@@ -291,7 +290,8 @@
   padding: .3rem .4rem;
   text-align: left;
   text-overflow: ellipsis;
-  vertical-align: baseline;
+  // investigate incompatible with block warning
+  // vertical-align: baseline;
   white-space: nowrap;
 }
 
