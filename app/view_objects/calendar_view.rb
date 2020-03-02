@@ -45,8 +45,14 @@ class CalendarView
     I18n.t("date.abbr_month_names")[month_number]
   end
 
+  def choose_modal_form(date, reservations: [])
+    return "edit-reservation-form" if reservations.any?{ |r| r.date == date }
+    
+    "new-reservation-form"
+  end
+
   def date_item_class_string(date, reservations: [])
-    strings = ["date-item"]
+    strings = ["modal-button"]
     strings << "is-today"   if date == Date.today
     strings << "is-active"  if reservations.any?{ |r| r.date == date }
     strings.join(" ")
