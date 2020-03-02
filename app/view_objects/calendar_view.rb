@@ -45,11 +45,27 @@ class CalendarView
     I18n.t("date.abbr_month_names")[month_number]
   end
 
-  def date_item_string(date, reservations: [])
+  def date_item_class_string(date, reservations: [])
     strings = ["date-item"]
-    strings << "is-today"       if date == Date.today
-    strings << "is-active"      if reservations.any?{ |r| r.date == date } 
+    strings << "is-today"   if date == Date.today
+    strings << "is-active"  if reservations.any?{ |r| r.date == date }
+    # if reservations.any?{ |r| r.date == date }
+    #   strings << "is-active"
+    #   strings << "has-tooltip-active"
+    # end
     strings.join(" ")
+  end
+
+  def date_item_tooltip_data(date, reservations: [])
+    max_tip_length = 20
+    return ""               if reservations.none?{ |r| r.date == date }
+    strings = []
+    strings << reservations.select{ |r| r.date == date }
+                            .map{ |r| r.event_name.truncate(max_tip_length) }
+    # strings.join("&#013;&#010;")
+    # strings.join("<br>")
+    strings.join("\n")
+    # strings.join(" ")
   end
 
   def date_class_string(date)

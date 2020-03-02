@@ -24,7 +24,8 @@ end
     time_slots = space.allowed_time_slots
 
     event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_0, time_slot: time_slots.sample)
-    event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_1, time_slot: time_slots.sample)
+    event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_1, time_slot: time_slots.first)
+    event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_1, time_slot: time_slots.second)
     event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_4, time_slot: time_slots.sample)
     event.save
   end

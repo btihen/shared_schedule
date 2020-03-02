@@ -28,7 +28,9 @@
       <div class="calendar-body">
         <% calendar.date_range.each do |day| %>
           <div class="<%= calendar.date_class_string(day) %>">
-            <button class="<%= calendar.date_item_string(day, reservations: space.reservations) %>">
+            <button data-html="true"
+                    class="<%= calendar.date_item_class_string(day, reservations: space.reservations) %>"
+                    data-tooltip="<%= calendar.date_item_tooltip_data(day, reservations: space.reservations) %>">
               <%= day.mday %>
             </button>
           </div>

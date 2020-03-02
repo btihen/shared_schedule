@@ -19,7 +19,7 @@ class EventSpaceReservationView < ViewObject
   # end
 
   def event
-    EventView.new(event_reservation.event)
+    EventView.new(event_space_reservation.event)
   end
 
   def event_name
@@ -27,11 +27,11 @@ class EventSpaceReservationView < ViewObject
   end
 
   # def space
-  #   SpaceView.new(event_reservation.space)
+  #   SpaceView.new(event_space_reservation.space)
   # end
 
   def time_slot
-    TimeSlotView.new(event_reservation.time_slot)
+    TimeSlotView.new(event_space_reservation.time_slot)
   end
 
   def hours_reserved

@@ -167,6 +167,60 @@
   text-decoration: none;
 }
 
+.calendar .calendar-date .date-item.is-active:hover {
+  background: #8fcbff;
+  border-color: #00bda1;
+  color: #4b4b4b;
+  text-decoration: none;
+
+  // /* Tool tip */
+  // visibility: hidden;
+  // width: 120px;
+  // background-color: #555;
+  // color: #fff;
+  // text-align: center;
+  // padding: 5px 0;
+  // border-radius: 6px;
+
+  // /* Position the tooltip text */
+  // position: absolute;
+  // z-index: 1;
+  // bottom: 125%;
+  // left: 50%;
+  // margin-left: -60px;
+
+  // /* Fade in tooltip */
+  // opacity: 0;
+  // transition: opacity 0.3s;
+}
+
+// https://www.w3schools.com/howto/howto_css_tooltip.asp
+.calendar .calendar-date .date-item.is-active:hover::after {
+  // /* Fetch Tool Tip Text */
+  content: attr(data-tooltip) ;
+
+  // /* Tool Tip Bubble */
+  position: absolute ;
+  z-index: 1 ;
+  top: 1.1em ;
+  left: 1em ;
+  width: 120px;
+  border-radius: 6px;
+  border: 1px #808080 solid ;
+  background-color: #cbcbcb ;
+
+  // /* Tool Tip Text */
+  color: black ;
+  text-align: center;
+  padding: 5px 0;
+  line-height: 16px;    // spacing between lines
+  white-space: pre-wrap; // use \n to wrap lines
+
+  // /* Position the tooltip text */
+  margin-top: -35px;
+  margin-left: -60px;
+}
+
 .calendar .calendar-date .date-item.is-active.is-today:hover {
   background: #8fcbff;
   border-color: #00bda1;
