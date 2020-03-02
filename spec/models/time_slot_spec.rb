@@ -15,9 +15,9 @@ RSpec.describe TimeSlot, type: :model do
 
   describe "destroy records - check dependents" do
     let(:tenant)  { FactoryBot.create :tenant }
+    let(:time1)   { FactoryBot.create :time_slot, begin_time: '08:00', end_time: '12:00', tenant: tenant }
+    let(:time2)   { FactoryBot.create :time_slot, begin_time: '13:00', end_time: '17:00', tenant: tenant }
     let(:space)   { space = FactoryBot.create :space, tenant: tenant
-                    time1 = FactoryBot.create :time_slot, tenant: tenant
-                    time2 = FactoryBot.create :time_slot, tenant: tenant
                     space.allowed_time_slots << [time1, time2]
                     space.save
                     space.reload

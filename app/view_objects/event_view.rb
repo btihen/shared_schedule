@@ -6,7 +6,7 @@ class EventView < ViewObject
   alias_method :event_path, :root_model_path
 
   # delegate to model for attributes needed
-  delegate  :event_title, to: :event
+  delegate  :event_name, to: :event
 
   def event_hosts
     event_reservations.map(&:host).uniq.join(', ')

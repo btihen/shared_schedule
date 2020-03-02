@@ -1,27 +1,13 @@
-<p id="notice"><%= notice %></p>
+<h1 class="title">Tenants</h1>
 
-<h1>Tenants</h1>
+<div class="columns is-multiline">
+<% tenants.each do |tenant| %>
+  <div class="column is-half-tablet is-one-third-desktop is-one-quarter-fullhd ">
+    <%= render 'tenant_card', tenant: tenant %>
+  </div>
+<% end %>
+</div>
 
-<table>
-  <thead>
-    <tr>
-      <th>Tenant name</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+<br/>
 
-  <tbody>
-    <% @tenants.each do |tenant| %>
-      <tr>
-        <td><%= tenant.tenant_name %></td>
-        <td><%= link_to 'Show', tenant %></td>
-        <td><%= link_to 'Edit', edit_tenant_path(tenant) %></td>
-        <td><%= link_to 'Destroy', tenant, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Tenant', new_tenant_path %>
+<%# link_to 'New Tenant', new_tenant_path %>

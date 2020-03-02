@@ -1,28 +1,36 @@
 class TenantsController < ApplicationController
-  before_action :set_tenant, only: [:show, :edit, :update, :destroy]
 
-  # GET /tenants
-  # GET /tenants.json
   def index
-    @tenants = Tenant.all
+    tenants      = Tenant.all
+    tenant_views = TenantView.collection(tenants)
+    respond_to do |format|
+      format.html { render 'tenants/index', locals: {tenants: tenant_views} }
+    end
   end
 
-  # GET /tenants/1
-  # GET /tenants/1.json
   def show
+    date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
+    calendar_view = CalendarView.new(date: date)
+    tenant        = Tenant.find(params[:id])
+    tenant_view   = TenantView.new(tenant)
+    spaces        = tenant.spaces.all
+    space_views   = SpaceView.collection(spaces)
+    respond_to do |format|
+      format.html { render 'tenants/show',
+                    locals: { tenant: tenant_view,
+                              spaces: space_views,
+                              calendar: calendar_view }
+                  }
+    end
   end
 
-  # GET /tenants/new
   def new
     @tenant = Tenant.new
   end
 
-  # GET /tenants/1/edit
   def edit
   end
 
-  # POST /tenants
-  # POST /tenants.json
   def create
     @tenant = Tenant.new(tenant_params)
 
@@ -37,8 +45,6 @@ class TenantsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /tenants/1
-  # PATCH/PUT /tenants/1.json
   def update
     respond_to do |format|
       if @tenant.update(tenant_params)
@@ -51,8 +57,6 @@ class TenantsController < ApplicationController
     end
   end
 
-  # DELETE /tenants/1
-  # DELETE /tenants/1.json
   def destroy
     @tenant.destroy
     respond_to do |format|
@@ -62,11 +66,6 @@ class TenantsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_tenant
-      @tenant = Tenant.find(params[:id])
-    end
-
     # Only allow a list of trusted parameters through.
     def tenant_params
       params.require(:tenant).permit(:tenant_name)

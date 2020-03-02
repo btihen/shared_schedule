@@ -23,8 +23,8 @@ RSpec.describe Space, type: :model do
     let(:tenant)  { FactoryBot.create :tenant }
     let(:reason1) { FactoryBot.create :reason, tenant: tenant }
     let(:reason2) { FactoryBot.create :reason, tenant: tenant }
-    let(:time1)   { FactoryBot.create :time_slot, tenant: tenant }
-    let(:time2)   { FactoryBot.create :time_slot, tenant: tenant }
+    let(:time1)   { FactoryBot.create :time_slot, begin_time: '08:00', end_time: '12:00', tenant: tenant }
+    let(:time2)   { FactoryBot.create :time_slot, begin_time: '13:00', end_time: '17:00', tenant: tenant }
     let(:space1)  { space = FactoryBot.create :space, tenant: tenant
                     space.allowed_time_slots << [time1, time2]
                     space.save
@@ -82,8 +82,32 @@ RSpec.describe Space, type: :model do
   describe "DB settings" do
     it { have_db_index(:space_name) }
     it { is_expected.to have_db_column(:space_location) }
+    it { is_expected.to have_db_column(:is_calendar_public) }
+    it { is_expected.to have_db_column(:is_double_booking_ok) }
   end
 
-  # describe "model methods"
+  context "model methods" do
+    describe "#is_calendar_public?" do
+      it "returns false by default" do
+        model = FactoryBot.build :space
+        expect(model.is_calendar_public?).to be_falsey
+      end
+      it "returns true when explicity set to true" do
+        model = FactoryBot.build :space, is_calendar_public: true
+        expect(model.is_calendar_public?).to be_truthy
+      end
+    end
+    describe "#is_double_booking_ok?" do
+      it "returns false by default" do
+        model = FactoryBot.build :space
+        expect(model.is_double_booking_ok?).to be_falsey
+      end
+      it "returns true when explicity set to true" do
+        model = FactoryBot.build :space, is_double_booking_ok: true
+        expect(model.is_double_booking_ok?).to be_truthy
+      end
+    end
+  end
+
 
 end

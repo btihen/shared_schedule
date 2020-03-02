@@ -1,0 +1,109 @@
+<!-- https://codepen.io/wikiki/pen/KvqKzK?editors=0100 -->
+<div class="column">
+  <div class="calendar">
+    <div class="calendar-nav">
+      <div class="calendar-nav-left">
+        <%= link_to prev_month_path, class: "button is-link" do %>
+          <i class="fa fa-chevron-left"></i>
+        <% end %>
+      </div>
+      <div><%= calendar.full_month_name %> <%= calendar.year_number %></div>
+      <div class="calendar-nav-right">
+        <%= link_to next_month_path, class: "button is-link" do %>
+          <i class="fa fa-chevron-right"></i>
+        <% end %>
+      </div>
+    </div>
+    <div class="calendar-container">
+      <div class="calendar-header">
+        <div class="calendar-date"><%= I18n.t("date.week_day.mon") %></div>
+        <div class="calendar-date"><%= I18n.t("date.week_day.tue") %></div>
+        <div class="calendar-date"><%= I18n.t("date.week_day.wed") %></div>
+        <div class="calendar-date"><%= I18n.t("date.week_day.thu") %></div>
+        <div class="calendar-date"><%= I18n.t("date.week_day.fri") %></div>
+        <div class="calendar-date"><%= I18n.t("date.week_day.sat") %></div>
+        <div class="calendar-date"><%= I18n.t("date.week_day.sun") %></div>
+      </div>
+
+      <div class="calendar-body">
+        <% calendar.date_range.each do |day| %>
+          <div class="<%= calendar.date_class_string(day) %>">
+            <button data-html="true"
+                    class="<%= calendar.date_item_class_string(day, reservations: space.reservations) %>"
+                    data-tooltip="<%= calendar.date_item_tooltip_data(day, reservations: space.reservations) %>">
+              <%= day.mday %>
+            </button>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<br><br>
+
+<div class="column">
+  <div class="calendar">
+  <div class="calendar-nav">
+    <div class="calendar-nav-left">
+      <button class="button is-link">
+        <i class="fa fa-chevron-left"></i>
+      </button>
+    </div>
+    <div>March 2017</div>
+    <div class="calendar-nav-right">
+      <button class="button is-link">
+        <i class="fa fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+  <div class="calendar-container">
+    <div class="calendar-header">
+      <div class="calendar-date">Sun</div>
+      <div class="calendar-date">Mon</div>
+      <div class="calendar-date">Tue</div>
+      <div class="calendar-date">Wed</div>
+      <div class="calendar-date">Thu</div>
+      <div class="calendar-date">Fri</div>
+      <div class="calendar-date">Sat</div>
+    </div>
+    <div class="calendar-body">
+      <div class="calendar-date is-disabled"><button class="date-item">26</button></div>
+      <div class="calendar-date is-disabled"><button class="date-item">27</button></div>
+      <div class="calendar-date is-disabled"><button class="date-item">28</button></div>
+      <div class="calendar-date"><button class="date-item">1</button></div>
+      <div class="calendar-date"><button class="date-item">2</button></div>
+      <div class="calendar-date"><button class="date-item">3</button></div>
+      <div class="calendar-date"><button class="date-item is-today">4</button></div>
+      <div class="calendar-date"><button class="date-item" disabled="">5</button></div>
+      <div class="calendar-date"><button class="date-item">6</button></div>
+      <div class="calendar-date"><button class="date-item">7</button></div>
+      <div class="calendar-date"><button class="date-item badge">8</button></div>
+      <div class="calendar-date"><button class="date-item">9</button></div>
+      <div class="calendar-date"><button class="date-item">10</button></div>
+      <div class="calendar-date"><button class="date-item">11</button></div>
+      <div class="calendar-date"><button class="date-item">12</button></div>
+      <div class="calendar-date"><button class="date-item">13</button></div>
+      <div class="calendar-date"><button class="date-item">14</button></div>
+      <div class="calendar-date"><button class="date-item">15</button></div>
+      <div class="calendar-date calendar-range range-start"><button class="date-item is-active">16</button></div>
+      <div class="calendar-date calendar-range"><button class="date-item">17</button></div>
+      <div class="calendar-date calendar-range"><button class="date-item">18</button></div>
+      <div class="calendar-date calendar-range"><button class="date-item">19</button></div>
+      <div class="calendar-date calendar-range range-end"><button class="date-item is-active">20</button></div>
+      <div class="calendar-date"><button class="date-item">21</button></div>
+      <div class="calendar-date"><button class="date-item">22</button></div>
+      <div class="calendar-date"><button class="date-item">23</button></div>
+      <div class="calendar-date"><button class="date-item">24</button></div>
+      <div class="calendar-date"><button class="date-item">25</button></div>
+      <div class="calendar-date"><button class="date-item">26</button></div>
+      <div class="calendar-date"><button class="date-item">27</button></div>
+      <div class="calendar-date"><button class="date-item">28</button></div>
+      <div class="calendar-date"><button class="date-item">29</button></div>
+      <div class="calendar-date"><button class="date-item">30</button></div>
+      <div class="calendar-date"><button class="date-item">31</button></div>
+      <div class="calendar-date is-disabled"><button class="date-item">1</button></div>
+    </div>
+  </div>
+</div>
+</div>

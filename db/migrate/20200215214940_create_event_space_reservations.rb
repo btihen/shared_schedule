@@ -10,6 +10,7 @@ class CreateEventSpaceReservations < ActiveRecord::Migration[6.0]
       t.timestamps
     end
     add_index :event_space_reservations,  :date
-    add_index :event_space_reservations, [:date, :space_id, :time_slot_id], unique: true, name: "index_event_space_reservation_unique"
+    add_index :event_space_reservations, [:date, :event_id, :space_id, :time_slot_id], 
+                                          unique: true, name: "index_event_space_reservation_unique"
   end
 end
