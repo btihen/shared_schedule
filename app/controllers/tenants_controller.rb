@@ -17,7 +17,7 @@ class TenantsController < ApplicationController
     space_views   = SpaceView.collection(spaces)
     respond_to do |format|
       format.html { render 'tenants/show',
-                    locals: { tenant: tenant,
+                    locals: { tenant: tenant_view,
                               spaces: space_views,
                               calendar: calendar_view }
                   }

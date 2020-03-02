@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
     t.bigint "time_slot_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["date", "space_id", "time_slot_id"], name: "index_event_space_reservation_unique", unique: true
+    t.index ["date", "event_id", "space_id", "time_slot_id"], name: "index_event_space_reservation_unique", unique: true
     t.index ["date"], name: "index_event_space_reservations_on_date"
     t.index ["event_id"], name: "index_event_space_reservations_on_event_id"
     t.index ["space_id"], name: "index_event_space_reservations_on_space_id"
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
   end
 
   create_table "events", force: :cascade do |t|
-    t.string "event_title", null: false
+    t.string "event_name", null: false
     t.string "event_description"
     t.bigint "reason_id", null: false
     t.bigint "tenant_id", null: false

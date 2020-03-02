@@ -45,10 +45,10 @@ class CalendarView
     I18n.t("date.abbr_month_names")[month_number]
   end
 
-  def date_item_string(date)
+  def date_item_string(date, reservations: [])
     strings = ["date-item"]
     strings << "is-today"       if date == Date.today
-    # strings << "is-active"      # if date 
+    strings << "is-active"      if reservations.any?{ |r| r.date == date } 
     strings.join(" ")
   end
 

@@ -32,6 +32,8 @@ spaces.each do |space|
   space.save
 end
 
+# run seed_demo_events.rb
+
 # DEMO Data
 5.times do
   tenant  = FactoryBot.create :tenant
@@ -70,7 +72,7 @@ end
     spaces << space
   end
 
-  (-2..2).each do |shift| 
+  (-2..2).each do |shift|
     date_0  = Date.today + shift.weeks
     date_1  = date_0 + 1.day
     date_2  = date_0 + 2.days
@@ -94,7 +96,7 @@ end
         event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_3,  time_slot: lunch)
         event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_3,  time_slot: dinner)
       end
-      space.save
+      event.save
     end
   end
 
