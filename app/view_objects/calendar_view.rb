@@ -47,13 +47,16 @@ class CalendarView
 
   def date_item_string(date)
     strings = ["date-item"]
-    strings << "is-today"      if date == Date.today
+    strings << "is-today"       if date == Date.today
+    # strings << "is-active"      # if date 
     strings.join(" ")
   end
 
   def date_class_string(date)
     strings = ["calendar-date"]
     strings << "is-disabled"    if date_outside_month?(date)
+    # strings << "range-start"
+    # strings << "range-end"
     strings.join(" ")
   end
 

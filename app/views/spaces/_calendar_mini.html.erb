@@ -1,15 +1,15 @@
-<!--  -->
+<!-- https://codepen.io/wikiki/pen/KvqKzK?editors=0100 -->
 <div class="column">
   <div class="calendar">
     <div class="calendar-nav">
       <div class="calendar-nav-left">
-        <%= link_to root_path(date: calendar.prev_month_string), class: "button is-link" do %>
+        <%= link_to prev_month_path, class: "button is-link" do %>
           <i class="fa fa-chevron-left"></i>
         <% end %>
       </div>
       <div><%= calendar.full_month_name %> <%= calendar.year_number %></div>
       <div class="calendar-nav-right">
-        <%= link_to root_path(date: calendar.next_month_string), class: "button is-link" do %>
+        <%= link_to next_month_path, class: "button is-link" do %>
           <i class="fa fa-chevron-right"></i>
         <% end %>
       </div>

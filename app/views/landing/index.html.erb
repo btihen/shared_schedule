@@ -22,16 +22,18 @@
         <%= tenant.tenant_tagline %>
       </p>
 
-      <div class="columns is-multiline">
+      <div class="columns is-centered is-multiline">
       <% tenant.spaces.each do |space| %>
-        <div class="column is-half-desktop is-one-third-fullhd is-centered">
+        <div class="column is-full-mobile is-half-tablet is-one-third-widescreen is-centered">
           <p class="title is-5">
             <%= link_to "#{space.space_name}",
                         tenant_space_path(id: space.id, tenant_id: tenant.id),
                         class: "card-footer-item" %>
           </p>
           <%= render 'spaces/calendar_mini',
-                        space: space, tenant: tenant, calendar: calendar %>
+                        space: space, tenant: tenant, calendar: calendar,
+                        prev_month_path: root_path(date: calendar.prev_month_string),
+                        next_month_path: root_path(date: calendar.next_month_string) %>
         </div>
       <% end %>
       </div>
