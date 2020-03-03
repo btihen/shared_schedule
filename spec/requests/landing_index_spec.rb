@@ -59,40 +59,48 @@ RSpec.describe "Landing", type: :request do
       expect(start_event).to      be
       expect(middle_event).to     be
       expect(end_event).to        be
+
       get root_path
 
       expect(response).to       have_http_status(200)
       expect(response.body).to  match "<p hidden id='landing_index' class='pageName'>Landing Index</p>"
+
       # navbar present
       expect(response.body).to  match "SharedSpace"
+
       # The hero section on webpage
       expect(response.body).to  match "Shared Schedules"
       expect(response.body).to  match "Where groups come to share their space and schedule and keep informed."
+
       # shows the DemoGroup (tenant) on the root page
-      expect(response.body).to  match "DemoGroup"
-      expect(response.body).to  match "Try it out"
-      expect(response.body).to  match "Reset every 24 hours"
+      expect(response.body).to  match "#{tenant.tenant_name}"
+      expect(response.body).to  match "#{tenant.tenant_tagline}"
+      expect(response.body).to  match "#{tenant.tenant_description}"
+
       # Spaces are present
-      expect(response.body).to  match "Space 1"
-      expect(response.body).to  match "Space 2"
-      # demo shows scheduled events
+      expect(response.body).to  match "#{space1.space_name}"
+      expect(response.body).to  match "#{space2.space_name}"
+
+      # first calendar scheduled events (from previous month - disabled)
       expect(response.body.squish).to  match %Q(<div class="calendar-date is-disabled">
                                                   <button data-html="true"
                                                           data-target="edit-reservation-form"
-                                                          data-tooltip="Event 1
-                                                                        Event 1"
+                                                          data-tooltip="#{start_event.event_name}
+                                                                        #{start_event.event_name}"
                                                           class="date-item modal-button is-active">
-                                                    29
+                                                    #{end_last_month.mday}
                                                   </button>
                                                 </div>).squish
+
+      # second calendar shows scheduled events that are viewable (active)
       expect(response.body.squish).to  match %Q(<div class="calendar-date">
                                                   <button data-html="true"
                                                           data-target="edit-reservation-form"
-                                                          data-tooltip="Event 2"
+                                                          data-tooltip="#{middle_event.event_name}"
                                                           class="date-item modal-button is-active">
-                                                    15
+                                                    #{middle_this_month.mday}
                                                   </button>
-                                                </div> ).squish
+                                                </div>).squish
 
     end
   end
