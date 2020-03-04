@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # keep views simple - when an object is nil at least return "" in view
-class NoViewObject
+class NoModel
   def to_s
     ""
   end
