@@ -21,9 +21,7 @@ class ViewObject
 
   # Initialize collection
   def self.collection(collection, view_context=nil)
-    # instance variable doesn't make sense in a class method
-    # @view_context ||= view_context
-    return []      if collection.blank?
+    return []   if collection.blank?
 
     collection.map { |root_model| self.new(root_model, view_context) }
   end
