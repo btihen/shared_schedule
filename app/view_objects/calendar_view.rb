@@ -46,9 +46,10 @@ class CalendarView
   end
 
   def choose_modal_form(date, reservations: [])
-    return "edit-reservation-form" if reservations.any?{ |r| r.date == date }
+    # show/edit reservations in modal when there are existing reservations
+    return "reservation-details" if reservations.any?{ |r| r.date == date }
     
-    "new-reservation-form"
+    "reservation-new"   # form to create a new reservation on other days
   end
 
   def date_item_class_string(date, reservations: [])
