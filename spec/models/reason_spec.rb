@@ -31,14 +31,14 @@ RSpec.describe Reason, type: :model do
                     space.reload
                   }
     let(:event1)  { event = FactoryBot.create :event, reason: reason1, tenant: tenant
-                    event.event_space_reservations << EventSpaceReservation.create(date: Date.today, space: space1, time_slot: time1)
-                    event.event_space_reservations << EventSpaceReservation.create(date: Date.today, space: space2, time_slot: time2)
+                    event.reservations << Reservation.create(date: Date.today, space: space1, time_slot: time1)
+                    event.reservations << Reservation.create(date: Date.today, space: space2, time_slot: time2)
                     event.save
                     event.reload
                   }
     let(:event2)  { event = FactoryBot.create :event, reason: reason2, tenant: tenant
-                    event.event_space_reservations << EventSpaceReservation.create(date: Date.tomorrow, space: space1, time_slot: time1)
-                    event.event_space_reservations << EventSpaceReservation.create(date: Date.yesterday, space: space2, time_slot: time2)
+                    event.reservations << Reservation.create(date: Date.tomorrow, space: space1, time_slot: time1)
+                    event.reservations << Reservation.create(date: Date.yesterday, space: space2, time_slot: time2)
                     event.save
                     event.reload }
     it "#destroy_all" do
@@ -46,7 +46,7 @@ RSpec.describe Reason, type: :model do
       expect(event2).to                     be
       described_class.destroy_all
       expect(Reason.all).to                 eq []
-      expect(EventSpaceReservation.all).to  eq []
+      expect(Reservation.all).to  eq []
       expect(Space.all.pluck(:id).sort).to      eq [space1.id, space2.id].sort
       expect(TimeSlot.all.pluck(:id).sort).to   eq [time1.id, time2.id].sort
       expect(SpaceTimeSlot.all.pluck(:space_id).sort).to      eq [space1.id, space2.id, space1.id, space2.id].sort
@@ -61,7 +61,7 @@ RSpec.describe Reason, type: :model do
       expect(TimeSlot.all.pluck(:id).sort).to   eq [time1.id, time2.id].sort
       expect(SpaceTimeSlot.all.pluck(:space_id).sort).to          eq [space1.id, space2.id, space1.id, space2.id].sort
       expect(SpaceTimeSlot.all.pluck(:time_slot_id).sort).to      eq [time1.id, time1.id, time2.id, time2.id].sort
-      expect(EventSpaceReservation.all.pluck(:space_id).sort).to  eq [space1.id, space2.id].sort
+      expect(Reservation.all.pluck(:space_id).sort).to  eq [space1.id, space2.id].sort
     end
   end
 

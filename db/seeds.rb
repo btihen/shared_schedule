@@ -64,18 +64,18 @@ SeedDemoGroup.create
     # schedule events within spaces
     spaces.each do |space|
       # make space reservation through event
-      event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_0, time_slot: afternoon)
-      event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_1, time_slot: evening)
-      event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_4, time_slot: evening)
+      event.reservations << Reservation.create(space: space, date: date_0, time_slot: afternoon)
+      event.reservations << Reservation.create(space: space, date: date_1, time_slot: evening)
+      event.reservations << Reservation.create(space: space, date: date_4, time_slot: evening)
 
       # make event reservation through space probably most common
       if space.is_double_booking_ok
-        event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_2, time_slot: morning)
-        event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_2, time_slot: afternoon)
+        event.reservations << Reservation.create(space: space, date: date_2, time_slot: morning)
+        event.reservations << Reservation.create(space: space, date: date_2, time_slot: afternoon)
 
-        event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_3,  time_slot: breakfast)
-        event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_3,  time_slot: lunch)
-        event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_3,  time_slot: dinner)
+        event.reservations << Reservation.create(space: space, date: date_3,  time_slot: breakfast)
+        event.reservations << Reservation.create(space: space, date: date_3,  time_slot: lunch)
+        event.reservations << Reservation.create(space: space, date: date_3,  time_slot: dinner)
       end
       event.save
     end

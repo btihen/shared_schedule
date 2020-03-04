@@ -1,12 +1,12 @@
-class EventSpaceReservationView < ViewObject
+class ReservationView < ViewObject
 
   # alias method allows use to rename view_object to a clear name without the initializer
-  alias_method :event_space_reservation,      :root_model
-  alias_method :event_space_reservation_url,  :root_model_url
-  alias_method :event_space_reservation_path, :root_model_path
+  alias_method :reservation,      :root_model
+  alias_method :reservation_url,  :root_model_url
+  alias_method :reservation_path, :root_model_path
 
   # delegate to model for attributes needed
-  delegate  :date, to: :event_space_reservation
+  delegate  :date, to: :reservation
 
   # methods for attribuits
   def host
@@ -19,7 +19,7 @@ class EventSpaceReservationView < ViewObject
   # end
 
   def event
-    EventView.new(event_space_reservation.event)
+    EventView.new(reservation.event)
   end
 
   def event_name
@@ -27,11 +27,11 @@ class EventSpaceReservationView < ViewObject
   end
 
   # def space
-  #   SpaceView.new(event_space_reservation.space)
+  #   SpaceView.new(reservation.space)
   # end
 
   def time_slot
-    TimeSlotView.new(event_space_reservation.time_slot)
+    TimeSlotView.new(reservation.time_slot)
   end
 
   def hours_reserved

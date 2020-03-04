@@ -15,21 +15,6 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "event_space_reservations", force: :cascade do |t|
-    t.string "host"
-    t.date "date", null: false
-    t.bigint "event_id", null: false
-    t.bigint "space_id", null: false
-    t.bigint "time_slot_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["date", "event_id", "space_id", "time_slot_id"], name: "index_event_space_reservation_unique", unique: true
-    t.index ["date"], name: "index_event_space_reservations_on_date"
-    t.index ["event_id"], name: "index_event_space_reservations_on_event_id"
-    t.index ["space_id"], name: "index_event_space_reservations_on_space_id"
-    t.index ["time_slot_id"], name: "index_event_space_reservations_on_time_slot_id"
-  end
-
   create_table "events", force: :cascade do |t|
     t.string "event_name", null: false
     t.string "event_description"
@@ -49,6 +34,21 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["reason_description", "tenant_id"], name: "index_reasons_on_reason_description_and_tenant_id", unique: true
     t.index ["tenant_id"], name: "index_reasons_on_tenant_id"
+  end
+
+  create_table "reservations", force: :cascade do |t|
+    t.string "host"
+    t.date "date", null: false
+    t.bigint "event_id", null: false
+    t.bigint "space_id", null: false
+    t.bigint "time_slot_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["date", "event_id", "space_id", "time_slot_id"], name: "index_reservation_unique", unique: true
+    t.index ["date"], name: "index_reservations_on_date"
+    t.index ["event_id"], name: "index_reservations_on_event_id"
+    t.index ["space_id"], name: "index_reservations_on_space_id"
+    t.index ["time_slot_id"], name: "index_reservations_on_time_slot_id"
   end
 
   create_table "space_time_slots", force: :cascade do |t|
@@ -140,12 +140,12 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
-  add_foreign_key "event_space_reservations", "events"
-  add_foreign_key "event_space_reservations", "spaces"
-  add_foreign_key "event_space_reservations", "time_slots"
   add_foreign_key "events", "reasons"
   add_foreign_key "events", "tenants"
   add_foreign_key "reasons", "tenants"
+  add_foreign_key "reservations", "events"
+  add_foreign_key "reservations", "spaces"
+  add_foreign_key "reservations", "time_slots"
   add_foreign_key "space_time_slots", "spaces"
   add_foreign_key "space_time_slots", "time_slots"
   add_foreign_key "spaces", "tenants"

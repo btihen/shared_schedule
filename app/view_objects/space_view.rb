@@ -33,7 +33,7 @@ class SpaceView < ViewObject
   end
 
   def reservations
-    EventSpaceReservationView.collection(space.event_space_reservations)
+    ReservationView.collection(space.reservations)
   end
 
   # def reserved_time_slots

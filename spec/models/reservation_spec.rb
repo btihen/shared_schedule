@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe EventSpaceReservation, type: :model do
+RSpec.describe Reservation, type: :model do
 
   describe "factory functions" do
     it "generates a valid user" do
-      model = FactoryBot.build :event_space_reservation
+      model = FactoryBot.build :reservation
       expect(model.valid?).to be true
     end
   end

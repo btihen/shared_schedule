@@ -26,29 +26,29 @@ RSpec.describe "TenantsPath - Demo", type: :request do
                             space.reload
                           }
   let(:start_event)       { event = FactoryBot.create :event, event_name: "Event 1", reason: reason1, tenant: tenant
-                            event.event_space_reservations << EventSpaceReservation.create(date: end_last_month,   space: space1, time_slot: brunch)
-                            event.event_space_reservations << EventSpaceReservation.create(date: end_last_month,   space: space1, time_slot: evening)
-                            event.event_space_reservations << EventSpaceReservation.create(date: start_this_month, space: space1, time_slot: morning)
-                            event.event_space_reservations << EventSpaceReservation.create(date: start_this_month, space: space1, time_slot: afternoon)
-                            event.event_space_reservations << EventSpaceReservation.create(date: start_this_month, space: space1, time_slot: evening)
+                            event.reservations << Reservation.create(date: end_last_month,   space: space1, time_slot: brunch)
+                            event.reservations << Reservation.create(date: end_last_month,   space: space1, time_slot: evening)
+                            event.reservations << Reservation.create(date: start_this_month, space: space1, time_slot: morning)
+                            event.reservations << Reservation.create(date: start_this_month, space: space1, time_slot: afternoon)
+                            event.reservations << Reservation.create(date: start_this_month, space: space1, time_slot: evening)
                             event.save
                             event.reload
                           }
   let(:middle_event)      { event = FactoryBot.create :event, event_name: "Event 2", reason: reason2, tenant: tenant
-                            event.event_space_reservations << EventSpaceReservation.create(date: middle_this_month - 1.day, space: space2, time_slot: evening)
-                            event.event_space_reservations << EventSpaceReservation.create(date: middle_this_month,         space: space2, time_slot: evening)
-                            event.event_space_reservations << EventSpaceReservation.create(date: middle_this_month + 1.day, space: space2, time_slot: morning)
-                            event.event_space_reservations << EventSpaceReservation.create(date: middle_this_month + 1.day, space: space2, time_slot: afternoon)
-                            event.event_space_reservations << EventSpaceReservation.create(date: middle_this_month + 1.day, space: space2, time_slot: evening)
+                            event.reservations << Reservation.create(date: middle_this_month - 1.day, space: space2, time_slot: evening)
+                            event.reservations << Reservation.create(date: middle_this_month,         space: space2, time_slot: evening)
+                            event.reservations << Reservation.create(date: middle_this_month + 1.day, space: space2, time_slot: morning)
+                            event.reservations << Reservation.create(date: middle_this_month + 1.day, space: space2, time_slot: afternoon)
+                            event.reservations << Reservation.create(date: middle_this_month + 1.day, space: space2, time_slot: evening)
                             event.save
                             event.reload
                           }
   let(:end_event)         { event = FactoryBot.create :event, event_name: "Event 3", reason: reason2, tenant: tenant
-                            event.event_space_reservations << EventSpaceReservation.create(date: end_this_month,   space: space1, time_slot: brunch)
-                            event.event_space_reservations << EventSpaceReservation.create(date: end_this_month,   space: space1, time_slot: evening)
-                            event.event_space_reservations << EventSpaceReservation.create(date: start_next_month, space: space1, time_slot: morning)
-                            event.event_space_reservations << EventSpaceReservation.create(date: start_next_month, space: space1, time_slot: afternoon)
-                            event.event_space_reservations << EventSpaceReservation.create(date: start_next_month, space: space1, time_slot: evening)
+                            event.reservations << Reservation.create(date: end_this_month,   space: space1, time_slot: brunch)
+                            event.reservations << Reservation.create(date: end_this_month,   space: space1, time_slot: evening)
+                            event.reservations << Reservation.create(date: start_next_month, space: space1, time_slot: morning)
+                            event.reservations << Reservation.create(date: start_next_month, space: space1, time_slot: afternoon)
+                            event.reservations << Reservation.create(date: start_next_month, space: space1, time_slot: evening)
                             event.save
                             event.reload
                           }

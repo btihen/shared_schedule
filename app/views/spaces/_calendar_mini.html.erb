@@ -29,7 +29,7 @@
         <% calendar.date_range.each do |day| %>
           <div class="<%= calendar.date_class_string(day) %>">
             <button data-html="true"
-                    data-href="/tenant/2/space/3/reservations?date=2020-12-20" # json call
+                    data-href="/tenant/2/space/3/reservations?date=2020-12-20"
                     data-target="<%= calendar.choose_modal_form(day, reservations: space.reservations) %>"
                     data-tooltip="<%= calendar.date_item_tooltip_data(day, reservations: space.reservations) %>"
                     class="date-item <%= calendar.date_item_class_string(day, reservations: space.reservations) %>">

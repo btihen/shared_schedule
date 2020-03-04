@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :event_space_reservation do
+  factory :reservation do
 
     transient do
       tenant  { FactoryBot.build :tenant }
