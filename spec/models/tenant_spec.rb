@@ -82,8 +82,21 @@ RSpec.describe Tenant, type: :model do
     it { is_expected.to have_db_column(:tenant_site_url) }
     it { is_expected.to have_db_column(:tenant_logo_url) }
     it { is_expected.to have_db_column(:tenant_description) }
+    it { is_expected.to have_db_column(:is_publicly_viewable) }
   end
 
-  # describe "model methods"
+  describe "model methods" do
+    context "#is_publicly_viewable?" do
+      it "returns false by default" do
+        model = FactoryBot.build :tenant
+        expect(model.is_publicly_viewable?).to be_falsey
+      end
+      it "returns true when explicity set to true" do
+        model = FactoryBot.build :tenant, is_publicly_viewable: true
+        expect(model.is_publicly_viewable?).to be_truthy
+      end
+    end
+
+  end
 
 end

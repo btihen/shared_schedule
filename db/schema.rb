@@ -65,7 +65,6 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
     t.string "space_name", null: false
     t.string "space_location"
     t.string "time_zone", default: "Europe/Zurich", null: false
-    t.boolean "is_calendar_public", default: false, null: false
     t.boolean "is_double_booking_ok", default: false, null: false
     t.bigint "tenant_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -81,8 +80,10 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
     t.string "tenant_site_url"
     t.string "tenant_logo_url"
     t.text "tenant_description"
+    t.boolean "is_publicly_viewable", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["tenant_name"], name: "index_tenants_on_tenant_name", unique: true
   end
 
   create_table "time_slots", force: :cascade do |t|

@@ -1,7 +1,7 @@
 class TenantsController < ApplicationController
 
   def index
-    tenants      = Tenant.all
+    tenants      = Tenant.where(is_publicly_viewable: true)
     tenant_views = TenantView.collection(tenants)
     respond_to do |format|
       format.html { render 'tenants/index', locals: {tenants: tenant_views} }
@@ -9,6 +9,7 @@ class TenantsController < ApplicationController
   end
 
   def show
+    # restrict to user ID and Demo
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
     calendar_view = CalendarView.new(date: date)
     tenant        = Tenant.find(params[:id])
