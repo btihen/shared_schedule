@@ -9,33 +9,52 @@ class ReservationView < ViewObject
   delegate  :date, to: :reservation
 
   # methods for attribuits
-  def host
+  def host_name
     event.host || ""
   end
 
-  # view_objects for relationships
-  # def tenant
-  #   TenantView.new(event.tenant)
-  # end
-
-  def event
-    EventView.new(reservation.event)
+  def time_slot_name
+    time_slot.time_slot_name
   end
 
   def event_name
     event.event_name
   end
 
-  # def space
-  #   SpaceView.new(reservation.space)
-  # end
+  def space_name
+    space.space_name
+  end
+
+  def tenant_name
+    tenant.tenant_name
+  end
+
+  def reservation_date
+    reservation.date
+    # I18n.l(reservation.date)
+    # reservation.date.in_time_zone(space.time_zone)
+    # Time.at(1364046539).in_time_zone("Eastern Time (US & Canada)").strftime("%m/%d/%y %I:%M %p")
+  end
+
+  def reservation_hours
+    "#{time_slot.begin_time.strftime('%H:%M')-time_slot.end_time.strftime('%H:%M')}"
+  end
+
+  # view_objects for relationships
+  def tenant
+    TenantView.new(event.tenant)
+  end
+
+  def event
+    EventView.new(reservation.event)
+  end
+
+  def space
+    SpaceView.new(reservation.space)
+  end
 
   def time_slot
     TimeSlotView.new(reservation.time_slot)
-  end
-
-  def hours_reserved
-    "#{time_slot.begin_time.strftime('%H:%M')-time_slot.end_time.strftime('%H:%M')}"
   end
 
 end

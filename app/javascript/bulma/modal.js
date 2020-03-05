@@ -26,21 +26,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // https://scotch.io/tutorials/how-to-use-the-javascript-fetch-api-to-get-data
         // https://stackoverflow.com/questions/15945278/how-to-get-json-data-from-the-urlrest-api-to-ui-using-jquery-or-java-script
-        var html = fetch(url)
+        // var html = fetch(url)
+        fetch(url)
           .then(response => response.json())
           .then(data => {
-            console.log('got it:', data);
-            document.getElementById(`${target}-body`).innerHTML =
-              `<ul><li>target: ${target}</li><li>URL: ${dataURL}</li><li>URL: ${data}</li></ul>`;
+            // return formatRequests(target, dataURL, data);
+            // Add the displayed data in the modal
+            document.getElementById(`${target}-body`).innerHTML = formatRequests(target, dataURL, data)
           })
           .catch(error => {
             console.error('An error ocurred', error); 
-            document.getElementById(`${target}-body`).innerHTML =
-              `<ul><li>target: ${target}</li><li>URL: ${dataURL}</li><li>URL: ${error}</li></ul>`;
+            // return `<ul><li>target: ${target}</li><li>URL: ${dataURL}</li><li>ERROR: ${error}</li></ul>`;
+            document.getElementById(`${target}-body`).innerHTML = 
+              `<ul><li>target: ${target}</li><li>URL: ${dataURL}</li><li>ERROR: ${error}</li></ul>`;
           });
 
-        // assign the html to the correct modal
-        // document.getElementById(`${target}-body`).innerHTML = `<ul><li>target: ${target}</li><li>URL: ${dataURL}</li><li>URL: ${html}</li></ul>`;
+        // not sure how to get a string from a promise - assign html in fetch
+        // document.getElementById(`${target}-body`).innerHTML = html
 
         // change the modal to 'is-active' - open modal
         rootEl.classList.add('is-clipped');
@@ -74,6 +76,45 @@ document.addEventListener('DOMContentLoaded', function () {
   // Functions
   function getAll(selector) {
     return Array.prototype.slice.call(document.querySelectorAll(selector), 0);
+  }
+
+  // Format Requests as Bulma HTML
+  function formatRequests(target, dataURL, jsonData) {
+    // https://codeblogmoney.com/convert-string-to-json-object-using-javascript/
+    var firstEmail = jsonData.results[0].email
+    // separate and build objects for html
+    // https://stackoverflow.com/questions/12491101/javascript-create-array-from-for-loop
+    var yearStart = 2000;
+    var yearEnd = 2010;
+    var years = [];
+    while (yearStart < yearEnd + 1) {
+      years.push(yearStart++);
+    }
+    // https://reactgo.com/javascript-loop-through-array-of-objects/
+    let users = [
+      { id: 1,
+        name: "king" },
+      { id: 2,
+        name: "john" },
+      { id: 3,
+        name: "gowtham" }
+    ]
+    // first way
+    users.forEach((user) => console.log(user.id, user.name));
+    // second way
+    for (let user of users) {
+      console.log(user.id, user.name)
+    }
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
+    years.forEach(function (year, index, years) {
+      console.log(year, index)
+    })
+    // https://www.w3schools.com/js/js_json_stringify.asp
+    var jsonString = JSON.stringify(jsonData);
+            // https://stackoverflow.com/questions/9306476/extracting-a-string-from-a-json-object
+            // var jsonData = data.getString("result");
+
+    return `<ul><li>target: ${target}</li><li>URL: ${dataURL}</li><li>1st E-mail: ${firstEmail}</li><li>Years: ${years}</li></ul><li>Data: ${jsonString}</li></ul>`;
   }
 
 });

@@ -81,37 +81,37 @@ RSpec.describe "Landing", type: :request do
       expect(response.body).to  match "#{space1.space_name}"
       expect(response.body).to  match "#{space2.space_name}"
 
+      # move to feature test
+      # # first calendar scheduled events (from previous month - disabled)
+      # expect(response.body.squish).to  match %Q(<div class="calendar-date is-disabled">
+      #                                             <button data-html="true"
+      #                                                     data-target="reservation-details"
+      #                                                     data-tooltip="#{start_event.event_name}
+      #                                                                   #{start_event.event_name}"
+      #                                                     class="date-item modal-button is-active">
+      #                                               #{end_last_month.mday}
+      #                                             </button>
+      #                                           </div>).squish
 
-      # first calendar scheduled events (from previous month - disabled)
-      expect(response.body.squish).to  match %Q(<div class="calendar-date is-disabled">
-                                                  <button data-html="true"
-                                                          data-target="reservation-details"
-                                                          data-tooltip="#{start_event.event_name}
-                                                                        #{start_event.event_name}"
-                                                          class="date-item modal-button is-active">
-                                                    #{end_last_month.mday}
-                                                  </button>
-                                                </div>).squish
+      # # calendar button for days without an event
+      # expect(response.body.squish).to  match %Q(<div class="calendar-date">
+      #                                             <button data-html="true"
+      #                                                     data-target="reservation-new"
+      #                                                     data-tooltip=""
+      #                                                     class="date-item modal-button">
+      #                                               10
+      #                                             </button>
+      #                                           </div>).squish
 
-      # calendar button for days without an event
-      expect(response.body.squish).to  match %Q(<div class="calendar-date">
-                                                  <button data-html="true"
-                                                          data-target="reservation-new"
-                                                          data-tooltip=""
-                                                          class="date-item modal-button">
-                                                    10
-                                                  </button>
-                                                </div>).squish
-
-      # second calendar shows scheduled events that are viewable (active)
-      expect(response.body.squish).to  match %Q(<div class="calendar-date">
-                                                  <button data-html="true"
-                                                          data-target="reservation-details"
-                                                          data-tooltip="#{middle_event.event_name}"
-                                                          class="date-item modal-button is-active">
-                                                    #{middle_this_month.mday}
-                                                  </button>
-                                                </div>).squish
+      # # second calendar shows scheduled events that are viewable (active)
+      # expect(response.body.squish).to  match %Q(<div class="calendar-date">
+      #                                             <button data-html="true"
+      #                                                     data-target="reservation-details"
+      #                                                     data-tooltip="#{middle_event.event_name}"
+      #                                                     class="date-item modal-button is-active">
+      #                                               #{middle_this_month.mday}
+      #                                             </button>
+      #                                           </div>).squish
     end
   end
 end

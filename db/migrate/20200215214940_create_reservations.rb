@@ -10,6 +10,8 @@ class CreateReservations < ActiveRecord::Migration[6.0]
       t.timestamps
     end
     add_index :reservations,  :date
+    # event_id is included, incase a space allows double booking
+    # then we can be sure its for two different events
     add_index :reservations, [:date, :event_id, :space_id, :time_slot_id], 
                                           unique: true, name: "index_reservation_unique"
   end
