@@ -10,13 +10,19 @@ class TimeSlotView < ViewObject
 
   # convert begin and end times for comparison?
 
-  def time_slot_name
-    time_slot_name
+  def time_slot_hours
+    "#{begin_time.strftime('%H:%M')}-#{end_time.strftime('%H:%M')}"
   end
 
   # view_objects for relationships
   def tenant
     TenantView.new(time_slot.tenant)
+  end
+
+  private
+
+  def format_time(time)
+    time.strftime('%H:%M')
   end
 
 end

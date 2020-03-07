@@ -4,7 +4,13 @@ class CalendarView
   # def self.day_of_week(date: Date.today)
   #   date.cwday
   # end
-  attr_reader :year_number
+
+  private
+  attr_reader :month_begin_date, :month_end_date,
+              :date_of_interest, :month_number
+
+  public
+  attr_reader :year_number, :month_number
 
   def initialize(date: Date.today)
     @date_of_interest   = date
@@ -33,6 +39,12 @@ class CalendarView
     next_month.strftime("%Y-%m-%d")
   end
 
+  def display_date(date)
+    return ""  if date.blank?
+
+    date.strftime("%Y-%m-%d")
+  end
+
   def date_range
     (date_first_monday..date_last_sunday)
   end
@@ -45,10 +57,17 @@ class CalendarView
     I18n.t("date.abbr_month_names")[month_number]
   end
 
+  def choose_reservations_html(space, date, reservations: [])
+    dates_reservations = reservations.select{ |r| r.date == date }
+    items = dates_reservations.map{ |r| %Q{<dl class="is-medium"><dt><b>#{r.time_slot_name}</b> (#{r.resevation_hours})</dt><dd>Event: <big><b>#{r.event_name}</b></big><br>Host: #{r.host_name.blank? ? "No one" : r.host_name}</dd></dl>} }
+
+    %Q{<div class="content is-medium">Space: <b>#{space.space_name}</b><br>Date: <b>#{display_date(date)}</b><hr><ul>#{items.join}</ul></div>}
+  end
+
   def choose_modal_form(date, reservations: [])
     # show/edit reservations in modal when there are existing reservations
     return "reservation-details" if reservations.any?{ |r| r.date == date }
-    
+
     "reservation-new"   # form to create a new reservation on other days
   end
 
@@ -85,8 +104,6 @@ class CalendarView
   end
 
   private
-  attr_reader :month_begin_date, :month_end_date,
-              :date_of_interest, :month_number
 
   def date_first_monday
     # days needed to go start on a monday

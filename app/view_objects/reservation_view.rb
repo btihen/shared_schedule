@@ -6,11 +6,11 @@ class ReservationView < ViewObject
   alias_method :reservation_path, :root_model_path
 
   # delegate to model for attributes needed
-  delegate  :date, to: :reservation
+  delegate  :date, :host, to: :reservation
 
   # methods for attribuits
   def host_name
-    event.host || ""
+    host || ""
   end
 
   def time_slot_name
@@ -30,14 +30,14 @@ class ReservationView < ViewObject
   end
 
   def reservation_date
-    reservation.date
+    # reservation.date
     # I18n.l(reservation.date)
-    # reservation.date.in_time_zone(space.time_zone)
+    reservation.date.in_time_zone(space.time_zone)
     # Time.at(1364046539).in_time_zone("Eastern Time (US & Canada)").strftime("%m/%d/%y %I:%M %p")
   end
 
-  def reservation_hours
-    "#{time_slot.begin_time.strftime('%H:%M')-time_slot.end_time.strftime('%H:%M')}"
+  def resevation_hours
+    time_slot.time_slot_hours
   end
 
   # view_objects for relationships
