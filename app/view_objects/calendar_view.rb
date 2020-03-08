@@ -79,7 +79,7 @@ class CalendarView
   end
 
   def date_item_tooltip_data(date, reservations: [])
-    max_tip_length = 20
+    max_tip_length = 15
     return ""               if reservations.none?{ |r| r.date == date }
     strings = []
     strings << reservations.select{ |r| r.date == date }
