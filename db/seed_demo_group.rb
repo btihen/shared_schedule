@@ -60,6 +60,7 @@ module SeedDemoGroup
       date_2  = date_0 + 2.days
       date_3  = date_0 + 3.days
       date_4  = date_0 + 4.days
+      date_5  = date_0 + 5.days
       event = FactoryBot.create :event, reason: reasons.sample, tenant: tenant
 
       # schedule events within spaces
@@ -67,10 +68,10 @@ module SeedDemoGroup
 
         time_slots = space.allowed_time_slots
 
-        event.reservations << Reservation.create(space: space, date: date_0, time_slot: time_slots.sample)
-        event.reservations << Reservation.create(space: space, date: date_1, time_slot: time_slots.first)
-        event.reservations << Reservation.create(space: space, date: date_1, time_slot: time_slots.second)
-        event.reservations << Reservation.create(space: space, date: date_4, time_slot: time_slots.sample)
+        event.reservations << Reservation.create(space: space, start_date: date_0, start_time_slot: time_slots.second, end_date: date_1, end_time_slot: time_slots.last)
+        event.reservations << Reservation.create(space: space, start_date: date_3, start_time_slot: time_slots.first,  end_date: date_3, end_time_slot: time_slots.first)
+        event.reservations << Reservation.create(space: space, start_date: date_3, start_time_slot: time_slots.second, end_date: date_3, end_time_slot: time_slots.second)
+        event.reservations << Reservation.create(space: space, start_date: date_5, start_time_slot: time_slots.sample, end_date: date_5, end_time_slot: time_slots.sample)
         event.save
       end
     end

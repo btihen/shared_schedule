@@ -3,64 +3,9 @@
 <%= form_for( reservation, local: true,
               url: tenant_space_reservations_path(tenant, space, reservation),
               id: "new-reservation-form", class: "reservation" ) do |form|  %>
-  <%# form_for( reservation, local: true,
-              url: tenant_space_reservation_path(reservation, tenant_id: tenant.id, space_id: space.id),
-              id: "new-reservation-form", class: "reservation" ) do |form| %>
-  <%# render 'form', form: form, reservation: reservation, space: space, spaces: spaces, tenant: tenant %>
 
-  <% if reservation.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(reservation.errors.count, "error") %> prohibited this reservation from being saved:</h2>
-
-      <ul>
-        <% reservation.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <div class="control">
-      <%= form.text_field :host, placeholder: "Host Name", class: "input" %>
-    </div>
-    <%= error_message_on(form.object, :host) %>
-  </div>
-
-  <div class="field">
-    <div class="control">
-      <%= form.date_field :date, class: "input" %>
-    </div>
-    <%= error_message_on(form.object, :date) %>
-  </div>
-
-  <div class="field">
-    <%= form.collection_select :space_id,
-                    tenant.spaces, :id, :space_name, {},
-                    {class: 'select'} %>
-    <%= error_message_on(form.object, :space_id) %>
-  </div>
-
-  <div class="field">
-    <%= form.collection_select :event_id,
-                    tenant.events, :id, :event_name, {include_blank: 'Please Select'},
-                    {class: 'select'} %>
-    <%= error_message_on(form.object, :event_id) %>
-  </div>
-
-  <div class="field">
-    <%= form.collection_select :time_slot_id,
-                    space.allowed_time_slots, :id, :time_slot_name, {include_blank: 'Please Select'},
-                    {class: 'select'} %>
-    <%= error_message_on(form.object, :space_id) %>
-  </div>
-
-  <%# form.button("Save", class: "button") %>
-  <%= form.submit("Create", class: "button") %>
-  <%# button_to "Submit", { action: "create" }, remote: true, class: "button" %>
-
+  <%= render 'form', form: form, reservation: reservation, space: space, spaces: spaces, tenant: tenant %>
 
 <% end %>
 
-<%= link_to 'Back', tenant_path(tenant) %>
 <%# link_to 'Back', tenant_path(tenant, date: Calendar.display_date(date)) %>

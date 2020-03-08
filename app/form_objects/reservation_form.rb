@@ -21,7 +21,7 @@ class ReservationForm < FormObject
   # when the model will never already stored then use the following:
   # def persisted?
   #   return true  if id.present?
-  #   return false 
+  #   return false
   # end
 
 
@@ -29,56 +29,58 @@ class ReservationForm < FormObject
   # list attributes - which accept any form (Arrays)
   # attr_accessor :event_id, :space_id, :time_slot_id
 
-  attribute :date,          :date
-  attribute :host,          :squished_string #, default: ""
-  attribute :event_id,      :integer
-  attribute :space_id,      :integer
-  attribute :time_slot_id,  :integer
-  # attribute :title,         :squished_string
-  # attribute :description,   :trimmed_text
+  attribute :end_date,            :date
+  attribute :start_date,          :date
+  attribute :end_time_slot_id,    :integer
+  attribute :start_time_slot_id,  :integer
+  attribute :event_id,            :integer
+  attribute :space_id,            :integer
+  attribute :host,                :squished_string
+  # attribute :description,         :trimmed_text
 
-  validates :date,          presence: true
-  # validates :event,         presence: true
-  # validates :space,         presence: true
-  # validates :time_slot,     presence: true
-  # validates :event_id,      presence: true
-  # validates :space_id,      presence: true
-  # validates :time_slot_id,  presence: true
+  validates :start_date,          presence: true
+  # validates :end_date,            presence: true
 
   validate :validate_event
   validate :validate_space
-  validate :validate_time_slot
-  validate :validate_time_slot_available
+  validate :validate_time_slots
+  validate :validate_dates_and_times_available
 
   # is user needed / helpful?
   def self.new_from(reservation=nil, user: GuestUser.new)
     attribs = {}
     if reservation.present?
       attribs_init = {id: reservation.id,
-                      date: reservation.date,
                       host: reservation.host,
                       event: reservation.event,
                       space: reservation.space,
-                      time_slot: reservation.time_slot}
+                      end_date: reservation.end_date,
+                      start_date: reservation.start_date,
+                      end_time_slot: reservation.end_time_slot,
+                      start_time_slot: reservation.start_time_slot}
       attribs = attribs.merge(attribs_init)
     end
     new(attribs)
   end
 
   def reservation
-    @reservation         ||= assign_reservation_attribs
+    @reservation  ||= assign_reservation_attribs
   end
 
-  def time_slot
-    @time_slot  ||= (TimeSlot.find_by(id: time_slot_id) || TimeSlot.new)
+  def start_time_slot
+    @start_time_slot  ||= (TimeSlot.find_by(id: start_time_slot_id) || TimeSlot.new)
+  end
+
+  def end_time_slot
+    @end_time_slot    ||= (TimeSlot.find_by(id: end_time_slot_id) || start_time_slot)
   end
 
   def event
-    @event      ||= (Event.find_by(id: event_id) || Event.new)
+    @event            ||= (Event.find_by(id: event_id) || Event.new)
   end
 
   def space
-    @space      ||= (Space.find_by(id: space_id) || Space.new)
+    @space            ||= (Space.find_by(id: space_id) || Space.new)
   end
 
   private
@@ -87,65 +89,77 @@ class ReservationForm < FormObject
   def assign_reservation_attribs
     # tenant_id  = user.tenant_id
     reservaion = Reservation.find_by(id: id) || Reservation.new
-    reservaion.time_slot  = time_slot
-    reservaion.event      = event
-    reservaion.space      = space
-    reservaion.date       = date
-    reservaion.host       = host
+    reservaion.start_time_slot  = start_time_slot
+    reservaion.end_time_slot    = end_time_slot
+    reservaion.event            = event
+    reservaion.space            = space
+    reservaion.start_date       = start_date
+    reservaion.end_date         = end_date || start_date
+    reservaion.host             = host
     reservaion
-  end
-
-  def validate_time_slot_available
-    # check if space allows double booking
-    # if not ensure timeslot has no overlaps on date
   end
 
   def validate_event
     return if event.valid?
 
-    # key = :event_id
-    # add_error_message(event, key)
-    # event.errors.messages[:event_id].each do |message|
-    #   errors.add(key, message)
-    # end
-
-    event.errors.each do |name, desc|
-      # rename to match form name
-      name = :event_id  if name.eql? :event
-      errors.add(name, desc)
+    event.errors.each do |_attribute_name, desc|
+      errors.add(:event_id, desc)
     end
   end
 
   def validate_space
     return if space.valid?
 
-    # key = :space_id
-    # add_error_message(space, key)
-    event.errors.each do |name, desc|
-      # rename to match form name
-      name = :space_id  if name.eql? :space
-      errors.add(name, desc)
+    event.errors.each do |_attribute_name, desc|
+      errors.add(:space_id, desc)
     end
   end
 
-  def validate_time_slot
-    return if time_slot.valid?
+  def validate_time_slots
+    return if start_time_slot.valid? && end_time_slot.valid?
 
-    # key = :time_slot_id
-    # add_error_message(time_slot, key)
-    time_slot.errors.each do |name, desc|
-      # rename to match form name
-      name = :time_slot_id  if name.eql? :time_slot
-      errors.add(name, desc)
+    start_time_slot.errors.each do |_attribute_name, desc|
+      errors.add(:start_time_slot_id, desc)
+    end
+    end_time_slot.errors.each do |_attribute_name, desc|
+      errors.add(:end_time_slot_id, desc)
     end
   end
 
-  def add_error_message(object, key)
-    return if object.errors.messages[:event_id].blank?
-
-    object.errors.messages[key].each do |message|
-      errors.add(key, message)
-    end
+  def validate_dates_and_times_available
+    # check if space allows double booking
+    # if not ensure timeslot has no overlaps on dates & times
   end
+
+  # def resevation_start_end_range
+  #   if is_event_one_time_slot?
+  #     build_date_time_range(reservation_start_date, start_time_slot.start_time,
+  #                           reservation_start_date, start_time_slot.finish_time)
+  #   elsif is_event_one_day?
+  #     build_date_time_range(reservation_start_date, start_time_slot.start_time,
+  #                           reservation_start_date, end_time_slot.finish_time)
+  #   else
+  #     build_date_time_range(reservation_start_date, start_time_slot.start_time,
+  #                           reservation_end_date, end_time_slot.finish_time)
+  #   end
+  # end
+
+  # def build_date_time_range(start_date, start_time, end_date, end_time)
+  #   (build_date_time(start_date, start_time)..build_date_time(end_date, end_time))
+  # end
+
+  # def build_date_time(date, time)
+  #   DateTime.new(date.year, date.month, date.day, time.hour, time.min)
+  # end
+
+  # def is_event_one_day?
+  #   return true   if start_date == end_date
+  #   false
+  # end
+
+  # def is_event_one_time_slot?
+  #   return true   if is_event_one_day? && (start_time_slot == end_time_slot)
+  #   false
+  # end
 
 end

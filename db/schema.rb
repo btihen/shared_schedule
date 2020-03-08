@@ -38,17 +38,21 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
 
   create_table "reservations", force: :cascade do |t|
     t.string "host"
-    t.date "date", null: false
+    t.date "end_date", null: false
+    t.date "start_date", null: false
     t.bigint "event_id", null: false
     t.bigint "space_id", null: false
-    t.bigint "time_slot_id", null: false
+    t.bigint "end_time_slot_id", null: false
+    t.bigint "start_time_slot_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["date", "event_id", "space_id", "time_slot_id"], name: "index_reservation_unique", unique: true
-    t.index ["date"], name: "index_reservations_on_date"
+    t.index ["end_date"], name: "index_reservations_on_end_date"
+    t.index ["end_time_slot_id"], name: "index_reservations_on_end_time_slot_id"
+    t.index ["event_id", "space_id", "start_date", "start_time_slot_id", "end_date", "end_time_slot_id"], name: "index_reservation_unique", unique: true
     t.index ["event_id"], name: "index_reservations_on_event_id"
     t.index ["space_id"], name: "index_reservations_on_space_id"
-    t.index ["time_slot_id"], name: "index_reservations_on_time_slot_id"
+    t.index ["start_date"], name: "index_reservations_on_start_date"
+    t.index ["start_time_slot_id"], name: "index_reservations_on_start_time_slot_id"
   end
 
   create_table "space_time_slots", force: :cascade do |t|
@@ -145,7 +149,8 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
   add_foreign_key "reasons", "tenants"
   add_foreign_key "reservations", "events"
   add_foreign_key "reservations", "spaces"
-  add_foreign_key "reservations", "time_slots"
+  add_foreign_key "reservations", "time_slots", column: "end_time_slot_id"
+  add_foreign_key "reservations", "time_slots", column: "start_time_slot_id"
   add_foreign_key "space_time_slots", "spaces"
   add_foreign_key "space_time_slots", "time_slots"
   add_foreign_key "spaces", "tenants"

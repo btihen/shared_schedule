@@ -59,24 +59,26 @@ SeedDemoGroup.create
     date_2  = date_0 + 2.days
     date_3  = date_0 + 3.days
     date_4  = date_0 + 4.days
+    date_5  = date_0 + 5.days
     event = FactoryBot.create :event, reason: reasons.sample, tenant: tenant
 
     # schedule events within spaces
     spaces.each do |space|
       # make space reservation through event
-      event.reservations << Reservation.create(space: space, date: date_0, time_slot: afternoon)
-      event.reservations << Reservation.create(space: space, date: date_1, time_slot: evening)
-      event.reservations << Reservation.create(space: space, date: date_4, time_slot: evening)
+      event.reservations << Reservation.create(space: space, start_date: date_0, start_time_slot: afternoon, end_date: date_1, end_time_slot: evening)
+      event.reservations << Reservation.create(space: space, start_date: date_3, start_time_slot: morning, end_date: date_3, end_time_slot: morning)
+      event.reservations << Reservation.create(space: space, start_date: date_3, start_time_slot: evening, end_date: date_3, end_time_slot: evening)
+      event.reservations << Reservation.create(space: space, start_date: date_5, start_time_slot: evening, end_date: date_5, end_time_slot: evening)
 
       # make event reservation through space probably most common
-      if space.is_double_booking_ok
-        event.reservations << Reservation.create(space: space, date: date_2, time_slot: morning)
-        event.reservations << Reservation.create(space: space, date: date_2, time_slot: afternoon)
+      # if space.is_double_booking_ok
+      #   event.reservations << Reservation.create(space: space, date: date_2, time_slot: morning)
+      #   event.reservations << Reservation.create(space: space, date: date_2, time_slot: afternoon)
 
-        event.reservations << Reservation.create(space: space, date: date_3,  time_slot: breakfast)
-        event.reservations << Reservation.create(space: space, date: date_3,  time_slot: lunch)
-        event.reservations << Reservation.create(space: space, date: date_3,  time_slot: dinner)
-      end
+      #   event.reservations << Reservation.create(space: space, date: date_3,  time_slot: breakfast)
+      #   event.reservations << Reservation.create(space: space, date: date_3,  time_slot: lunch)
+      #   event.reservations << Reservation.create(space: space, date: date_3,  time_slot: dinner)
+      # end
       event.save
     end
   end

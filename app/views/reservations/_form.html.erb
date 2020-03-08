@@ -1,57 +1,86 @@
-<% if reservation.errors.any? %>
-  <div id="error_explanation">
-    <h2><%= pluralize(reservation.errors.count, "error") %> prohibited this reservation from being saved:</h2>
+  <% if reservation.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(reservation.errors.count, "error") %> prohibited this reservation from being saved:</h2>
 
-    <ul>
-      <% reservation.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
+      <ul>
+        <% reservation.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :event %>
+    <div class="control">
+      <%= form.collection_select :event_id,
+                tenant.events, :id, :event_name, {include_blank: 'Please Select'},
+                {class: 'select is-rounded'} %>
+      <%= error_message_on(form.object, :event_id) %>
+    </div>
   </div>
-<% end %>
 
-<div class="field">
-  <div class="control">
-    <input class="input" type="text" placeholder="Host Name">
+  <div class="field">
+    <%= form.label :host %>
+    <div class="control">
+      <%= form.text_field :host, placeholder: "Host Name (Optional)", class: "input" %>
+      <%= error_message_on(form.object, :host) %>
+    </div>
   </div>
-  <%# error_message_on(f.object, :contact_message) %>
-</div>
 
-<div class="field">
-  <div class="control">
-  <%# binding.pry %>
-    <%= form.text_field(:host, placeholder: "Host Name", class: "input") %>
+  <div class="field">
+    <%= form.label :start_time %>
+    <div class="control">
+      <%= form.collection_select :start_time_slot_id,
+                space.allowed_time_slots, :id, :time_slot_name, {include_blank: 'Please Select'},
+                {class: 'select is-primary'} %>
+      <%= error_message_on(form.object, :space_id) %>
+    </div>
   </div>
-  <%# error_message_on(f.object, :contact_message) %>
-</div>
 
-<div class="select">
-  <select>
-    <option value="">Select</option>
-    <option value="Argentina">Argentina</option>
-    <option value="Bolivia">Bolivia</option>
-    <option value="Brazil">Brazil</option>
-    <option value="Chile">Chile</option>
-    <option value="Colombia">Colombia</option>
-    <option value="Ecuador">Ecuador</option>
-    <option value="Guyana">Guyana</option>
-    <option value="Paraguay">Paraguay</option>
-    <option value="Peru">Peru</option>
-    <option value="Suriname">Suriname</option>
-    <option value="Uruguay">Uruguay</option>
-    <option value="Venezuela">Venezuela</option>
-  </select>
-</div>
+  <div class="field">
+    <%= form.label :start_date %>
+    <div class="control">
+      <%= form.date_field :date, class: "input" %>
+      <%= error_message_on(form.object, :date) %>
+    </div>
+  </div>
 
-<h4 class="f5 lh-title">Age Groups</h4>
-<div class="measure-wide mv3">
-  <%# form.collection_select :age_group_ids,
-                  AgeGroup.active, :id, :age_group_name, {},
-                  {multiple: true, class: 'input-reset pa2 mb2 db w-100 br3 bg-black-05 ba b--light-gray black-50'} %>
-  <%# error_message_on(f.object, :age_group_ids) %>
-  <small class="f6 black-60 db mb2 mt1">to select multiple hold crtl or command and click</small>
-</div>
+  <div class="card">
+    <div class="card-content">
+    
+      <div class="field">
+        <%= form.label :end_time %>
+        <div class="control">
+          <%= form.collection_select :end_time_slot_id,
+                    space.allowed_time_slots, :id, :time_slot_name, {include_blank: 'Please Select'},
+                    {class: 'select is-primary'} %>
+          <%= error_message_on(form.object, :space_id) %>
+        </div>
+      </div>
 
-<%# form.button("Save", class: "button") %>
-<%= form.submit("Create", class: "button") %>
-<%# button_to "Submit", { action: "create" }, remote: true, class: "button" %>
+      <div class="field">
+        <%= form.label :end_date %>
+        <div class="control">
+          <%= form.date_field :date, class: "input" %>
+          <%= error_message_on(form.object, :date) %>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="field">
+      <%= form.label :space %>
+    <div class="control">
+      <%= form.collection_select :space_id,
+                tenant.spaces, :id, :space_name, {},
+                {class: 'select'} %>
+      <%= error_message_on(form.object, :space_id) %>
+    </div>
+  </div>
+
+  <%# form.button("Save", class: "button") %>
+  <%= form.submit("Save", class: "button is-info is-outlined is-light") %>
+  <%# button_to "Submit", { action: "create" }, remote: true, class: "button" %>
+  <%= link_to 'Back', tenant_path(tenant), class: 'button is-danger is-outlined' %>
