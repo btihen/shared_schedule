@@ -15,6 +15,8 @@ RSpec.describe TimeSlot, type: :model do
 
   describe "destroy records - check dependents" do
     let(:tenant)  { FactoryBot.create :tenant }
+    let(:reason1) { FactoryBot.create :reason, tenant: tenant }
+    let(:reason2) { FactoryBot.create :reason, tenant: tenant }
     let(:time1)   { FactoryBot.create :time_slot, begin_time: '08:00', end_time: '12:00', tenant: tenant }
     let(:time2)   { FactoryBot.create :time_slot, begin_time: '13:00', end_time: '17:00', tenant: tenant }
     let(:space)   { space = FactoryBot.create :space, tenant: tenant
@@ -22,21 +24,16 @@ RSpec.describe TimeSlot, type: :model do
                     space.save
                     space.reload
                   }
-    let(:event_1) { event = FactoryBot.create :event, tenant: tenant
-                    time1 = TimeSlot.first
-                    time2 = TimeSlot.last
-                    event.reservations << Reservation.create(date: Date.today, space: space, time_slot: time1)
-                    event.reservations << Reservation.create(date: Date.today, space: space, time_slot: time2)
+    let(:event_1) { event = FactoryBot.create :event, reason: reason1, tenant: tenant
+                    event.reservations << Reservation.create(space: space, start_date: Date.today, start_time_slot: time1, end_date: Date.today, end_time_slot: time1)
                     event.save
                     event.reload
                   }
-    let(:event_2) { event = FactoryBot.create :event, tenant: tenant
-                    time1 = TimeSlot.first
-                    time2 = TimeSlot.last
-                    event.reservations << Reservation.create(date: Date.tomorrow, space: space, time_slot: time1)
-                    event.reservations << Reservation.create(date: Date.yesterday, space: space, time_slot: time2)
+    let(:event_2) { event = FactoryBot.create :event, reason: reason2, tenant: tenant
+                    event.reservations << Reservation.create(space: space, start_date: Date.yesterday, start_time_slot: time2, end_date: Date.yesterday, end_time_slot: time2)
                     event.save
                     event.reload }
+
     it "#destroy_all" do
       expect(event_1).to            be
       expect(event_2).to            be
@@ -54,8 +51,8 @@ RSpec.describe TimeSlot, type: :model do
       expect(Space.all).to                  eq [space]
       expect(TimeSlot.all.pluck(:id)).to    eq [TimeSlot.last.id]
       expect(Event.all.pluck(:id).sort).to  eq [event_1.id, event_2.id].sort
-      expect(SpaceTimeSlot.all.pluck(:time_slot_id).sort).to          eq [TimeSlot.last.id]
-      expect(Reservation.all.pluck(:time_slot_id).sort).to  eq [TimeSlot.last.id]
+      expect(Reservation.all.pluck(:start_time_slot_id).sort).to  eq [TimeSlot.last.id]
+      expect(Reservation.all.pluck(:end_time_slot_id).sort).to    eq [TimeSlot.last.id]
     end
   end
 

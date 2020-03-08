@@ -13,7 +13,7 @@ RSpec.describe Event, type: :model do
     it { is_expected.to belong_to(:reason) }
     it { is_expected.to belong_to(:tenant) }
     it { is_expected.to have_many(:spaces).through(:reservations) }
-    it { is_expected.to have_many(:reserved_time_slots).through(:reservations) }
+    # it { is_expected.to have_many(:reserved_time_slots).through(:reservations) }
   end
 
   describe "destroy records - check dependents" do
@@ -28,12 +28,12 @@ RSpec.describe Event, type: :model do
                     space.reload
                   }
     let(:event_1) { event = FactoryBot.create :event, reason: reason1, tenant: tenant
-                    event.reservations << Reservation.create(date: Date.today, space: space, time_slot: time1)
+                    event.reservations << Reservation.create(space: space, start_date: Date.today, start_time_slot: time1, end_date: Date.today, end_time_slot: time1)
                     event.save
                     event.reload
                   }
     let(:event_2) { event = FactoryBot.create :event, reason: reason2, tenant: tenant
-                    event.reservations << Reservation.create(date: Date.yesterday, space: space, time_slot: time2)
+                    event.reservations << Reservation.create(space: space, start_date: Date.yesterday, start_time_slot: time2, end_date: Date.yesterday, end_time_slot: time2)
                     event.save
                     event.reload }
     it "#destroy_all" do
@@ -55,8 +55,8 @@ RSpec.describe Event, type: :model do
       expect(Event.all.pluck(:id)).to               eq [event_2.id].sort
       expect(Reason.all.pluck(:id).sort).to         eq [reason1.id, reason2.id]
       expect(TimeSlot.all.pluck(:id)).to            eq [TimeSlot.first.id, TimeSlot.last.id]
-      expect(SpaceTimeSlot.all.pluck(:time_slot_id).sort).to          eq [TimeSlot.first.id, TimeSlot.last.id]
-      expect(Reservation.all.pluck(:time_slot_id).sort).to  eq [TimeSlot.last.id]
+      expect(Reservation.all.pluck(:start_time_slot_id).sort).to    eq [TimeSlot.last.id]
+      expect(Reservation.all.pluck(:end_time_slot_id).sort).to      eq [TimeSlot.last.id]
     end
   end
 

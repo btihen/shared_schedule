@@ -13,10 +13,7 @@ RSpec.describe Space, type: :model do
     it { is_expected.to belong_to(:tenant) }
     it { is_expected.to have_many(:events).
                         through(:reservations) }
-    it { is_expected.to have_many(:reserved_time_slots).
-                        through(:reservations) }
-    it { is_expected.to have_many(:allowed_time_slots).
-                        through(:space_time_slots) }
+    it { is_expected.to have_many(:allowed_time_slots).through(:space_time_slots) }
   end
 
   describe "destroy records - check dependents" do
@@ -36,14 +33,14 @@ RSpec.describe Space, type: :model do
                     space.reload
                   }
     let(:event1)  { event = FactoryBot.create :event, reason: reason1, tenant: tenant
-                    event.reservations << Reservation.create(date: Date.today, space: space1, time_slot: time1)
-                    event.reservations << Reservation.create(date: Date.today, space: space2, time_slot: time2)
+                    event.reservations << Reservation.create(space: space1, start_date: Date.today, start_time_slot: time1, end_date: Date.today, end_time_slot: time1)
+                    event.reservations << Reservation.create(space: space2, start_date: Date.today, start_time_slot: time2, end_date: Date.today, end_time_slot: time2)
                     event.save
                     event.reload
                   }
     let(:event2)  { event = FactoryBot.create :event, reason: reason2, tenant: tenant
-                    event.reservations << Reservation.create(date: Date.tomorrow, space: space1, time_slot: time1)
-                    event.reservations << Reservation.create(date: Date.yesterday, space: space2, time_slot: time2)
+                    event.reservations << Reservation.create(space: space1, start_date: Date.tomorrow, start_time_slot: time1, end_date: Date.tomorrow, end_time_slot: time1)
+                    event.reservations << Reservation.create(space: space2, start_date: Date.yesterday, start_time_slot: time2, end_date: Date.yesterday, end_time_slot: time2)
                     event.save
                     event.reload }
     it "#destroy_all" do

@@ -5,7 +5,8 @@ class Event < ApplicationRecord
 
   has_many :reservations, inverse_of: :event, dependent: :destroy
   has_many :spaces, through: :reservations, source: :space
-  has_many :reserved_time_slots, through: :reservations, source: :time_slot
+  # has_many :reserved_time_slots, through: :reservations, source: :time_slot
+  # has_many :reserved_time_slots, through: :reservations, source: :time_slot
 
   validates :reason,     presence: true
   validates :tenant,     presence: true
