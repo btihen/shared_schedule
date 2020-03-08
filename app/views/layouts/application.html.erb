@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <!--
+      Modal JS solution when 'back' button needs JS reload
+      https://github.com/turbolinks/turbolinks#ensuring-specific-pages-trigger-a-full-reload
+      https://stackoverflow.com/questions/39627881/jquery-plugin-initialization-on-browser-back-button-for-turbolinks-rails-5/39801052
+      put the following at the top of a recieving page - that needs JS reload for 'back' button
+      <%# content_for :head do %>
+        <meta name="turbolinks-visit-control" content="reload">
+      <%# end %>
+    -->
+    <% if content_for?(:head) %>
+      <%= yield(:head) %>
+    <% end %>
+
     <title>SharedSpaces</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
