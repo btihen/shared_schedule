@@ -8,6 +8,10 @@ class TenantView < ViewObject
   # delegate to model for attributes needed
   delegate  :tenant_name, to: :tenant
 
+  def is_demo?
+    tenant.tenant_name == "DemoGroup"
+  end
+
   # attributes that allow nils
   def tenant_logo_url
     tenant.tenant_logo_url || "https://placeimg.com/80/80/arch/sepia"

@@ -103,6 +103,10 @@ class CalendarView
     date.month == month_number
   end
 
+  def date_has_reservation?(date, reservations: [])
+    reservations.any?{ |r| r.date == date }
+  end
+
   private
 
   def date_first_monday

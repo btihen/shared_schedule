@@ -1,34 +1,57 @@
-<%= form_with(model: space, local: true) do |form| %>
-  <% if space.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(space.errors.count, "error") %> prohibited this space from being saved:</h2>
+<% if reservation.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= pluralize(reservation.errors.count, "error") %> prohibited this reservation from being saved:</h2>
 
-      <ul>
-        <% space.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= form.submit %>
+    <ul>
+      <% reservation.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
   </div>
 <% end %>
 
-<div id="reservation-form" class="modal">
-  <div class="modal-background"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">Edit Reservation</p>
-      <button class="delete" aria-label="close"></button>
-    </header>
-    <section class="modal-card-body">
-      Edit Form
-    </section>
-    <footer class="modal-card-foot">
-      <button class="button is-success">Save changes</button>
-      <button class="button">Cancel</button>
-    </footer>
+<div class="field">
+  <div class="control">
+    <input class="input" type="text" placeholder="Host Name">
   </div>
+  <%# error_message_on(f.object, :contact_message) %>
 </div>
+
+<div class="field">
+  <div class="control">
+  <%# binding.pry %>
+    <%= form.text_field(:host, placeholder: "Host Name", class: "input") %>
+  </div>
+  <%# error_message_on(f.object, :contact_message) %>
+</div>
+
+<div class="select">
+  <select>
+    <option value="">Select</option>
+    <option value="Argentina">Argentina</option>
+    <option value="Bolivia">Bolivia</option>
+    <option value="Brazil">Brazil</option>
+    <option value="Chile">Chile</option>
+    <option value="Colombia">Colombia</option>
+    <option value="Ecuador">Ecuador</option>
+    <option value="Guyana">Guyana</option>
+    <option value="Paraguay">Paraguay</option>
+    <option value="Peru">Peru</option>
+    <option value="Suriname">Suriname</option>
+    <option value="Uruguay">Uruguay</option>
+    <option value="Venezuela">Venezuela</option>
+  </select>
+</div>
+
+<h4 class="f5 lh-title">Age Groups</h4>
+<div class="measure-wide mv3">
+  <%# form.collection_select :age_group_ids,
+                  AgeGroup.active, :id, :age_group_name, {},
+                  {multiple: true, class: 'input-reset pa2 mb2 db w-100 br3 bg-black-05 ba b--light-gray black-50'} %>
+  <%# error_message_on(f.object, :age_group_ids) %>
+  <small class="f6 black-60 db mb2 mt1">to select multiple hold crtl or command and click</small>
+</div>
+
+<%# form.button("Save", class: "button") %>
+<%= form.submit("Create", class: "button") %>
+<%# button_to "Submit", { action: "create" }, remote: true, class: "button" %>

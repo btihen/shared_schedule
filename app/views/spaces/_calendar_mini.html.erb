@@ -28,35 +28,26 @@
       <div class="calendar-body">
         <% calendar.date_range.each do |day| %>
           <div class="<%= calendar.date_class_string(day) %>">
-            <button data-html="true"
-                    data-href="https://randomuser.me/api/?results=10"
-                    data-modal="<%= calendar.choose_reservations_html(space, day, reservations: space.reservations) %>"
-                    data-target="<%= calendar.choose_modal_form(day, reservations: space.reservations) %>"
-                    data-tooltip="<%= calendar.date_item_tooltip_data(day, reservations: space.reservations) %>"
-                    class="date-item <%= calendar.date_item_class_string(day, reservations: space.reservations) %>">
+            <% if calendar.date_has_reservation?(day, reservations: space.reservations) %>
+              <button data-html="true"
+                      data-href="https://randomuser.me/api/?results=10"
+                      data-modal="<%= calendar.choose_reservations_html(space, day, reservations: space.reservations) %>"
+                      data-target="<%= calendar.choose_modal_form(day, reservations: space.reservations) %>"
+                      data-tooltip="<%= calendar.date_item_tooltip_data(day, reservations: space.reservations) %>"
+                      class="date-item <%= calendar.date_item_class_string(day, reservations: space.reservations) %>">
+                <%= day.mday %>
+              </button>
+            <% elsif tenant.is_demo? && calendar.date_in_month_of_interest?(day) %>
+              <%= link_to day.mday, 
+                          new_tenant_space_reservation_path(tenant_id: tenant.id, space_id: space.id, date: calendar.display_date(day)), 
+                          class: "button is-light" %>
+            <% else %>
               <%= day.mday %>
-            </button>
+            <% end %>
           </div>
         <% end %>
       </div>
     </div>
-  </div>
-</div>
-
-<div id="reservation-new" class="modal">
-  <div class="modal-background"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">New Reservation</p>
-      <button class="delete" aria-label="close"></button>
-    </header>
-    <section id="reservation-new-body" class="modal-card-body">
-      New Reservation Form
-    </section>
-    <footer class="modal-card-foot">
-      <button class="button is-success">Save</button>
-      <button class="button">Dismiss</button>
-    </footer>
   </div>
 </div>
 

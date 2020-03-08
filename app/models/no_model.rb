@@ -2,13 +2,18 @@
 
 # keep views simple - when an object is nil at least return "" in view
 class NoModel
+
   def to_s
     ""
   end
+
+  # ensure unexpected calls return ""
   def method_missing(m, *args, &block)
     ""
   end
+
   def respond_to?(method_name, include_private = false)
     true
   end
+
 end

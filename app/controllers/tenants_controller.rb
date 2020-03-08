@@ -9,10 +9,11 @@ class TenantsController < ApplicationController
   end
 
   def show
-    # restrict to user ID and Demo
+    user          = current_user || GuestUser.new
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
     calendar_view = CalendarView.new(date: date)
     tenant        = Tenant.find(params[:id])
+    # not_auhorized unless tenant.is_publicly_viewable? || tenant.id == user.tenant_id
     tenant_view   = TenantView.new(tenant)
     spaces        = tenant.spaces.all
     space_views   = SpaceView.collection(spaces)

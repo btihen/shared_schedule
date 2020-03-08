@@ -1,6 +1,7 @@
 class LandingController < ApplicationController
 
   def index
+    user          = current_user || GuestUser.new
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
     calendar_view = CalendarView.new(date: date)
     tenant        = Tenant.find_by(tenant_name: "DemoGroup")
