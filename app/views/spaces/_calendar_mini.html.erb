@@ -40,7 +40,7 @@
             <% elsif tenant.is_demo? && calendar.date_in_month_of_interest?(day) %>
               <%= link_to day.mday, 
                           new_tenant_space_reservation_path(tenant_id: tenant.id, space_id: space.id, date: calendar.display_date(day)), 
-                          class: "button is-light" %>
+                          class: "date-item button is-light" %>
             <% else %>
               <%= day.mday %>
             <% end %>
