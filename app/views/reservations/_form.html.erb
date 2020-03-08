@@ -10,77 +10,102 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :event %>
-    <div class="control">
-      <%= form.collection_select :event_id,
-                tenant.events, :id, :event_name, {include_blank: 'Please Select'},
-                {class: 'select is-rounded'} %>
-      <%= error_message_on(form.object, :event_id) %>
-    </div>
-  </div>
-
-  <div class="field">
-    <%= form.label :host %>
-    <div class="control">
-      <%= form.text_field :host, placeholder: "Host Name (Optional)", class: "input" %>
-      <%= error_message_on(form.object, :host) %>
-    </div>
-  </div>
-
-  <div class="field">
-    <%= form.label :start_time %>
-    <div class="control">
-      <%= form.collection_select :start_time_slot_id,
-                space.allowed_time_slots, :id, :time_slot_name, {include_blank: 'Please Select'},
-                {class: 'select is-primary'} %>
-      <%= error_message_on(form.object, :space_id) %>
-    </div>
-  </div>
-
-  <div class="field">
-    <%= form.label :start_date %>
-    <div class="control">
-      <%= form.date_field :date, class: "input" %>
-      <%= error_message_on(form.object, :date) %>
-    </div>
-  </div>
-
   <div class="card">
     <div class="card-content">
-    
-      <div class="field">
-        <%= form.label :end_time %>
-        <div class="control">
-          <%= form.collection_select :end_time_slot_id,
-                    space.allowed_time_slots, :id, :time_slot_name, {include_blank: 'Please Select'},
-                    {class: 'select is-primary'} %>
-          <%= error_message_on(form.object, :space_id) %>
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">Event</div>
+        <div class="field-body">
+          <div class="field has-addons is-grouped is-grouped-multiline">
+            <div class="control">
+              <%= form.collection_select :event_id,
+                        tenant.events, :id, :event_name, {include_blank: 'Select Event'},
+                        {class: 'select is-rounded is-danger'} %>
+              <p class="help is-danger">Event is Required</p>
+              <%# error_message_on(form.object, :event_id) %>
+            </div>
+            <div class="control is-expanded has-icons-left">
+              <%= form.text_field :host, placeholder: "Host (Optional)", class: "input" %>
+              <span class="icon is-small is-left">
+                <i class="fas fa-user"></i>
+              </span>
+              <p class="help">Host is optional</p>
+              <%# error_message_on(form.object, :host) %>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="field">
-        <%= form.label :end_date %>
-        <div class="control">
-          <%= form.date_field :date, class: "input" %>
-          <%= error_message_on(form.object, :date) %>
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">Space</div>
+        <div class="field-body">
+          <div class="field">
+            <div class="control">
+              <%= form.collection_select :space_id,
+                        tenant.spaces, :id, :space_name, {},
+                        {class: 'select space'} %>
+              <p class="help is-danger">Room/Space is required</p>
+              <%= error_message_on(form.object, :space_id) %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">Start Info</div>
+        <div class="field-body">
+          <div class="field has-addons is-grouped is-grouped-multiline">
+            <div class="control">
+              <%= form.date_field :start_date, class: "input" %>
+              <p class="help is-danger">Start-Date is required</p>
+              <%= error_message_on(form.object, :date) %>
+            </div>
+            <div class="control is-expanded">
+              <%= form.collection_select :start_time_slot_id,
+                        space.allowed_time_slots, :id, :time_slot_name, {include_blank: 'Please Select'},
+                        {class: 'select'} %>
+              <p class="help is-danger">Timeslot is required</p>
+              <%= error_message_on(form.object, :space_id) %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">End Info (Optional)</div>
+        <div class="field-body">
+          <div class="field has-addons is-grouped is-grouped-multiline">
+            <div class="control">
+              <%= form.date_field :end_date, class: "input" %>
+              <p class="help">When empty same as start</p>
+              <%= error_message_on(form.object, :date) %>
+            </div>
+
+            <div class="control is-expanded">
+              <%= form.collection_select :end_time_slot_id,
+                        space.allowed_time_slots, :id, :time_slot_name, {include_blank: 'Please Select'},
+                        {class: 'select'} %>
+              <p class="help">Timeslot (optional)</p>
+              <%= error_message_on(form.object, :space_id) %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field is-horizontal">
+        <div class="field-label is-normal"></div>
+        <div class="field-body">
+          <div class="field is-grouped is-grouped-multiline">
+            <div class="control">
+              <%= form.submit("Save", class: "button is-link is-info is-outlined is-light") %>
+            </div>
+            <div class="control">
+              <%= link_to 'Back', tenant_path(tenant), class: 'button is-link is-danger is-outlined' %>
+            </div>
+          </div>
+          <%# form.button("Save", class: "button") %>
+          <%# button_to "Submit", { action: "create" }, remote: true, class: "button" %>
         </div>
       </div>
 
     </div>
   </div>
-
-  <div class="field">
-      <%= form.label :space %>
-    <div class="control">
-      <%= form.collection_select :space_id,
-                tenant.spaces, :id, :space_name, {},
-                {class: 'select'} %>
-      <%= error_message_on(form.object, :space_id) %>
-    </div>
-  </div>
-
-  <%# form.button("Save", class: "button") %>
-  <%= form.submit("Save", class: "button is-info is-outlined is-light") %>
-  <%# button_to "Submit", { action: "create" }, remote: true, class: "button" %>
-  <%= link_to 'Back', tenant_path(tenant), class: 'button is-danger is-outlined' %>

@@ -31,7 +31,7 @@ class ReservationsController < ApplicationController
     space_views   = SpaceView.collection(spaces)
     # not_auhorized unless tenant.is_publicly_viewable? || tenant.id == user.tenant_id
     # not_auhorized unless space.tenant.id == user.tenant_id
-    reservation   = Reservation.new(space: space, date: date)
+    reservation   = Reservation.new(space: space, start_date: date)
     reservation_form = ReservationForm.new_from(reservation)
     respond_to do |format|
       format.html { render 'reservations/new', locals: {space: space_view,
@@ -43,7 +43,6 @@ class ReservationsController < ApplicationController
   end
 
   def create
-    binding.pry
     attributes       = reservation_params #.merge(sponsor_id: current_user.id)
     reservation_form = ReservationForm.new(attributes)
 
@@ -65,7 +64,7 @@ class ReservationsController < ApplicationController
       reservation.save!
 
       flash[:notice] = "#{reservation.event.event_name} initiative was successfully created."
-      redirect_to tenant_space_path(tenant, space)
+      redirect_to tenant_path(tenant)
     else
       respond_to do |format|
         flash[:alert] = 'Please fix the form errors'
@@ -80,6 +79,8 @@ class ReservationsController < ApplicationController
   private
     # Only allow a list of trusted parameters through.
     def reservation_params
-      params.require(:reservation).permit(:host, :date, :event_id, :space_id, :time_slot_id)
+      params.require(:reservation)
+            .permit(:host, :event_id, :space_id, :start_date, :end_date,
+                    :start_time_slot_id, :end_time_slot_id)
     end
 end

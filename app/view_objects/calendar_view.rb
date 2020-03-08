@@ -57,32 +57,37 @@ class CalendarView
     I18n.t("date.abbr_month_names")[month_number]
   end
 
-  def choose_reservations_html(space, date, reservations: [])
-    dates_reservations = reservations.select{ |r| r.date == date }
-    items = dates_reservations.map{ |r| %Q{<dl class="is-medium"><dt><b>#{r.time_slot_name}</b> (#{r.resevation_hours})</dt><dd>Event: <big><b>#{r.event_name}</b></big><br>Host: #{r.host_name.blank? ? "No one" : r.host_name}</dd></dl>} }
+  def choose_reservations_html(space, date, reservations = [])
+    # dates_reservations = reservations.select{ |r| r.date == date }
+# binding.pry  if date.day == 9
+    dates_reservations = reservations.select{ |r| r.date_range.include?(date) }
+    # dates_reservations = reservations.select{ |r| (r.start_date == date) || (r.end_date == date) }
+
+    items = dates_reservations.map{ |r| %Q{<dl class="is-medium"><dt>#{r.date_range_string}</dt><dd>Event: <big><b>#{r.event_name}</b></big><br>Host: #{r.host_name.blank? ? "No one" : r.host_name}</dd></dl>} }
 
     %Q{<div class="content is-medium">Space: <b>#{space.space_name}</b><br>Date: <b>#{display_date(date)}</b><hr><ul>#{items.join}</ul></div>}
   end
 
-  def choose_modal_form(date, reservations: [])
+  def choose_modal_form(date, reservations = [])
     # show/edit reservations in modal when there are existing reservations
-    return "reservation-details" if reservations.any?{ |r| r.date == date }
+    return "reservation-details" if date_has_reservation?(date, reservations)
+    # return "reservation-details" if reservations.any?{ |r| (r.start_date == date) || (r.end_date == date) }
 
     "reservation-new"   # form to create a new reservation on other days
   end
 
-  def date_item_class_string(date, reservations: [])
+  def date_item_class_string(date, reservations = [])
     strings = ["modal-button"]
     strings << "is-today"   if date == Date.today
-    strings << "is-active"  if reservations.any?{ |r| r.date == date }
+    strings << "is-active"  if date_has_reservation?(date, reservations)
     strings.join(" ")
   end
 
-  def date_item_tooltip_data(date, reservations: [])
+  def date_item_tooltip_data(date, reservations = [])
     max_tip_length = 15
-    return ""               if reservations.none?{ |r| r.date == date }
+    return ""               if date_without_reservation?(date, reservations)
     strings = []
-    strings << reservations.select{ |r| r.date == date }
+    strings << reservations.select{ |r| r.date_range.include?(date) }
                             .map{ |r| r.event_name.truncate(max_tip_length) }
     strings.join("\n")      # css hover::after needs 'white-space: pre-wrap;'
   end
@@ -103,8 +108,15 @@ class CalendarView
     date.month == month_number
   end
 
-  def date_has_reservation?(date, reservations: [])
-    reservations.any?{ |r| r.date == date }
+  def date_without_reservation?(date, reservations = [])
+    !date_has_reservation?(date, reservations)
+  end
+
+  def date_has_reservation?(date, reservations = [])
+    return false if reservations.blank?
+# binding.pry  if date.day == 9
+    reservations.any?{ |r| r.date_range.include?(date) }
+    # reservations.any?{ |r| (r.start_date == date) || (r.end_date == date) }
   end
 
   private

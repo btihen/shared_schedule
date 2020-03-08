@@ -18,41 +18,35 @@ RSpec.describe "RootPath", type: :request do
   let(:space1)            { space = FactoryBot.create :space, space_name: 'Space 1',   tenant: tenant
                             space.allowed_time_slots << [morning, brunch, afternoon, evening]
                             space.save
-                            space.reload
-                          }
+                            space.reload }
   let(:space2)            { space = FactoryBot.create :space, space_name: 'Space 2',   tenant: tenant
                             space.allowed_time_slots << [morning, brunch, afternoon, evening]
                             space.save
-                            space.reload
-                          }
+                            space.reload }
   let(:start_event)       { event = FactoryBot.create :event, event_name: "Event 1", reason: reason1, tenant: tenant
-                            event.reservations << Reservation.create(date: end_last_month,   space: space1, time_slot: brunch)
-                            event.reservations << Reservation.create(date: end_last_month,   space: space1, time_slot: evening)
-                            event.reservations << Reservation.create(date: start_this_month, space: space1, time_slot: morning)
-                            event.reservations << Reservation.create(date: start_this_month, space: space1, time_slot: afternoon)
-                            event.reservations << Reservation.create(date: start_this_month, space: space1, time_slot: evening)
+                            event.reservations << Reservation.create(space: space1, start_date: end_last_month,   start_time_slot: brunch,    end_date: end_last_month,   end_time_slot: brunch)
+                            event.reservations << Reservation.create(space: space1, start_date: end_last_month,   start_time_slot: evening,   end_date: end_last_month,   end_time_slot: evening)
+                            event.reservations << Reservation.create(space: space1, start_date: start_this_month, start_time_slot: morning,   end_date: start_this_month, end_time_slot: morning)
+                            event.reservations << Reservation.create(space: space1, start_date: start_this_month, start_time_slot: afternoon, end_date: start_this_month, end_time_slot: afternoon)
+                            event.reservations << Reservation.create(space: space1, start_date: start_this_month, start_time_slot: evening,   end_date: start_this_month, end_time_slot: evening)
                             event.save
-                            event.reload
-                          }
+                            event.reload }
   let(:middle_event)      { event = FactoryBot.create :event, event_name: "Event 2", reason: reason2, tenant: tenant
-                            event.reservations << Reservation.create(date: middle_this_month - 1.day, space: space2, time_slot: evening)
-                            event.reservations << Reservation.create(date: middle_this_month,         space: space2, time_slot: evening)
-                            event.reservations << Reservation.create(date: middle_this_month + 1.day, space: space2, time_slot: morning)
-                            event.reservations << Reservation.create(date: middle_this_month + 1.day, space: space2, time_slot: afternoon)
-                            event.reservations << Reservation.create(date: middle_this_month + 1.day, space: space2, time_slot: evening)
+                            event.reservations << Reservation.create(space: space2, start_date: middle_this_month - 1.day, start_time_slot: evening,   end_date: middle_this_month - 1.day, end_time_slot: evening)
+                            event.reservations << Reservation.create(space: space2, start_date: middle_this_month,         start_time_slot: evening,   end_date: middle_this_month,         end_time_slot: evening)
+                            event.reservations << Reservation.create(space: space2, start_date: middle_this_month + 1.day, start_time_slot: morning,   end_date: middle_this_month + 1.day, end_time_slot: morning)
+                            event.reservations << Reservation.create(space: space2, start_date: middle_this_month + 1.day, start_time_slot: afternoon, end_date: middle_this_month + 1.day, end_time_slot: afternoon)
+                            event.reservations << Reservation.create(space: space2, start_date: middle_this_month + 1.day, start_time_slot: evening,   end_date: middle_this_month + 1.day, end_time_slot: evening)
                             event.save
-                            event.reload
-                          }
+                            event.reload }
   let(:end_event)         { event = FactoryBot.create :event, event_name: "Event 3", reason: reason2, tenant: tenant
-                            event.reservations << Reservation.create(date: end_this_month,   space: space1, time_slot: brunch)
-                            event.reservations << Reservation.create(date: end_this_month,   space: space1, time_slot: evening)
-                            event.reservations << Reservation.create(date: start_next_month, space: space1, time_slot: morning)
-                            event.reservations << Reservation.create(date: start_next_month, space: space1, time_slot: afternoon)
-                            event.reservations << Reservation.create(date: start_next_month, space: space1, time_slot: evening)
+                            event.reservations << Reservation.create(space: space1, start_date: end_this_month,   start_time_slot: brunch,    end_date: end_this_month,   end_time_slot: brunch)
+                            event.reservations << Reservation.create(space: space1, start_date: end_this_month,   start_time_slot: evening,   end_date: end_this_month,   end_time_slot: evening)
+                            event.reservations << Reservation.create(space: space1, start_date: start_next_month, start_time_slot: morning,   end_date: start_next_month, end_time_slot: morning)
+                            event.reservations << Reservation.create(space: space1, start_date: start_next_month, start_time_slot: afternoon, end_date: start_next_month, end_time_slot: afternoon)
+                            event.reservations << Reservation.create(space: space1, start_date: start_next_month, start_time_slot: evening,   end_date: start_next_month, end_time_slot: evening)
                             event.save
-                            event.reload
-                          }
-
+                            event.reload }
   describe "GET /" do
     it "shows landing page without DemoGroup" do
       get root_path

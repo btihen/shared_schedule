@@ -65,7 +65,7 @@ SeedDemoGroup.create
     # schedule events within spaces
     spaces.each do |space|
       # make space reservation through event
-      event.reservations << Reservation.create(space: space, start_date: date_0, start_time_slot: afternoon, end_date: date_1, end_time_slot: evening)
+      event.reservations << Reservation.create(space: space, start_date: date_0, start_time_slot: afternoon, end_date: date_2, end_time_slot: evening)
       event.reservations << Reservation.create(space: space, start_date: date_3, start_time_slot: morning, end_date: date_3, end_time_slot: morning)
       event.reservations << Reservation.create(space: space, start_date: date_3, start_time_slot: evening, end_date: date_3, end_time_slot: evening)
       event.reservations << Reservation.create(space: space, start_date: date_5, start_time_slot: evening, end_date: date_5, end_time_slot: evening)

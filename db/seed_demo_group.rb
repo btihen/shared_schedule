@@ -68,7 +68,7 @@ module SeedDemoGroup
 
         time_slots = space.allowed_time_slots
 
-        event.reservations << Reservation.create(space: space, start_date: date_0, start_time_slot: time_slots.second, end_date: date_1, end_time_slot: time_slots.last)
+        event.reservations << Reservation.create(space: space, start_date: date_0, start_time_slot: time_slots.second, end_date: date_2, end_time_slot: time_slots.last)
         event.reservations << Reservation.create(space: space, start_date: date_3, start_time_slot: time_slots.first,  end_date: date_3, end_time_slot: time_slots.first)
         event.reservations << Reservation.create(space: space, start_date: date_3, start_time_slot: time_slots.second, end_date: date_3, end_time_slot: time_slots.second)
         event.reservations << Reservation.create(space: space, start_date: date_5, start_time_slot: time_slots.sample, end_date: date_5, end_time_slot: time_slots.sample)

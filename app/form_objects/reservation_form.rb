@@ -2,12 +2,14 @@ class ReservationForm < FormObject
 
   # alias_method :reservation, :root_model
 
-  delegate :id, :date, :host, :event, :space, :time_slot,
-            :persisted?,    to: :reservation,  allow_nil: true
+  delegate :id, :host, :event, :space, :start_date, :end_date,
+            :start_time_slot, :end_time_slot, :persisted?,
+            to: :reservation,  allow_nil: true
 
   # All the models that are apart of our form should be part attr_accessor.
   # This allows the form to be initialized with existing instances.
-  attr_accessor :id, :date, :host, :event, :space, :time_slot
+  attr_accessor :id, :start_date, :end_date, :host, :event,
+                :space, :start_time_slot, :end_time_slot
 
   def self.model_name
     ActiveModel::Name.new(self, nil, 'Reservation')
@@ -88,15 +90,16 @@ class ReservationForm < FormObject
   # consider moving to InitiativeServices::SaveInitiative
   def assign_reservation_attribs
     # tenant_id  = user.tenant_id
-    reservaion = Reservation.find_by(id: id) || Reservation.new
-    reservaion.start_time_slot  = start_time_slot
-    reservaion.end_time_slot    = end_time_slot
-    reservaion.event            = event
-    reservaion.space            = space
-    reservaion.start_date       = start_date
-    reservaion.end_date         = end_date || start_date
-    reservaion.host             = host
-    reservaion
+binding.pry
+    reservation = Reservation.find_by(id: id) || Reservation.new
+    reservation.start_time_slot  = start_time_slot
+    reservation.end_time_slot    = end_time_slot
+    reservation.event            = event
+    reservation.space            = space
+    reservation.start_date       = start_date
+    reservation.end_date         = (end_date.blank? ? start_date : end_date)
+    reservation.host             = host
+    reservation
   end
 
   def validate_event
@@ -130,6 +133,43 @@ class ReservationForm < FormObject
     # check if space allows double booking
     # if not ensure timeslot has no overlaps on dates & times
   end
+
+  # def reservation_end_date
+  #   # reservation.date
+  #   # I18n.l(reservation.date)
+  #   reservation.end_date.in_time_zone(space.time_zone)
+  #   # Time.at(1364046539).in_time_zone("Eastern Time (US & Canada)").strftime("%m/%d/%y %I:%M %p")
+  # end
+
+  # def reservation_start_date
+  #   # reservation.date
+  #   # I18n.l(reservation.date)
+  #   reservation.start_date.in_time_zone(space.time_zone)
+  #   # Time.at(1364046539).in_time_zone("Eastern Time (US & Canada)").strftime("%m/%d/%y %I:%M %p")
+  # end
+
+
+  # def date_time_range
+  #   if is_event_one_time_slot?
+  #     build_date_time_range(start_date, start_time_slot.begin_time,
+  #                           start_date, start_time_slot.end_time)
+  #   elsif is_event_one_day?
+  #     build_date_time_range(start_date, start_time_slot.begin_time,
+  #                           start_date, end_time_slot.end_time)
+  #   else
+  #     build_date_time_range(start_date, start_time_slot.begin_time,
+  #                           end_date,   end_time_slot.end_time)
+  #   end
+  # end
+
+  # def build_date_time_range(start_date, start_time, end_date, end_time)
+  #   (build_date_time(start_date, start_time)..build_date_time(end_date, end_time))
+  # end
+
+  # def build_date_time(date, time)
+  #   DateTime.new(date.year, date.month, date.day, time.hour, time.min)
+  # end
+
 
   # def resevation_start_end_range
   #   if is_event_one_time_slot?
