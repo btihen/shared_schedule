@@ -27,8 +27,6 @@
   </head>
 
   <body style="background-color:AliceBlue;">
-    <p class="notice" id="notice"><%= notice %></p>
-    <p class="alert"  id="alert"><%= alert %></p>
 
     <nav class="navbar is-light" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
@@ -93,10 +91,15 @@
       </div>
     </nav>
 
+    <% if notice.present? %>
+      <p class="notification is-success" id="notice"><%= notice %></p>
+    <% end %>
+    <% if alert.present? %>
+      <p class="notification is-danger"  id="alert"><%= alert %></p>
+    <% end %>
+
     <section class="section">
       <div class="container is-fluid">
-        <p class="notice"><%= notice %></p>
-        <p class="alert"><%= alert %></p>
         <%= yield %>
       </div>
     </section>
