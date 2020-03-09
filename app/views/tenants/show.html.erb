@@ -1,18 +1,40 @@
-<h1 class="title"><%= tenant.tenant_name %></h1>
+<% content_for :head do %>
+  <!--
+  https://github.com/turbolinks/turbolinks#ensuring-specific-pages-trigger-a-full-reload
+  https://stackoverflow.com/questions/39627881/jquery-plugin-initialization-on-browser-back-button-for-turbolinks-rails-5/39801052
+  -->
+  <meta name="turbolinks-visit-control" content="reload">
+<% end %>
 
-<div class="columns is-multiline">
-<% tenant.spaces.each do |space| %>
-  <div class="column is-half-desktop is-one-third-fullhd is-centered">
-    <p class="title is-4"><%= link_to "#{space.space_name}",
+<p hidden id='tenant_show_<%= tenant.id %>' class='pageName'>tenant_show_<%= tenant.id %></p>
+
+<div class="container">
+
+  <p class="title is-3">
+    <%= tenant.tenant_name %>
+  </p>
+  <p class="subtitle is-5">
+    <%= tenant.tenant_tagline %>
+  </p>
+  <p class="subtitle is-6">
+    <%= tenant.tenant_description %>
+  </p>
+
+  <div class="columns is-multiline">
+  <% tenant.spaces.each do |space| %>
+    <div class="column is-half-desktop is-one-third-fullhd is-centered">
+      <p class="title is-4"><%= link_to space.space_name,
                                         tenant_space_path(id: space.id, tenant_id: tenant.id),
                                         class: "card-footer-item" %></p>
-    <%= render 'spaces/calendar_mini', space: space, tenant: tenant, calendar: calendar,
+      <%= render 'spaces/calendar_mini', space: space, tenant: tenant, calendar: calendar,
                                         prev_month_path: tenant_path( id: space.id, tenant_id: tenant.id,
                                                                     date: calendar.prev_month_string),
                                         next_month_path: tenant_path( id: space.id, tenant_id: tenant.id,
                                                                     date: calendar.next_month_string)   %>
+    </div>
+  <% end %>
   </div>
-<% end %>
+
 </div>
 
 <%= link_to 'Edit', edit_tenant_path(tenant) %> |

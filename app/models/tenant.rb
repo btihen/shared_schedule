@@ -8,4 +8,8 @@ class Tenant < ApplicationRecord
 
   validates :tenant_name, presence: true
 
+  def is_publicly_viewable?
+    is_publicly_viewable
+  end
+
 end

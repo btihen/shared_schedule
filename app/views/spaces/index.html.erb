@@ -1,6 +1,18 @@
-<h1 class="title"><small>Spaces for:</small><%= tenant.tenant_name %></h1>
-<br>
-<div class="columns is-centered is-multiline">
+<p hidden id='tenant_spaces_show_<%= tenant.id %>' class='pageName'>tenant_spaces_show_<%= tenant.id %></p>
+
+<div class="container">
+
+  <p class="title is-3">
+    <%= tenant.tenant_name %>
+  </p>
+  <p class="subtitle is-5">
+    <%= tenant.tenant_tagline %>
+  </p>
+  <p class="subtitle is-6">
+    <%= tenant.tenant_description %>
+  </p>
+
+  <div class="columns is-centered is-multiline">
   <% spaces.each do |space| %>
     <div class="column is-full-mobile is-half-tablet is-one-third-widescreen is-centered">
       <p class="title is-6">
@@ -15,4 +27,6 @@
                                                                       date: calendar.next_month_string)  %>
     </div>
   <% end %>
+  </div>
+
 </div>

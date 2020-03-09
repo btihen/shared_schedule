@@ -2,9 +2,12 @@ class SpacesController < ApplicationController
 
   # show mini-calendars for each space in Tenant
   def index
+    user          = current_user || GuestUser.new
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
     calendar_view = CalendarView.new(date: date)
-    tenant        = Tenant.find(params[:tenant_id])  # replace with user_id ASAP
+    tenant        = Tenant.find(params[:tenant_id]) 
+    # tenant        = Tenant.find(user.tenant_id])
+    # not_auhorized unless tenant.is_publicly_viewable? || tenant.id == user.tenant_id
     tenant_view   = TenantView.new(tenant)
     spaces        = tenant.spaces.all
     space_views   = SpaceView.collection(spaces)
@@ -17,9 +20,14 @@ class SpacesController < ApplicationController
 
   # larger (but responsive) calendar for chosen space
   def show
-    tenant = Tenant.find(params[:tenant_id])  # replace with user_id ASAP
-    space = tenant.spaces.find(params[:id])
-    space_view = SpaceView.new(space)
+    user          = current_user || GuestUser.new
+    date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
+    calendar_view = CalendarView.new(date: date)
+    tenant        = Tenant.find(params[:tenant_id])
+    space         = tenant.spaces.find(params[:id])
+    # not_auhorized unless tenant.is_publicly_viewable? || tenant.id == user.tenant_id
+    # not_auhorized unless space.tenant.id == user.tenant_id
+    space_view    = SpaceView.new(space)
     respond_to do |format|
       format.html { render 'spaces/show', locals: {space: space_view, today: Date.today} }
     end

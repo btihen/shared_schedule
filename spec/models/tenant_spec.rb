@@ -35,12 +35,12 @@ RSpec.describe Tenant, type: :model do
                     space.reload
                   }
     let(:event1)  { event = FactoryBot.create :event, reason: reason1, tenant: tenant1
-                    event.event_space_reservations << EventSpaceReservation.create(date: Date.today, space: space1, time_slot: time1)
+                    event.reservations << Reservation.create(space: space1, start_date: Date.today, start_time_slot: time1, end_date: Date.today, end_time_slot: time1)
                     event.save
                     event.reload
                   }
     let(:event2)  { event = FactoryBot.create :event, reason: reason2, tenant: tenant2
-                    event.event_space_reservations << EventSpaceReservation.create(date: Date.yesterday, space: space2, time_slot: time2)
+                    event.reservations << Reservation.create(space: space2, start_date: Date.yesterday, start_time_slot: time2, end_date: Date.yesterday, end_time_slot: time2)
                     event.save
                     event.reload }
     it "#destroy_all" do
@@ -53,7 +53,7 @@ RSpec.describe Tenant, type: :model do
       expect(Tenant.all).to                 eq []
       expect(TimeSlot.all).to               eq []
       expect(SpaceTimeSlot.all).to          eq []
-      expect(EventSpaceReservation.all).to  eq []
+      expect(Reservation.all).to  eq []
     end
     it "#destroy" do
       expect(event1).to                     be
@@ -64,11 +64,11 @@ RSpec.describe Tenant, type: :model do
       expect(Reason.all.pluck(:id)).to      eq [reason2.id]
       expect(Tenant.all.pluck(:id)).to      eq [tenant2.id]
       expect(TimeSlot.all.pluck(:id)).to    eq [time2.id]
-      expect(SpaceTimeSlot.all.pluck(:space_id).sort).to              eq [space2.id]
-      expect(SpaceTimeSlot.all.pluck(:time_slot_id).sort).to          eq [time2.id]
-      expect(EventSpaceReservation.all.pluck(:event_id).sort).to      eq [event2.id]
-      expect(EventSpaceReservation.all.pluck(:space_id).sort).to      eq [space2.id]
-      expect(EventSpaceReservation.all.pluck(:time_slot_id).sort).to  eq [time2.id]
+      expect(SpaceTimeSlot.all.pluck(:space_id).sort).to          eq [space2.id]
+      expect(Reservation.all.pluck(:event_id).sort).to            eq [event2.id]
+      expect(Reservation.all.pluck(:space_id).sort).to            eq [space2.id]
+      expect(Reservation.all.pluck(:end_time_slot_id).sort).to    eq [time2.id]
+      expect(Reservation.all.pluck(:start_time_slot_id).sort).to  eq [time2.id]
     end
   end
 
@@ -82,8 +82,21 @@ RSpec.describe Tenant, type: :model do
     it { is_expected.to have_db_column(:tenant_site_url) }
     it { is_expected.to have_db_column(:tenant_logo_url) }
     it { is_expected.to have_db_column(:tenant_description) }
+    it { is_expected.to have_db_column(:is_publicly_viewable) }
   end
 
-  # describe "model methods"
+  describe "model methods" do
+    context "#is_publicly_viewable?" do
+      it "returns false by default" do
+        model = FactoryBot.build :tenant
+        expect(model.is_publicly_viewable?).to be_falsey
+      end
+      it "returns true when explicity set to true" do
+        model = FactoryBot.build :tenant, is_publicly_viewable: true
+        expect(model.is_publicly_viewable?).to be_truthy
+      end
+    end
+
+  end
 
 end

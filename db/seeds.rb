@@ -1,42 +1,23 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-error_msg = "DataSeeds not allowed in production"
-raise StandarError, error_msg      if Rails.env.production?
-raise StandarError, error_msg  unless Rails.env.development? || Rails.env.test?
-
-# Everything belongs to tenant - delete tenant - takes all assosciated records too
-Tenant.destroy_all
+require './db/seed_demo_group.rb'
 
 # figure out login for site-admin
 # admin  = FactoryBot.create :user, tenant: tenant, user_role: "admin", email: "admin@example.ch",   password: "Let-M3-In!", password_confirmation:  "Let-M3-In!"
 # users << admin
 
-# DEMO Tenant
-tenant    = FactoryBot.create :tenant, tenant_name: "DemoGroup", tenant_description: "This schedule will be erased every 24hrs",
-                              tenant_tagline: "Try it out",      tenant_logo_url: "https://loremflickr.com/g/96/96/bern"
+# Protect against destroying Production
+error_msg = "Database Seed not allowed in production"
+raise StandardError, error_msg      if Rails.env.production?
+raise StandardError, error_msg  unless Rails.env.development? || Rails.env.test?
 
-breakfast = TimeSlot.create time_slot_name: "Breakfast", begin_time: "06:00", end_time: "10:00", tenant: tenant
-morning   = TimeSlot.create time_slot_name: "Morning",   begin_time: "08:00", end_time: "12:00", tenant: tenant
-lunch     = TimeSlot.create time_slot_name: "Lunch",     begin_time: "10:00", end_time: "14:00", tenant: tenant
-afternoon = TimeSlot.create time_slot_name: "Afternoon", begin_time: "13:00", end_time: "18:00", tenant: tenant
-dinner    = TimeSlot.create time_slot_name: "Dinner",    begin_time: "16:00", end_time: "20:00", tenant: tenant
-evening   = TimeSlot.create time_slot_name: "Evening",   begin_time: "18:00", end_time: "22:00", tenant: tenant
+# Delete Everything - delete all tenants and associated records
+Tenant.destroy_all
 
-spaces = []
-spaces << FactoryBot.create(:space, space_name: "Single Usage Room", tenant: tenant, is_calendar_public: true, is_double_booking_ok: false)
-spaces << FactoryBot.create(:space, space_name: "Multi-Usage Room",  tenant: tenant, is_calendar_public: true, is_double_booking_ok: true)
+# create demo group - for guests to try
+SeedDemoGroup.create
 
-spaces.each do |space|
-  space.allowed_time_slots << [morning, afternoon, evening]
-  space.allowed_time_slots << [breakfast, lunch, dinner]
-  space.save
-end
-
-# run seed_demo_events.rb
-
-# DEMO Data
-5.times do
-  tenant  = FactoryBot.create :tenant
+# Create Developer Experimental Data
+8.times do |index|
+  tenant  = FactoryBot.create :tenant, is_publicly_viewable: index.even?
 
   FactoryBot.create :reason, tenant: tenant
   reasons = []
@@ -73,29 +54,31 @@ end
   end
 
   (-2..2).each do |shift|
-    date_0  = Date.today + shift.weeks
+    date_0  = Date.today + (shift*3).weeks
     date_1  = date_0 + 1.day
     date_2  = date_0 + 2.days
     date_3  = date_0 + 3.days
     date_4  = date_0 + 4.days
+    date_5  = date_0 + 5.days
     event = FactoryBot.create :event, reason: reasons.sample, tenant: tenant
 
     # schedule events within spaces
     spaces.each do |space|
       # make space reservation through event
-      event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_0, time_slot: afternoon)
-      event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_1, time_slot: evening)
-      event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_4, time_slot: evening)
+      event.reservations << Reservation.create(space: space, start_date: date_0, start_time_slot: afternoon, end_date: date_2, end_time_slot: evening)
+      event.reservations << Reservation.create(space: space, start_date: date_3, start_time_slot: morning, end_date: date_3, end_time_slot: morning)
+      event.reservations << Reservation.create(space: space, start_date: date_3, start_time_slot: evening, end_date: date_3, end_time_slot: evening)
+      event.reservations << Reservation.create(space: space, start_date: date_5, start_time_slot: evening, end_date: date_5, end_time_slot: evening)
 
       # make event reservation through space probably most common
-      if space.is_double_booking_ok
-        event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_2, time_slot: morning)
-        event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_2, time_slot: afternoon)
+      # if space.is_double_booking_ok
+      #   event.reservations << Reservation.create(space: space, date: date_2, time_slot: morning)
+      #   event.reservations << Reservation.create(space: space, date: date_2, time_slot: afternoon)
 
-        event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_3,  time_slot: breakfast)
-        event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_3,  time_slot: lunch)
-        event.event_space_reservations << EventSpaceReservation.create(space: space, date: date_3,  time_slot: dinner)
-      end
+      #   event.reservations << Reservation.create(space: space, date: date_3,  time_slot: breakfast)
+      #   event.reservations << Reservation.create(space: space, date: date_3,  time_slot: lunch)
+      #   event.reservations << Reservation.create(space: space, date: date_3,  time_slot: dinner)
+      # end
       event.save
     end
   end

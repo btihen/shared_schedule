@@ -4,7 +4,6 @@ class CreateSpaces < ActiveRecord::Migration[6.0]
       t.string :space_name, null: false
       t.string :space_location
       t.string :time_zone,             null: false, default: "Europe/Zurich"
-      t.boolean :is_calendar_public,   null: false, default: false
       t.boolean :is_double_booking_ok, null: false, default: false
 
       t.belongs_to :tenant,            null: false, foreign_key: true

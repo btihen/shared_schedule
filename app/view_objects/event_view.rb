@@ -34,7 +34,7 @@ class EventView < ViewObject
   end
 
   def event_reservations
-    EventReservation.collection(event.event_space_reservations)
+    EventReservation.collection(event.reservations)
   end
 
 end

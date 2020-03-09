@@ -26,6 +26,9 @@ class User < ApplicationRecord
 
   validate  :validate_password_complexity
 
+  def guest?
+    id.blank?
+  end
 
   private
 

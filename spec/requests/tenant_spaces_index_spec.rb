@@ -18,14 +18,14 @@ RSpec.describe "Spaces index", type: :request do
                   space.reload
                 }
   let(:event1)  { event = FactoryBot.create :event, reason: reason1, tenant: tenant
-                  event.event_space_reservations << EventSpaceReservation.create(date: Date.today, space: space1, time_slot: time1)
-                  event.event_space_reservations << EventSpaceReservation.create(date: Date.today, space: space2, time_slot: time2)
+                  event.reservations << Reservation.create(date: Date.today, space: space1, time_slot: time1)
+                  event.reservations << Reservation.create(date: Date.today, space: space2, time_slot: time2)
                   event.save
                   event.reload
                 }
   let(:event2)  { event = FactoryBot.create :event, reason: reason2, tenant: tenant
-                  event.event_space_reservations << EventSpaceReservation.create(date: Date.tomorrow, space: space1, time_slot: time1)
-                  event.event_space_reservations << EventSpaceReservation.create(date: Date.yesterday, space: space2, time_slot: time2)
+                  event.reservations << Reservation.create(date: Date.tomorrow, space: space1, time_slot: time1)
+                  event.reservations << Reservation.create(date: Date.yesterday, space: space2, time_slot: time2)
                   event.save
                   event.reload }
 

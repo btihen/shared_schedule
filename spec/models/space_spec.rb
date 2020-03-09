@@ -12,11 +12,8 @@ RSpec.describe Space, type: :model do
   describe "relationships" do
     it { is_expected.to belong_to(:tenant) }
     it { is_expected.to have_many(:events).
-                        through(:event_space_reservations) }
-    it { is_expected.to have_many(:reserved_time_slots).
-                        through(:event_space_reservations) }
-    it { is_expected.to have_many(:allowed_time_slots).
-                        through(:space_time_slots) }
+                        through(:reservations) }
+    it { is_expected.to have_many(:allowed_time_slots).through(:space_time_slots) }
   end
 
   describe "destroy records - check dependents" do
@@ -36,14 +33,14 @@ RSpec.describe Space, type: :model do
                     space.reload
                   }
     let(:event1)  { event = FactoryBot.create :event, reason: reason1, tenant: tenant
-                    event.event_space_reservations << EventSpaceReservation.create(date: Date.today, space: space1, time_slot: time1)
-                    event.event_space_reservations << EventSpaceReservation.create(date: Date.today, space: space2, time_slot: time2)
+                    event.reservations << Reservation.create(space: space1, start_date: Date.today, start_time_slot: time1, end_date: Date.today, end_time_slot: time1)
+                    event.reservations << Reservation.create(space: space2, start_date: Date.today, start_time_slot: time2, end_date: Date.today, end_time_slot: time2)
                     event.save
                     event.reload
                   }
     let(:event2)  { event = FactoryBot.create :event, reason: reason2, tenant: tenant
-                    event.event_space_reservations << EventSpaceReservation.create(date: Date.tomorrow, space: space1, time_slot: time1)
-                    event.event_space_reservations << EventSpaceReservation.create(date: Date.yesterday, space: space2, time_slot: time2)
+                    event.reservations << Reservation.create(space: space1, start_date: Date.tomorrow, start_time_slot: time1, end_date: Date.tomorrow, end_time_slot: time1)
+                    event.reservations << Reservation.create(space: space2, start_date: Date.yesterday, start_time_slot: time2, end_date: Date.yesterday, end_time_slot: time2)
                     event.save
                     event.reload }
     it "#destroy_all" do
@@ -52,7 +49,7 @@ RSpec.describe Space, type: :model do
       described_class.destroy_all
       expect(Space.all).to                      eq []
       expect(SpaceTimeSlot.all).to              eq []
-      expect(EventSpaceReservation.all).to      eq []
+      expect(Reservation.all).to      eq []
       expect(Event.all.pluck(:id).sort).to      eq [event1.id, event2.id].sort
       expect(Reason.all.pluck(:id).sort).to     eq [reason1.id, reason2.id].sort
       expect(TimeSlot.all.pluck(:id).sort).to   eq [time1.id, time2.id].sort
@@ -66,8 +63,8 @@ RSpec.describe Space, type: :model do
       expect(TimeSlot.all.pluck(:id).sort).to               eq [time1.id, time2.id].sort
       expect(SpaceTimeSlot.all.pluck(:space_id)).to         eq [space2.id, space2.id]
       expect(SpaceTimeSlot.all.pluck(:time_slot_id)).to     eq [time1.id, time2.id]
-      expect(EventSpaceReservation.all.pluck(:space_id)).to eq [space2.id, space2.id]
-      expect(EventSpaceReservation.all.pluck(:event_id)).to eq [event1.id, event2.id]
+      expect(Reservation.all.pluck(:space_id)).to eq [space2.id, space2.id]
+      expect(Reservation.all.pluck(:event_id)).to eq [event1.id, event2.id]
     end
   end
 
@@ -82,21 +79,11 @@ RSpec.describe Space, type: :model do
   describe "DB settings" do
     it { have_db_index(:space_name) }
     it { is_expected.to have_db_column(:space_location) }
-    it { is_expected.to have_db_column(:is_calendar_public) }
+    # it { is_expected.to have_db_column(:is_calendar_public) }
     it { is_expected.to have_db_column(:is_double_booking_ok) }
   end
 
   context "model methods" do
-    describe "#is_calendar_public?" do
-      it "returns false by default" do
-        model = FactoryBot.build :space
-        expect(model.is_calendar_public?).to be_falsey
-      end
-      it "returns true when explicity set to true" do
-        model = FactoryBot.build :space, is_calendar_public: true
-        expect(model.is_calendar_public?).to be_truthy
-      end
-    end
     describe "#is_double_booking_ok?" do
       it "returns false by default" do
         model = FactoryBot.build :space

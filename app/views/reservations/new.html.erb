@@ -1,0 +1,11 @@
+<h1>New Reservation(s)</h1>
+
+<%= form_for( reservation, local: true,
+              url: tenant_space_reservations_path(tenant, space, reservation),
+              id: "new-reservation-form", class: "reservation" ) do |form|  %>
+
+  <%= render 'form', form: form, reservation: reservation, space: space, spaces: spaces, tenant: tenant %>
+
+<% end %>
+
+<%# link_to 'Back', tenant_path(tenant, date: Calendar.display_date(date)) %>

@@ -27,12 +27,23 @@
 
       <div class="calendar-body">
         <% calendar.date_range.each do |day| %>
-          <div class="<%= calendar.date_class_string(day) %>">
-            <button data-html="true"
-                    class="<%= calendar.date_item_class_string(day, reservations: space.reservations) %>"
-                    data-tooltip="<%= calendar.date_item_tooltip_data(day, reservations: space.reservations) %>">
+          <div class="<%= calendar.date_class_string(day, space.reservations) %>">
+            <% if calendar.date_has_reservation?(day, space.reservations) %>
+              <button data-html="true"
+                      data-href="https://randomuser.me/api/?results=10"
+                      data-modal="<%= calendar.choose_reservations_html(space, day, space.reservations) %>"
+                      data-target="<%= calendar.choose_modal_form(day, space.reservations) %>"
+                      data-tooltip="<%= calendar.date_item_tooltip_data(day, space.reservations) %>"
+                      class="date-item <%= calendar.date_item_class_string(day, space.reservations) %>">
+                <%= day.mday %>
+              </button>
+            <% elsif tenant.is_demo? && calendar.date_in_month_of_interest?(day) %>
+              <%= link_to day.mday,
+                          new_tenant_space_reservation_path(tenant_id: tenant.id, space_id: space.id, date: calendar.display_date(day)),
+                          class: "date-item button is-light" %>
+            <% else %>
               <%= day.mday %>
-            </button>
+            <% end %>
           </div>
         <% end %>
       </div>
@@ -40,70 +51,19 @@
   </div>
 </div>
 
-<br><br>
-
-<div class="column">
-  <div class="calendar">
-  <div class="calendar-nav">
-    <div class="calendar-nav-left">
-      <button class="button is-link">
-        <i class="fa fa-chevron-left"></i>
-      </button>
-    </div>
-    <div>March 2017</div>
-    <div class="calendar-nav-right">
-      <button class="button is-link">
-        <i class="fa fa-chevron-right"></i>
-      </button>
-    </div>
+<div id="reservation-details" class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Reservation(s)</p>
+      <button class="delete" aria-label="close"></button>
+    </header>
+    <section id="reservation-details-body" class="modal-card-body">
+      List Reservations
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-success">Edit</button>
+      <button class="button">Dismiss</button>
+    </footer>
   </div>
-  <div class="calendar-container">
-    <div class="calendar-header">
-      <div class="calendar-date">Sun</div>
-      <div class="calendar-date">Mon</div>
-      <div class="calendar-date">Tue</div>
-      <div class="calendar-date">Wed</div>
-      <div class="calendar-date">Thu</div>
-      <div class="calendar-date">Fri</div>
-      <div class="calendar-date">Sat</div>
-    </div>
-    <div class="calendar-body">
-      <div class="calendar-date is-disabled"><button class="date-item">26</button></div>
-      <div class="calendar-date is-disabled"><button class="date-item">27</button></div>
-      <div class="calendar-date is-disabled"><button class="date-item">28</button></div>
-      <div class="calendar-date"><button class="date-item">1</button></div>
-      <div class="calendar-date"><button class="date-item">2</button></div>
-      <div class="calendar-date"><button class="date-item">3</button></div>
-      <div class="calendar-date"><button class="date-item is-today">4</button></div>
-      <div class="calendar-date"><button class="date-item" disabled="">5</button></div>
-      <div class="calendar-date"><button class="date-item">6</button></div>
-      <div class="calendar-date"><button class="date-item">7</button></div>
-      <div class="calendar-date"><button class="date-item badge">8</button></div>
-      <div class="calendar-date"><button class="date-item">9</button></div>
-      <div class="calendar-date"><button class="date-item">10</button></div>
-      <div class="calendar-date"><button class="date-item">11</button></div>
-      <div class="calendar-date"><button class="date-item">12</button></div>
-      <div class="calendar-date"><button class="date-item">13</button></div>
-      <div class="calendar-date"><button class="date-item">14</button></div>
-      <div class="calendar-date"><button class="date-item">15</button></div>
-      <div class="calendar-date calendar-range range-start"><button class="date-item is-active">16</button></div>
-      <div class="calendar-date calendar-range"><button class="date-item">17</button></div>
-      <div class="calendar-date calendar-range"><button class="date-item">18</button></div>
-      <div class="calendar-date calendar-range"><button class="date-item">19</button></div>
-      <div class="calendar-date calendar-range range-end"><button class="date-item is-active">20</button></div>
-      <div class="calendar-date"><button class="date-item">21</button></div>
-      <div class="calendar-date"><button class="date-item">22</button></div>
-      <div class="calendar-date"><button class="date-item">23</button></div>
-      <div class="calendar-date"><button class="date-item">24</button></div>
-      <div class="calendar-date"><button class="date-item">25</button></div>
-      <div class="calendar-date"><button class="date-item">26</button></div>
-      <div class="calendar-date"><button class="date-item">27</button></div>
-      <div class="calendar-date"><button class="date-item">28</button></div>
-      <div class="calendar-date"><button class="date-item">29</button></div>
-      <div class="calendar-date"><button class="date-item">30</button></div>
-      <div class="calendar-date"><button class="date-item">31</button></div>
-      <div class="calendar-date is-disabled"><button class="date-item">1</button></div>
-    </div>
-  </div>
-</div>
 </div>
