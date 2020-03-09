@@ -27,7 +27,7 @@
 
       <div class="calendar-body">
         <% calendar.date_range.each do |day| %>
-          <div class="<%= calendar.date_class_string(day) %>">
+          <div class="<%= calendar.date_class_string(day, space.reservations) %>">
             <% if calendar.date_has_reservation?(day, space.reservations) %>
               <button data-html="true"
                       data-href="https://randomuser.me/api/?results=10"

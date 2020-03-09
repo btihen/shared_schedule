@@ -58,12 +58,10 @@ class ReservationsController < ApplicationController
     # not_auhorized unless space.tenant.id == user.tenant_id
 
     if reservation_form.valid?
-      # initiative    = InitiativeSaveCommand.call(initiative_form)
-      # InitiativeMailer.initiative_created(initiative).deliver_later
       reservation = reservation_form.reservation
       reservation.save!
 
-      flash[:notice] = "#{reservation.event.event_name} initiative was successfully created."
+      flash[:notice] = "#{reservation.event.event_name} event was successfully created."
       redirect_to tenant_path(tenant)
     else
       respond_to do |format|

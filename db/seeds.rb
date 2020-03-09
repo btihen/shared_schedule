@@ -54,7 +54,7 @@ SeedDemoGroup.create
   end
 
   (-2..2).each do |shift|
-    date_0  = Date.today + shift.weeks
+    date_0  = Date.today + (shift*3).weeks
     date_1  = date_0 + 1.day
     date_2  = date_0 + 2.days
     date_3  = date_0 + 3.days

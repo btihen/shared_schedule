@@ -87,10 +87,8 @@ class ReservationForm < FormObject
 
   private
 
-  # consider moving to InitiativeServices::SaveInitiative
   def assign_reservation_attribs
     # tenant_id  = user.tenant_id
-binding.pry
     reservation = Reservation.find_by(id: id) || Reservation.new
     reservation.start_time_slot  = start_time_slot
     reservation.end_time_slot    = end_time_slot

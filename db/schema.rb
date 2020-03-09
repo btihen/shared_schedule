@@ -38,17 +38,17 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
 
   create_table "reservations", force: :cascade do |t|
     t.string "host"
-    t.date "end_date", null: false
     t.date "start_date", null: false
+    t.date "end_date", null: false
     t.bigint "event_id", null: false
     t.bigint "space_id", null: false
-    t.bigint "end_time_slot_id", null: false
     t.bigint "start_time_slot_id", null: false
+    t.bigint "end_time_slot_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["end_date"], name: "index_reservations_on_end_date"
     t.index ["end_time_slot_id"], name: "index_reservations_on_end_time_slot_id"
-    t.index ["event_id", "space_id", "start_date", "start_time_slot_id", "end_date", "end_time_slot_id"], name: "index_reservation_unique", unique: true
+    t.index ["event_id", "space_id", "start_date", "end_date", "start_time_slot_id", "end_time_slot_id"], name: "index_reservation_unique", unique: true
     t.index ["event_id"], name: "index_reservations_on_event_id"
     t.index ["space_id"], name: "index_reservations_on_space_id"
     t.index ["start_date"], name: "index_reservations_on_start_date"

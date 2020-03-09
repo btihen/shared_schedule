@@ -70,6 +70,21 @@ class ReservationView < ViewObject
     false
   end
 
+  def is_multi_day_event?
+    return true   if (end_date - start_date).to_i > 0
+    false
+  end
+
+  def is_range_start?(date)
+    return true   if is_multi_day_event? && (date == start_date)
+    false
+  end
+
+  def is_range_end?(date)
+    return true   if is_multi_day_event? && (date == end_date)
+    false
+  end
+
   def start_time_slot_name
     start_time_slot.time_slot_name
   end

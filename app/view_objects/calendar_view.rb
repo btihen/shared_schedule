@@ -92,11 +92,15 @@ class CalendarView
     strings.join("\n")      # css hover::after needs 'white-space: pre-wrap;'
   end
 
-  def date_class_string(date)
+  def date_class_string(date, reservations = [])
+    return "calendar-date is-disabled"  if date_outside_month?(date)
+
+    reservations_on_date = reservations.select{ |r| r.date_range.include?(date) }
+
     strings = ["calendar-date"]
-    strings << "is-disabled"    if date_outside_month?(date)
-    # strings << "range-start"
-    # strings << "range-end"
+    strings << "calendar-range" if reservations_on_date.any?{ |r| r.is_multi_day_event? }
+    strings << "range-start"    if reservations_on_date.any?{ |r| r.is_range_start?(date) }
+    strings << "range-end"      if reservations_on_date.any?{ |r| r.is_range_end?(date) }
     strings.join(" ")
   end
 
