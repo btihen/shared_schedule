@@ -28,7 +28,9 @@
       <div class="calendar-body">
         <% calendar.date_range.each do |day| %>
           <div class="<%= calendar.date_class_string(day, space.reservations) %>">
-            <% if calendar.date_has_reservation?(day, space.reservations) %>
+
+            <%# date-item has reservation and within month of interest - with tool-tips and modal pop-ups %>
+            <% if calendar.date_has_reservation?(day, space.reservations) && calendar.date_in_month_of_interest?(day) %>
               <button data-html="true"
                       data-href="https://randomuser.me/api/?results=10"
                       data-modal="<%= calendar.choose_reservations_html(space, day, space.reservations) %>"
@@ -37,13 +39,30 @@
                       class="date-item <%= calendar.date_item_class_string(day, space.reservations) %>">
                 <%= day.mday %>
               </button>
+
+            <%# date-item has reservation and NOT in month of interest - needs is-active for green dot %>
+            <%#  - get tool-tips working %>
+            <% elsif calendar.date_has_reservation?(day, space.reservations) && !calendar.date_in_month_of_interest?(day) %>
+              <button data-html="true"
+                      data-tooltip="<%= calendar.date_item_tooltip_data(day, space.reservations) %>"
+                      class="date-item modal-button is-active">
+                <%= day.mday %>
+              </button>
+
+            <%# when person is allowed to add new events on empty days %>
             <% elsif tenant.is_demo? && calendar.date_in_month_of_interest?(day) %>
+              <%# date-item button for a new link %>
               <%= link_to day.mday,
                           new_tenant_space_reservation_path(tenant_id: tenant.id, space_id: space.id, date: calendar.display_date(day)),
                           class: "date-item button is-light" %>
+
+            <%# date-item without event and user without permission to make new events %>
             <% else %>
-              <%= day.mday %>
+              <div class="date-item">
+                <%= day.mday %>
+              </div>
             <% end %>
+
           </div>
         <% end %>
       </div>
@@ -62,7 +81,10 @@
       List Reservations
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-success">Edit</button>
+      <%# only show when edit permissions (or demogroup for testing) %>
+      <% if tenant.is_demo?  %>
+        <button class="button is-success">Edit</button>
+      <% end %>
       <button class="button">Dismiss</button>
     </footer>
   </div>
