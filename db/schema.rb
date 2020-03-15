@@ -27,12 +27,12 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
   end
 
   create_table "reasons", force: :cascade do |t|
-    t.string "reason_description"
     t.string "reason_name", null: false
+    t.string "reason_description"
     t.bigint "tenant_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["reason_description", "tenant_id"], name: "index_reasons_on_reason_description_and_tenant_id", unique: true
+    t.index ["reason_name", "tenant_id"], name: "index_reasons_on_reason_name_and_tenant_id", unique: true
     t.index ["tenant_id"], name: "index_reasons_on_tenant_id"
   end
 
