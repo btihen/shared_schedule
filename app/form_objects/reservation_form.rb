@@ -8,8 +8,8 @@ class ReservationForm < FormObject
 
   # All the models that are apart of our form should be part attr_accessor.
   # This allows the form to be initialized with existing instances.
-  attr_accessor :id, :start_date, :end_date, :host, :event,
-                :space, :start_time_slot, :end_time_slot
+  attr_accessor :id, :host, :event, :reason, :space,
+                :start_date, :end_date, :start_time_slot, :end_time_slot
 
   def self.model_name
     ActiveModel::Name.new(self, nil, 'Reservation')
@@ -26,8 +26,6 @@ class ReservationForm < FormObject
   #   return false
   # end
 
-
-
   # list attributes - which accept any form (Arrays)
   # attr_accessor :event_id, :space_id, :time_slot_id
 
@@ -37,7 +35,12 @@ class ReservationForm < FormObject
   attribute :start_time_slot_id,  :integer
   attribute :event_id,            :integer
   attribute :space_id,            :integer
+  attribute :reason_id,           :integer
   attribute :host,                :squished_string
+  attribute :event_name,          :squished_string
+  attribute :event_description,   :squished_string
+  attribute :reason_name,         :squished_string
+  attribute :reason_description,  :squished_string
   # attribute :description,         :trimmed_text
 
   validates :start_date,          presence: true
@@ -56,6 +59,7 @@ class ReservationForm < FormObject
                       host: reservation.host,
                       event: reservation.event,
                       space: reservation.space,
+                      # reason: reservation&.event&.reason,
                       end_date: reservation.end_date,
                       start_date: reservation.start_date,
                       end_time_slot: reservation.end_time_slot,
@@ -66,30 +70,38 @@ class ReservationForm < FormObject
   end
 
   def reservation
-    @reservation  ||= assign_reservation_attribs
+    @reservation     ||= assign_reservation_attribs
   end
 
   def start_time_slot
-    @start_time_slot  ||= (TimeSlot.find_by(id: start_time_slot_id) || TimeSlot.new)
+    @start_time_slot ||= (TimeSlot.find_by(id: start_time_slot_id) || TimeSlot.new)
   end
 
   def end_time_slot
-    @end_time_slot    ||= (TimeSlot.find_by(id: end_time_slot_id) || start_time_slot)
+    @end_time_slot   ||= (TimeSlot.find_by(id: end_time_slot_id) || start_time_slot)
+  end
+
+  def reason
+    @reason          ||= assign_reason_attribs
+    # @reason          ||= (Reason.find_by(id: reason_id) || Reason.new)
   end
 
   def event
-    @event            ||= (Event.find_by(id: event_id) || Event.new)
+    @event           ||= assign_event_attribs
+    # @event           ||= (Event.find_by(id: event_id) || Event.new)
   end
 
   def space
-    @space            ||= (Space.find_by(id: space_id) || Space.new)
+    @space           ||= (Space.find_by(id: space_id) || Space.new)
   end
 
   private
 
   def assign_reservation_attribs
-    # tenant_id  = user.tenant_id
+    # get / create instance
     reservation = Reservation.find_by(id: id) || Reservation.new
+
+    # update reservation attributes
     reservation.start_time_slot  = start_time_slot
     reservation.end_time_slot    = end_time_slot
     reservation.event            = event
@@ -98,6 +110,30 @@ class ReservationForm < FormObject
     reservation.end_date         = (end_date.blank? ? start_date : end_date)
     reservation.host             = host
     reservation
+  end
+
+  def assign_reason_attribs
+    # get reason
+    return event.reason           if event_id.present?
+    return Reason.find(reason_id) if reason_id.present?
+
+    # create new reason
+    reason = Reason.new
+    reason.reason_name        = reason_name
+    reason.reason_description = reason_description
+    reason
+  end
+
+  def assign_event_attribs
+    # get event
+    return Event.find(event_id)          if event_id.present?
+
+    # create a new event
+    event = Event.new
+    event.event_name        = event_name
+    event.event_description = event_description
+    event.reason            = reason
+    event
   end
 
   def validate_event

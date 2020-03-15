@@ -15,28 +15,119 @@
 
     <div class="field is-horizontal">
       <div class="field-label is-normal">
-        Event <small><i>(choose: new or existing)</i></small>
+        Event
       </div>
       <div class="field-body">
-        <div class="field has-addons is-grouped is-grouped-multiline">
-          <div class="control">
-            <%= form.collection_select :event_id, tenant.events,
-                      :id, :event_name, {include_blank: 'Select Event'},
-                      {class: 'select is-rounded is-danger'} %>
-            <p class="help">Choose Existing</p>
-            <%= error_message_on(form.object, :event_id) %>
-          </div>
-          <div class="control">
-            <%# button_to "Submit", { action: "create" }, remote: true, class: "button" %>
-            <button data-html="true"
-                      data-modal="event-new-modal"
-                      data-target="Form for new event"
-                      class="button is-small">
-                or New
-              </button>
-            <p class="help">Create New</p>
+      <section>
+        <div class="card">
+          <header class="card-header">
+            <p class="card-header-title">Choose Existing Event</p>
+            <a class="card-header-icon card-toggle" id="existingEventToggle">
+              <i class="fa fa-angle-down"></i>
+            </a>
+          </header>
+          <div class="card-content" id="existingEventContent">
+            <div class="content">
+              <div class="field">
+              <div class="control has-addons">
+                <%= form.collection_select :event_id, tenant.events,
+                          :id, :event_name, {include_blank: 'Select Event'},
+                          {class: 'select is-rounded is-danger'} %>
+                <p class="help">Select the Event</p>
+                <%= error_message_on(form.object, :event_id) %>
+              </div>
+            </div>
           </div>
         </div>
+
+        <div class="card">
+          <header class="card-header">
+            <p class="card-header-title">Create New Event</p>
+            <a class="card-header-icon card-toggle" id="newEventToggle">
+              <i class="fa fa-angle-down"></i>
+            </a>
+          </header>
+          <div class="card-content is-hidden" id="newEventContent">
+            <div class="content">
+              <div class="field is-horizontal">
+                <div class="control has-icons-left">
+                  <%= form.text_field :event_name, placeholder: "Event Name", class: "input" %>
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-user"></i>
+                  </span>
+                  <p class="help">Event Name Required</p>
+                  <%= error_message_on(form.object, :event_name) %>
+                </div>
+
+                <div class="control has-icons-left">
+                  <%= form.text_field :event_description, placeholder: "Event Description (Optional)", class: "input" %>
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-user"></i>
+                  </span>
+                  <p class="help">Description Optional</p>
+                  <%= error_message_on(form.object, :event_description) %>
+                </div>
+              </div>
+
+              <br>
+
+              <div class="card">
+                <header class="card-header">
+                  <p class="card-header-title">Choose Existing Reason</p>
+                  <a class="card-header-icon card-toggle" id="existingReasonToggle">
+                    <i class="fa fa-angle-down"></i>
+                  </a>
+                </header>
+                <div class="card-content" id="existingReasonContent">
+                  <div class="content">
+                    <div class="field">
+                    <div class="control has-addons">
+                      <%= form.collection_select :reason_id, tenant.reasons,
+                            :id, :reason_name, {include_blank: 'Select Reason'},
+                            {class: 'select is-rounded is-danger'} %>
+                      <p class="help">Event Reason</p>
+                      <%= error_message_on(form.object, :reason_id) %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <header class="card-header">
+                  <p class="card-header-title">Create New Reason</p>
+                  <a class="card-header-icon card-toggle" id="newReasonToggle">
+                    <i class="fa fa-angle-down"></i>
+                  </a>
+                </header>
+                <div class="card-content is-hidden" id="newReasonContent">
+                  <div class="content">
+
+                    <div class="field is-horizontal">
+                      <div class="control has-icons-left">
+                        <%= form.text_field :reason_name, placeholder: "Reason Name", class: "input" %>
+                        <span class="icon is-small is-left">
+                          <i class="fas fa-user"></i>
+                        </span>
+                        <p class="help">Reason Name - Required</p>
+                        <%= error_message_on(form.object, :reason_name) %>
+                      </div>
+                      <div class="control has-icons-left">
+                        <%= form.text_field :reason_description, placeholder: "Reason Description (Optional)", class: "input" %>
+                        <span class="icon is-small is-left">
+                          <i class="fas fa-user"></i>
+                        </span>
+                        <p class="help">Description Optional</p>
+                        <%= error_message_on(form.object, :reason_description) %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </section>
       </div>
     </div>
 
@@ -84,13 +175,13 @@
 
     <div class="field is-horizontal">
       <div class="field-label is-normal">
-        End Info <small><i>(when empty assumes same as start info)</i></small>
+        End info
       </div>
       <div class="field-body">
         <div class="field has-addons is-grouped is-grouped-multiline">
           <div class="control">
             <%= form.date_field :end_date, class: "input" %>
-            <p class="help">Optional</p>
+            <p class="help">Optional - defaults to start info</p>
             <%= error_message_on(form.object, :date) %>
           </div>
 
@@ -124,23 +215,93 @@
   </div>
 </div>
 
+<script>
+'use strict';
 
-<div id="event-new-modal" class="modal">
-  <div class="modal-background"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">New Event</p>
-      <button class="delete" aria-label="close"></button>
-    </header>
-    <section id="reservation-details-body" class="modal-card-body">
-      New event form
-    </section>
-    <footer class="modal-card-foot">
-      <%# only show when edit permissions (or demogroup for testing) %>
-      <% if tenant.is_demo?  %>
-        <button class="button is-success">Edit</button>
-      <% end %>
-      <button class="button">Dismiss</button>
-    </footer>
-  </div>
-</div>
+document.getElementById("newEventToggle").onclick = function(){
+  var $target
+
+  // open the new event card
+  $target = document.getElementById("newEventContent");
+  $target.setAttribute('class', 'card-content');
+
+  // clear the previous event_id
+  $target = document.getElementById("reservation_event_id")
+  $target.selectedIndex = 0;
+
+  // close the existing event card
+  $target = document.getElementById("existingEventContent");
+  $target.setAttribute('class', 'card-content is-hidden');
+
+  // prevent form submission
+  event.preventDefault();
+}
+
+document.getElementById("existingEventToggle").onclick = function(){
+  var $target
+
+  // open the existing event card
+  $target = document.getElementById("existingEventContent");
+  $target.setAttribute('class', 'card-content');
+
+  // clear the form when closing
+  $target = document.getElementById("reservation_event_name")
+  $target.value=''
+  $target = document.getElementById("reservation_event_description")
+  $target.value=''
+  // clear all sub-forms too
+  $target = document.getElementById("reservation_reason_id")
+  $target.selectedIndex = 0;
+  $target = document.getElementById("reservation_reason_name")
+  $target.value=''
+  $target = document.getElementById("reservation_reason_description")
+  $target.value=''
+
+  // close the new event card
+  $target = document.getElementById("newEventContent");
+  $target.setAttribute('class', 'card-content is-hidden');
+
+  // prevent form submission
+  event.preventDefault();
+}
+
+document.getElementById("newReasonToggle").onclick = function(){
+  var $target
+
+  // open the new reason card
+  $target = document.getElementById("newReasonContent");
+  $target.setAttribute('class', 'card-content');
+
+  // clear existing reasons
+  $target = document.getElementById("reservation_reason_id")
+  $target.selectedIndex = 0;
+
+  // close the existing reason card
+  $target = document.getElementById("existingReasonContent");
+  $target.setAttribute('class', 'card-content is-hidden');
+
+  // prevent form submission
+  event.preventDefault();
+}
+
+document.getElementById("existingReasonToggle").onclick = function(){
+  var $target
+
+  // open the existing reason card
+  $target = document.getElementById("existingReasonContent");
+  $target.setAttribute('class', 'card-content');
+
+  // clear the new reason form
+  $target = document.getElementById("reservation_reason_name")
+  $target.value=''
+  $target = document.getElementById("reservation_reason_description")
+  $target.value=''
+
+  // close the new reason card
+  $target = document.getElementById("newReasonContent");
+  $target.setAttribute('class', 'card-content is-hidden');
+
+  // prevent form submission
+  event.preventDefault();
+}
+</script>

@@ -1,8 +1,8 @@
-<% content_for :head do %>
-  <!--
+<!-- fix turbolinks with back button
   https://github.com/turbolinks/turbolinks#ensuring-specific-pages-trigger-a-full-reload
   https://stackoverflow.com/questions/39627881/jquery-plugin-initialization-on-browser-back-button-for-turbolinks-rails-5/39801052
   -->
+<% content_for :head do %>
   <meta name="turbolinks-visit-control" content="reload">
 <% end %>
 

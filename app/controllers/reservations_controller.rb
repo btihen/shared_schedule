@@ -9,14 +9,15 @@ class ReservationsController < ApplicationController
     # not_auhorized unless tenant.is_publicly_viewable? || tenant.id == user.tenant_id
     # not_auhorized unless space.tenant.id == user.tenant_id
     space_view    = SpaceView.new(space)
-    reservations  = Reservation.where(date: date, space_id: space.id)
+    reservations  = Reservation.where(space_id: space.id)
+                              .where('start_date <= :date AND end_date >= :date', date: date)
     reservation_views = ReservationView.collection(reservations)
     respond_to do |format|
-      format.html { render 'spaces/index', locals: {tenant: tenant_view,
+      format.html { render 'spaces/show', locals: {tenant: tenant_view,
                                                     space: space_view,
                                                     calendar: calendar_view,
                                                     reservations: reservation_views} }
-      json.html   { render :index, status: :ok, reservations: reservation_views }
+      format.json { render :index, status: :ok, reservations: reservation_views }
     end
   end
 
@@ -38,7 +39,7 @@ class ReservationsController < ApplicationController
                                                         spaces: space_views,
                                                         tenant: tenant_view,
                                                         reservation: reservation_form} }
-      # json.html   { render :index, status: :ok, reservation: reservation_form }
+      # format.json { render :index, status: :ok, reservation: reservation_form }
     end
   end
 
