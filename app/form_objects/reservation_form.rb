@@ -8,17 +8,35 @@ class ReservationForm < FormObject
 
   # All the models that are apart of our form should be part attr_accessor.
   # This allows the form to be initialized with existing instances.
-  attr_accessor :id, :host, :event, :reason, :space,
+  attr_accessor :id, :host, :event, :reason, :space, :tenant,
                 :start_date, :end_date, :start_time_slot, :end_time_slot
-
-  def self.model_name
-    ActiveModel::Name.new(self, nil, 'Reservation')
-  end
 
   # def initialize(attribs)
   #   super
   #   @root_model ||= Reservation.new
   # end
+
+  def self.model_name
+    ActiveModel::Name.new(self, nil, 'Reservation')
+  end
+
+  # is user needed / helpful?
+  def self.new_from(reservation, tenant)
+    attribs = {}
+    if reservation.present?
+      attribs_init = {id: reservation.id,
+                      host: reservation.host,
+                      event: reservation.event,
+                      space: reservation.space,
+                      tenant: tenant,
+                      end_date: reservation.end_date,
+                      start_date: reservation.start_date,
+                      end_time_slot: reservation.end_time_slot,
+                      start_time_slot: reservation.start_time_slot}
+      attribs = attribs.merge(attribs_init)
+    end
+    new(attribs)
+  end
 
   # when the model will never already stored then use the following:
   # def persisted?
@@ -36,6 +54,7 @@ class ReservationForm < FormObject
   attribute :event_id,            :integer
   attribute :space_id,            :integer
   attribute :reason_id,           :integer
+  attribute :tenant_id,           :integer
   attribute :host,                :squished_string
   attribute :event_name,          :squished_string
   attribute :event_description,   :squished_string
@@ -46,28 +65,11 @@ class ReservationForm < FormObject
   validates :start_date,          presence: true
   # validates :end_date,            presence: true
 
-  validate :validate_event
   validate :validate_space
+  validate :validate_event
+  validate :validate_reason
   validate :validate_time_slots
   validate :validate_dates_and_times_available
-
-  # is user needed / helpful?
-  def self.new_from(reservation=nil, user: GuestUser.new)
-    attribs = {}
-    if reservation.present?
-      attribs_init = {id: reservation.id,
-                      host: reservation.host,
-                      event: reservation.event,
-                      space: reservation.space,
-                      # reason: reservation&.event&.reason,
-                      end_date: reservation.end_date,
-                      start_date: reservation.start_date,
-                      end_time_slot: reservation.end_time_slot,
-                      start_time_slot: reservation.start_time_slot}
-      attribs = attribs.merge(attribs_init)
-    end
-    new(attribs)
-  end
 
   def reservation
     @reservation     ||= assign_reservation_attribs
@@ -79,6 +81,10 @@ class ReservationForm < FormObject
 
   def end_time_slot
     @end_time_slot   ||= (TimeSlot.find_by(id: end_time_slot_id) || start_time_slot)
+  end
+
+  def tenant
+    @tenant          ||= (Tenant.find_by(id: tenant_id) || Tenant.find_by(tenant_name: "DemoGroup"))
   end
 
   def reason
@@ -121,6 +127,7 @@ class ReservationForm < FormObject
     reason = Reason.new
     reason.reason_name        = reason_name
     reason.reason_description = reason_description
+    reason.tenant             = tenant
     reason
   end
 
@@ -133,21 +140,32 @@ class ReservationForm < FormObject
     event.event_name        = event_name
     event.event_description = event_description
     event.reason            = reason
+    event.tenant            = tenant
     event
+  end
+
+  def validate_reason
+    return if reason.valid?
+
+    reason.errors.each do |attribute_name, desc|
+      attribute_sym = attribute_name.to_s.eql?(id) ? :reason_id : attribute_name.to_sym
+      errors.add(attribute_sym, desc)
+    end
   end
 
   def validate_event
     return if event.valid?
 
-    event.errors.each do |_attribute_name, desc|
-      errors.add(:event_id, desc)
+    event.errors.each do |attribute_name, desc|
+      attribute_sym = attribute_name.to_s.eql?(id) ? :event_id : attribute_name.to_sym
+      errors.add(attribute_sym, desc)
     end
   end
 
   def validate_space
     return if space.valid?
 
-    event.errors.each do |_attribute_name, desc|
+    space.errors.each do |_attribute_name, desc|
       errors.add(:space_id, desc)
     end
   end

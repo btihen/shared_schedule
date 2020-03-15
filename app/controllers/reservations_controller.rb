@@ -33,7 +33,7 @@ class ReservationsController < ApplicationController
     # not_auhorized unless tenant.is_publicly_viewable? || tenant.id == user.tenant_id
     # not_auhorized unless space.tenant.id == user.tenant_id
     reservation   = Reservation.new(space: space, start_date: date)
-    reservation_form = ReservationForm.new_from(reservation)
+    reservation_form = ReservationForm.new_from(reservation, tenant)
     respond_to do |format|
       format.html { render 'reservations/new', locals: {space: space_view,
                                                         spaces: space_views,
@@ -44,7 +44,8 @@ class ReservationsController < ApplicationController
   end
 
   def create
-    attributes       = reservation_params #.merge(sponsor_id: current_user.id)
+    user             = GuestUser.new
+    attributes       = reservation_params.merge(tenant_id: user.tenant.id)
     reservation_form = ReservationForm.new(attributes)
 
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
@@ -79,7 +80,10 @@ class ReservationsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def reservation_params
       params.require(:reservation)
-            .permit(:host, :event_id, :space_id, :start_date, :end_date,
-                    :start_time_slot_id, :end_time_slot_id)
+            .permit(:host, :space_id, :event_id, :reason_id,
+                    :start_date, :end_date,
+                    :start_time_slot_id, :end_time_slot_id,
+                    :event_name, :event_description,
+                    :reason_name, :reason_description)
     end
 end
