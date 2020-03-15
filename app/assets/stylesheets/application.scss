@@ -35,7 +35,8 @@ $subtitle-line-height: 1.5;
 
 // import bulma and optionally the extensions
 @import 'bulma';
-@import 'bulma-extensions';
+// @import '@creativebulma/bulma-collapsible';
+// @import 'bulma-extensions';
 
 // import additional scss layouts
 @import '_layout';

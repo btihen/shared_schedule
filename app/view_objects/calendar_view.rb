@@ -58,10 +58,7 @@ class CalendarView
   end
 
   def choose_reservations_html(space, date, reservations = [])
-    # dates_reservations = reservations.select{ |r| r.date == date }
-# binding.pry  if date.day == 9
     dates_reservations = reservations.select{ |r| r.date_range.include?(date) }
-    # dates_reservations = reservations.select{ |r| (r.start_date == date) || (r.end_date == date) }
 
     items = dates_reservations.map{ |r| %Q{<dl class="is-medium"><dt>#{r.date_range_string}</dt><dd>Event: <big><b>#{r.event_name}</b></big><br>Host: #{r.host_name.blank? ? "No one" : r.host_name}</dd></dl>} }
 
@@ -118,9 +115,7 @@ class CalendarView
 
   def date_has_reservation?(date, reservations = [])
     return false if reservations.blank?
-# binding.pry  if date.day == 9
     reservations.any?{ |r| r.date_range.include?(date) }
-    # reservations.any?{ |r| (r.start_date == date) || (r.end_date == date) }
   end
 
   private
@@ -128,14 +123,12 @@ class CalendarView
   def date_first_monday
     # days needed to go start on a monday
     month_start_offset = month_begin_date.cwday - 1
-
     (month_begin_date - month_start_offset.days)
   end
 
   def date_last_sunday
     # days needed to go until last sunday
     month_end_offset = 7 - month_end_date.cwday
-
     (month_end_date + month_end_offset.days)
   end
 end

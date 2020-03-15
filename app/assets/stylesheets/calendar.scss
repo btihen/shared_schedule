@@ -92,6 +92,7 @@
   -ms-flex: 0 0 14.28%;
   flex: 0 0 14.28%;
   max-width: 14.28%;
+  text-align: center;
 }
 
 .calendar .calendar-header {
@@ -234,7 +235,7 @@
   text-decoration: none;
 }
 
-.calendar .calendar-date.is-disabled .date-item, .calendar .calendar-date.is-disabled .calendar-event {
+.calendar .calendar-date.is-disabled .date-item, .calendar-event {
   cursor: default;
   opacity: .25;
   pointer-events: none;
@@ -269,6 +270,7 @@
   color: #4b4b4b;
 }
 
+// the large calendar settings
 .calendar.is-calendar-large .calendar-body {
   padding: 0;
 }

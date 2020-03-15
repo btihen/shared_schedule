@@ -7,12 +7,17 @@ require("@rails/ujs").start()
 require("turbolinks").start()
 require("@rails/activestorage").start()
 require("channels")
-// require("bulma/calendar")
-// require("bulma/modal_url")
-require("bulma/modal_html")
 require("bulma/navbar_hamburger")
-require("bulma-extensions")
-//= require bulma-extensions
+require("bulma/modal_html_calendar")
+// require("bulma/collapsible_registration")
+// require("bulma/accordion_events")
+// require("bulma/accordion_main")
+// require("bulma-extensions")
+// require("bulma/modal_url")
+// require("bulma/calendar")
+// //= require bulma-extensions
+
+// require '@creativebulma/bulma-collapsible';
 
 // Uncomment to copy all static images under ../images to the output folder and reference
 // them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)

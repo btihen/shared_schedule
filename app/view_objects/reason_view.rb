@@ -6,7 +6,11 @@ class ReasonView < ViewObject
   alias_method :reason_path, :root_model_path
 
   # delegate to model for attributes needed
-  delegate  :reason_description, to: :reason
+  delegate  :reason_name, to: :reason
+
+  def reason_description
+    reason.reason_description || ""
+  end
 
   # view_objects for relationships
   def tenant
