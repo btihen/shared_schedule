@@ -6,7 +6,7 @@ class TenantView < ViewObject
   alias_method :tenant_path, :root_model_path
 
   # delegate to model for attributes needed
-  delegate  :tenant_name, to: :tenant
+  delegate  :tenant_name, :is_demo?, :is_publicly_viewable?, to: :tenant
 
   def is_demo?
     tenant.tenant_name == "DemoGroup"

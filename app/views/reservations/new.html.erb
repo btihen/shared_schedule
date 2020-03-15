@@ -4,7 +4,7 @@
               url: tenant_space_reservations_path(tenant, space, reservation),
               id: "new-reservation-form", class: "reservation" ) do |form|  %>
 
-  <%= render 'form', form: form, reservation: reservation, space: space, spaces: spaces, tenant: tenant %>
+  <%= render 'form', form: form, reservation: reservation, space: space, tenant: tenant %>
 
 <% end %>
 

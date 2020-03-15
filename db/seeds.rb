@@ -16,7 +16,7 @@ Tenant.destroy_all
 SeedDemoGroup.create
 
 # Create Developer Experimental Data
-8.times do |index|
+4.times do |index|
   tenant  = FactoryBot.create :tenant, is_publicly_viewable: index.even?
 
   FactoryBot.create :reason, tenant: tenant
@@ -27,14 +27,21 @@ SeedDemoGroup.create
   end
 
   users  = []
-  5.times do
-    user = FactoryBot.create :user, tenant: tenant, user_role: ApplicationHelper::USER_ROLES.sample, password: "Let-M3-In!", password_confirmation:  "Let-M3-In!"
-    interests_count = rand(1..(reasons.length-1))
-    user.interests  << reasons.sample(interests_count)
-    user.save!
+  if index == 0
+    user = FactoryBot.create :user, email: 'manager0@group0.ch', tenant: tenant, user_role: 'manager', password: "Let-M3-In!", password_confirmation:  "Let-M3-In!"
+    # interests_count = rand(1..(reasons.length-1))
+    # user.interests  << reasons.sample(interests_count)
+    # user.save!
     users << user
+  else
+    5.times do
+      user = FactoryBot.create :user, tenant: tenant, user_role: ApplicationHelper::USER_ROLES.sample, password: "Let-M3-In!", password_confirmation:  "Let-M3-In!"
+      interests_count = rand(1..(reasons.length-1))
+      user.interests  << reasons.sample(interests_count)
+      user.save!
+      users << user
+    end
   end
-  tenant.save!
 
   breakfast = TimeSlot.create time_slot_name: "Frühstuck",  begin_time: "06:00", end_time: "10:00", tenant: tenant
   morning   = TimeSlot.create time_slot_name: "Morgen",     begin_time: "08:00", end_time: "12:00", tenant: tenant

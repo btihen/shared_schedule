@@ -6,7 +6,7 @@ class UserView < ViewObject
   alias_method :user_path, :root_model_path
 
   # delegate to model for attributes needed
-  delegate  :first_name, :last_name, :user_role, to: :user
+  delegate  :first_name, :last_name, :user_role, :may_edit?, to: :user
 
   # attribute methods 
   def title

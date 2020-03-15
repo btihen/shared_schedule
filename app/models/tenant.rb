@@ -8,6 +8,10 @@ class Tenant < ApplicationRecord
 
   validates :tenant_name, presence: true
 
+  def is_demo?
+    tenant_name == "DemoGroup"
+  end
+
   def is_publicly_viewable?
     is_publicly_viewable
   end

@@ -30,6 +30,10 @@ class User < ApplicationRecord
     id.blank?
   end
 
+  def may_edit?
+    %w[manager scheduler].include? user_role
+  end
+
   private
 
   def password_present?
