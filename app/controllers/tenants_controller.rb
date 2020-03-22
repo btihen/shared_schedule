@@ -2,8 +2,9 @@ class TenantsController < ApplicationController
 
   def index
     user          = current_user || GuestUser.new
-    tenants       = Tenant.where(is_publicly_viewable: true)    # public tenants
-                          .or(Tenant.where(id: user.tenant.id)) # user tenant
+    tenants       = Tenant.viewable(user.tenant)
+    # tenants       = Tenant.where(is_publicly_viewable: true)    # public tenants
+    #                       .or(Tenant.where(id: user.tenant.id)) # user tenant
     tenant_views  = TenantView.collection(tenants)
     respond_to do |format|
       format.html { render 'tenants/index', locals: {tenants: tenant_views} }
@@ -15,14 +16,19 @@ class TenantsController < ApplicationController
     tenant        = Tenant.find(params[:id])
     unauthorized_view(user, tenant); return if performed?
 
-    # show publicly available calendars -- but no EDITS?
-    # not authorized error if :id != tenant.id & not public
+    user_view     = UserView.new(user)
+    tenant_view   = TenantView.new(tenant)
+    spaces        = Space.viewable(user.tenant)
+    space_views   = SpaceView.collection(spaces)
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
     calendar_view = CalendarView.new(date: date)
-    tenant_view   = TenantView.new(tenant)
-    spaces        = tenant.spaces.all
-    space_views   = SpaceView.collection(spaces)
-    user_view     = UserView.new(user)
+
+    # spaces        = if user.tenant_id == tenant.id
+    #                   tenant.spaces.all
+    #                 else
+    #                   tenant.spaces.select{ |space| space.is_calendar_public? }
+    #                 end
+
     respond_to do |format|
       format.html { render 'tenants/show', locals: {user: user_view,
                                                     tenant: tenant_view,

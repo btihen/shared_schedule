@@ -12,8 +12,8 @@ module SeedDemoGroup
     evening   = TimeSlot.create time_slot_name: "Evening",   begin_time: "18:00", end_time: "22:00", tenant: tenant
 
     spaces = []
-    spaces << FactoryBot.create(:space, space_name: "Single Usage Room", tenant: tenant, is_double_booking_ok: false)
-    spaces << FactoryBot.create(:space, space_name: "Multi-Usage Room",  tenant: tenant, is_double_booking_ok: true)
+    spaces << FactoryBot.create(:space, space_name: "Single Usage Demo", tenant: tenant, is_calendar_public: true, is_double_booking_ok: false)
+    spaces << FactoryBot.create(:space, space_name: "Multi-Usage Demo",  tenant: tenant, is_calendar_public: true, is_double_booking_ok: true)
 
     spaces.each do |space|
       space.allowed_time_slots << [morning, afternoon, evening]

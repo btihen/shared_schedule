@@ -11,6 +11,10 @@ class GuestUser
     "Guest User"
   end
 
+  def role
+    "scheduler"
+  end
+
   def guest?
     true
   end
@@ -19,9 +23,9 @@ class GuestUser
     Tenant.find_by(tenant_name: 'DemoGroup')
   end
 
-  # def tenant_id
-  #   Tenant.find_by(tenant_name: 'DemoGroup').id
-  # end
+  def tenant_id
+    Tenant.find_by(tenant_name: 'DemoGroup').id
+  end
 
   # answer "" for all unexpected calls
   def method_missing(m, *args, &block)

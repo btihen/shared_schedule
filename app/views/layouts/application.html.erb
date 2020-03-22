@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <!-- fix turbolinks with back button
       Modal JS solution when 'back' button needs JS reload
       https://github.com/turbolinks/turbolinks#ensuring-specific-pages-trigger-a-full-reload
@@ -11,7 +12,7 @@
       <%# end %>
     -->
     <% if content_for?(:head) %>
-      <%= yield(:head) %>
+    <%= yield(:head) %>
     <% end %>
 
     <title>SharedSpaces</title>
@@ -24,26 +25,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://unpkg.com/bulmaswatch/litera/bulmaswatch.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-  </head>
+</head>
 
-  <body style="background-color:AliceBlue;">
+<body style="background-color:AliceBlue;">
 
     <%= render 'layouts/navbar' %>
 
     <% if notice.present? %>
-      <p class="notification is-success" id="notice"><%= notice %></p>
+    <p class="notification is-success" id="notice"><%= notice %></p>
     <% end %>
     <% if alert.present? %>
-      <p class="notification is-danger"  id="alert"><%= alert %></p>
+    <p class="notification is-danger" id="alert"><%= alert %></p>
     <% end %>
 
     <section class="section">
-      <div class="container is-fluid">
-        <%= yield %>
-      </div>
+        <div class="container is-fluid">
+            <%= yield %>
+        </div>
     </section>
 
     <%= render 'layouts/footer' %>
 
-  </body>
+</body>
+
 </html>

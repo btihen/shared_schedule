@@ -5,14 +5,20 @@ class SpacesController < ApplicationController
     user          = current_user || GuestUser.new
     space         = Space.find(params[:id])
     tenant        = Tenant.find(params[:tenant_id])
-    unauthorized_change(user, tenant, space); return if performed?
+    unauthorized_view(user, tenant, space); return if performed?
 
+    user_view     = UserView.new(user)
     tenant_view   = TenantView.new(tenant)
-    spaces        = tenant.spaces.all
+    spaces        = Spaces.viewable(user.tenant)
     space_views   = SpaceView.collection(spaces)
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
     calendar_view = CalendarView.new(date: date)
-    user_view     = UserView.new(user)
+
+    # spaces        = if user.tenant_id == tenant.id
+    #                   tenant.spaces.all
+    #                 else
+    #                   tenant.spaces.select{ |space| space.is_calendar_public? }
+    #                 end
     respond_to do |format|
       # it tenant really needed?
       format.html { render 'spaces/index', locals: {user: user_view,
@@ -22,24 +28,24 @@ class SpacesController < ApplicationController
     end
   end
 
-  # larger (but responsive) calendar for chosen space
-  def show
-    user          = current_user || GuestUser.new
-    space         = Space.find(params[:id])
-    tenant        = Tenant.find(params[:tenant_id])
-    unauthorized_change(user, tenant, space); return if performed?
+  # # larger (but responsive) calendar for chosen space
+  # def show
+  #   user          = current_user || GuestUser.new
+  #   space         = Space.find(params[:id])
+  #   tenant        = Tenant.find(params[:tenant_id])
+  #   unauthorized_view(user, tenant, space); return if performed?
 
-    # tenant_view   = TenantView.new(tenant)
-    space_view    = SpaceView.new(space)
-    date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
-    calendar_view = CalendarView.new(date: date)
-    user_view     = UserView.new(user)
-    respond_to do |format|
-      format.html { render 'spaces/show', locals: { user: user_view,
-                                                    space: space_view,
-                                                    today: Date.today} }
-    end
-  end
+  #   # tenant_view   = TenantView.new(tenant)
+  #   space_view    = SpaceView.new(space)
+  #   date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
+  #   calendar_view = CalendarView.new(date: date)
+  #   user_view     = UserView.new(user)
+  #   respond_to do |format|
+  #     format.html { render 'spaces/show', locals: { user: user_view,
+  #                                                   space: space_view,
+  #                                                   today: Date.today} }
+  #   end
+  # end
 
   # def edit
   # end

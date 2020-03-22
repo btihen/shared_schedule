@@ -22,10 +22,15 @@
 
   <div class="columns is-multiline">
   <% tenant.spaces.each do |space| %>
-    <div class="column is-half-desktop is-one-third-fullhd is-centered">
+    <div class="column is-half-desktop is-one-third-fullhd is-centered has-text-centered">
+      <!--
       <p class="title is-4"><%= link_to space.space_name,
                                         tenant_space_path(id: space.id, tenant_id: tenant.id),
                                         class: "card-footer-item" %></p>
+      -->
+      <div>
+        <p class="title is-4 calendar-title"><%= space.space_name %></p>
+      </div>
       <%= render 'spaces/calendar_mini', user: user, space: space, tenant: tenant, calendar: calendar,
                                         prev_month_path: tenant_path( id: tenant.id,
                                                                       date: calendar.prev_month_string ),
@@ -36,6 +41,3 @@
   </div>
 
 </div>
-
-<%= link_to 'Edit', edit_tenant_path(tenant) %> |
-<%= link_to 'Back', tenants_path %>

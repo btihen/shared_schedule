@@ -17,6 +17,17 @@ class Space < ApplicationRecord
   validate :validate_reserved_time_slots_alowed
   validate :vaidate_reserved_time_slots_not_overlapping
 
+  scope :viewable,  ->(user_tenant) { if user_tenant.blank?
+                                        where(is_calendar_public: true)
+                                      else
+                                        where(tenant_id: user_tenant.id)
+                                      end
+                                    }
+
+  def is_calendar_public?
+    is_calendar_public
+  end
+
   def is_double_booking_ok?
     is_double_booking_ok
   end

@@ -8,6 +8,11 @@ class Tenant < ApplicationRecord
 
   validates :tenant_name, presence: true
 
+  # all public viewable and also own tenant if private
+  scope :viewable,  ->(user_tenant) { where(is_publicly_viewable: true)
+                                      .or(Tenant.where(id: user_tenant.id))
+                                    }
+
   def is_demo?
     tenant_name == "DemoGroup"
   end
