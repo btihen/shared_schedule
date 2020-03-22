@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- fix turbolinks with back button
+      Modal JS solution when 'back' button needs JS reload
+      https://github.com/turbolinks/turbolinks#ensuring-specific-pages-trigger-a-full-reload
+      https://stackoverflow.com/questions/39627881/jquery-plugin-initialization-on-browser-back-button-for-turbolinks-rails-5/39801052
+      put the following at the top of a recieving page - that needs JS reload for 'back' button
+      <%# content_for :head do %>
+        <meta name="turbolinks-visit-control" content="reload">
+      <%# end %>
+    -->
+    <% if content_for?(:head) %>
+    <%= yield(:head) %>
+    <% end %>
+
+    <title>SharedSpaces</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://unpkg.com/bulmaswatch/litera/bulmaswatch.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+</head>
+
+<body style="background-color:AliceBlue;">
+
+    <%= render 'layouts/navbar' %>
+
+    <% if notice.present? %>
+    <p class="notification is-success" id="notice"><%= notice %></p>
+    <% end %>
+    <% if alert.present? %>
+    <p class="notification is-danger" id="alert"><%= alert %></p>
+    <% end %>
+
+    <section class="section">
+        <div class="container is-fluid">
+            <%= yield %>
+        </div>
+    </section>
+
+    <%= render 'layouts/footer' %>
+
+</body>
+
+</html>
