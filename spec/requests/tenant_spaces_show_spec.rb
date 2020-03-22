@@ -50,10 +50,10 @@ RSpec.describe "Spaces Show", type: :request do
                             event.reload
                           }
 
-  describe "GET tenant/:tenant_id/spaces/:id" do
-    it "works! (now write some real specs)" do
-      get tenant_spaces_path(id: space1.id, tenant_id: tenant.id)
-      expect(response).to have_http_status(200)
-    end
-  end
+  # describe "GET tenant/:tenant_id/spaces/:id" do
+  #   it "works! (now write some real specs)" do
+  #     get tenant_spaces_path(id: space1.id, tenant_id: tenant.id)
+  #     expect(response).to have_http_status(200)
+  #   end
+  # end
 end

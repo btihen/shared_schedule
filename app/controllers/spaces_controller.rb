@@ -4,22 +4,17 @@ class SpacesController < ApplicationController
   def index
     user          = current_user || GuestUser.new
     tenant        = Tenant.find(params[:tenant_id])
-    unauthorized_view(user, tenant, space); return if performed?
+    unauthorized_view(user, tenant); return if performed?
 
     user_view     = UserView.new(user)
     tenant_view   = TenantView.new(tenant)
-    spaces        = Space.viewable(user.tenant)
+    spaces        = Space.viewable(user_view.tenant)
     space_views   = SpaceView.collection(spaces)
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
     calendar_view = CalendarView.new(date: date)
 
-    # spaces        = if user.tenant_id == tenant.id
-    #                   tenant.spaces.all
-    #                 else
-    #                   tenant.spaces.select{ |space| space.is_calendar_public? }
-    #                 end
     respond_to do |format|
-      # it tenant really needed?
+      # is tenant really needed?
       format.html { render 'spaces/index', locals: {user: user_view,
                                                     tenant: tenant_view,
                                                     spaces: space_views,

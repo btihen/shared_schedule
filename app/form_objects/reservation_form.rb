@@ -113,7 +113,7 @@ class ReservationForm < FormObject
     reservation.end_time_slot    = end_time_slot
     reservation.event            = event
     reservation.space            = space
-    # reservation.tenant           = tenant
+    reservation.tenant           = space.tenant
     reservation.start_date       = start_date
     reservation.start_date_time  = start_date_time
     reservation.end_date         = (end_date.blank? ? start_date : end_date)
@@ -122,7 +122,10 @@ class ReservationForm < FormObject
   end
 
   def start_date_time
-    DateTime.new(start_date.year, start_date.month, start_date.day, start_time_slot.begin_time.hour, start_time_slot.begin_time.min, 0) #, "ECT")
+    return nil unless start_date.present? && start_time_slot.valid?
+
+    start_date_obj = start_date.is_a?(String) ? Date.parse(start_date) : start_date
+    DateTime.new(start_date_obj.year, start_date_obj.month, start_date_obj.day, start_time_slot.begin_time.hour, start_time_slot.begin_time.min, 0) #, "ECT")
   end
 
   def assign_reason_attribs

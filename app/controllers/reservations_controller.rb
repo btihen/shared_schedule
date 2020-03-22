@@ -61,7 +61,7 @@ class ReservationsController < ApplicationController
     space_view    = SpaceView.new(space)
     user_view     = UserView.new(user)
 
-    attributes       = reservation_params.merge(tenant_id: tenant.id)
+    attributes       = reservation_params
     reservation_form = ReservationForm.new(attributes)
     if reservation_form.valid?
       reservation = reservation_form.reservation

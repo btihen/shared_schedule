@@ -17,7 +17,10 @@ class TenantView < ViewObject
   end
 
   def next_event_formated(date_time = Time.now)
-    next_event(date_time).start_date_time.strftime("%a %d %b %Y @ %H:%M")
+    reservation = next_event(date_time)
+    return "---"  if reservation.blank? || reservation.start_date_time.blank?
+
+    reservation.start_date_time.strftime("%a %d %b %Y @ %H:%M")
   end
 
   # attributes that allow nils

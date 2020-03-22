@@ -27,19 +27,15 @@ RSpec.describe Event, type: :model do
                     space.save
                     space.reload
                   }
-    let(:event_1) { event = FactoryBot.create :event, reason: reason1, tenant: tenant
-                    event.reservations << Reservation.create(space: space, start_date: Date.today, start_time_slot: time1, end_date: Date.today, end_time_slot: time1)
-                    event.save
-                    event.reload
-                  }
-    let(:event_2) { event = FactoryBot.create :event, reason: reason2, tenant: tenant
-                    event.reservations << Reservation.create(space: space, start_date: Date.yesterday, start_time_slot: time2, end_date: Date.yesterday, end_time_slot: time2)
-                    event.save
-                    event.reload }
+    let(:event1)  { event = FactoryBot.create :event, reason: reason1, tenant: tenant }
+    let(:event2)  { event = FactoryBot.create :event, reason: reason2, tenant: tenant }
+    let(:reservation1) { FactoryBot.create(:reservation, event: event1, space: space, tenant: tenant, start_date: Date.yesterday, start_time_slot: time1, end_date: Date.yesterday, end_time_slot: time1) }
+    let(:reservation2) { FactoryBot.create(:reservation, event: event2, space: space, tenant: tenant, start_date: Date.yesterday, start_time_slot: time2, end_date: Date.yesterday, end_time_slot: time2) }
     it "#destroy_all" do
-      expect(event_1).to            be
-      expect(event_2).to            be
+      expect(reservation1).to            be
+      expect(reservation2).to            be
       described_class.destroy_all
+
       expect(Event.all).to                          eq [].sort
       expect(Space.all).to                          eq [space]
       expect(Reservation.all).to          eq []
@@ -48,11 +44,12 @@ RSpec.describe Event, type: :model do
       expect(SpaceTimeSlot.all.pluck(:id).sort).to  eq [SpaceTimeSlot.first.id, SpaceTimeSlot.last.id].sort
     end
     it "#destroy" do
-      expect(event_1).to            be
-      expect(event_2).to            be
-      event_1.destroy
+      expect(reservation1).to            be
+      expect(reservation2).to            be
+      event1.destroy
+
       expect(Space.all).to                          eq [space]
-      expect(Event.all.pluck(:id)).to               eq [event_2.id].sort
+      expect(Event.all.pluck(:id)).to               eq [event2.id].sort
       expect(Reason.all.pluck(:id).sort).to         eq [reason1.id, reason2.id]
       expect(TimeSlot.all.pluck(:id)).to            eq [TimeSlot.first.id, TimeSlot.last.id]
       expect(Reservation.all.pluck(:start_time_slot_id).sort).to    eq [TimeSlot.last.id]

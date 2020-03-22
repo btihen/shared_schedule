@@ -34,31 +34,28 @@ RSpec.describe Tenant, type: :model do
                     space.save
                     space.reload
                   }
-    let(:event1)  { event = FactoryBot.create :event, reason: reason1, tenant: tenant1
-                    event.reservations << Reservation.create(space: space1, start_date: Date.today, start_time_slot: time1, end_date: Date.today, end_time_slot: time1)
-                    event.save
-                    event.reload
-                  }
-    let(:event2)  { event = FactoryBot.create :event, reason: reason2, tenant: tenant2
-                    event.reservations << Reservation.create(space: space2, start_date: Date.yesterday, start_time_slot: time2, end_date: Date.yesterday, end_time_slot: time2)
-                    event.save
-                    event.reload }
+    let(:event1)  { event = FactoryBot.create :event, reason: reason1, tenant: tenant1 }
+    let(:event2)  { event = FactoryBot.create :event, reason: reason2, tenant: tenant2 }
+    let(:reservation1) { FactoryBot.create(:reservation, event: event1, space: space1, tenant: tenant1, start_date: Date.today, start_time_slot: time1, end_date: Date.today, end_time_slot: time1) }
+    let(:reservation2) { FactoryBot.create(:reservation, event: event2, space: space2, tenant: tenant2, start_date: Date.today, start_time_slot: time2, end_date: Date.today, end_time_slot: time2) }
     it "#destroy_all" do
-      expect(event1).to                     be
-      expect(event2).to                     be
+      expect(reservation1).to               be
+      expect(reservation2).to               be
       described_class.destroy_all
+
       expect(Event.all).to                  eq []
       expect(Space.all).to                  eq []
       expect(Reason.all).to                 eq []
       expect(Tenant.all).to                 eq []
       expect(TimeSlot.all).to               eq []
       expect(SpaceTimeSlot.all).to          eq []
-      expect(Reservation.all).to  eq []
+      expect(Reservation.all).to            eq []
     end
     it "#destroy" do
-      expect(event1).to                     be
-      expect(event2).to                     be
+      expect(reservation1).to               be
+      expect(reservation2).to               be
       tenant1.destroy
+
       expect(Space.all.pluck(:id)).to       eq [space2.id]
       expect(Event.all.pluck(:id)).to       eq [event2.id]
       expect(Reason.all.pluck(:id)).to      eq [reason2.id]

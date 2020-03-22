@@ -3,15 +3,15 @@
 # keep views simple - when an object is nil at least return "" in view
 class GuestUser
 
-  def role
-    "user"
+  def id
+    0
   end
 
   def to_s
     "Guest User"
   end
 
-  def role
+  def user_role
     "scheduler"
   end
 
