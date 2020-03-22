@@ -2,13 +2,13 @@ class ReservationForm < FormObject
 
   # alias_method :reservation, :root_model
 
-  delegate :id, :host, :event, :space, :start_date, :end_date,
-            :start_time_slot, :end_time_slot, :persisted?,
+  delegate :id, :persisted?, :host, :event, :space, :tenant,
+            :start_date, :end_date, :start_time_slot, :end_time_slot,
             to: :reservation,  allow_nil: true
 
   # All the models that are apart of our form should be part attr_accessor.
   # This allows the form to be initialized with existing instances.
-  attr_accessor :id, :host, :event, :reason, :space, :tenant,
+  attr_accessor :id, :host, :event, :reason, :space, #:tenant,
                 :start_date, :end_date, :start_time_slot, :end_time_slot
 
   # def initialize(attribs)
@@ -28,7 +28,7 @@ class ReservationForm < FormObject
                       host: reservation.host,
                       event: reservation.event,
                       space: reservation.space,
-                      tenant: tenant,
+                      # tenant: tenant,
                       end_date: reservation.end_date,
                       start_date: reservation.start_date,
                       end_time_slot: reservation.end_time_slot,
@@ -54,7 +54,7 @@ class ReservationForm < FormObject
   attribute :event_id,            :integer
   attribute :space_id,            :integer
   attribute :reason_id,           :integer
-  attribute :tenant_id,           :integer
+  # attribute :tenant_id,           :integer
   attribute :host,                :squished_string
   attribute :event_name,          :squished_string
   attribute :event_description,   :squished_string
@@ -84,7 +84,8 @@ class ReservationForm < FormObject
   end
 
   def tenant
-    @tenant          ||= (Tenant.find_by(id: tenant_id) || Tenant.find_by(tenant_name: "DemoGroup"))
+    @tenant          ||= space.tenant
+    # @tenant          ||= (Tenant.find_by(id: tenant_id) || Tenant.find_by(tenant_name: "DemoGroup"))
   end
 
   def reason
@@ -112,10 +113,16 @@ class ReservationForm < FormObject
     reservation.end_time_slot    = end_time_slot
     reservation.event            = event
     reservation.space            = space
+    # reservation.tenant           = tenant
     reservation.start_date       = start_date
+    reservation.start_date_time  = start_date_time
     reservation.end_date         = (end_date.blank? ? start_date : end_date)
     reservation.host             = host
     reservation
+  end
+
+  def start_date_time
+    DateTime.new(start_date.year, start_date.month, start_date.day, start_time_slot.begin_time.hour, start_time_slot.begin_time.min, 0) #, "ECT")
   end
 
   def assign_reason_attribs
@@ -133,7 +140,7 @@ class ReservationForm < FormObject
 
   def assign_event_attribs
     # get event
-    return Event.find(event_id)          if event_id.present?
+    return Event.find(event_id) if event_id.present?
 
     # create a new event
     event = Event.new

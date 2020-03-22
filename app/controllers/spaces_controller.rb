@@ -3,13 +3,12 @@ class SpacesController < ApplicationController
   # show mini-calendars for each space in Tenant
   def index
     user          = current_user || GuestUser.new
-    space         = Space.find(params[:id])
     tenant        = Tenant.find(params[:tenant_id])
     unauthorized_view(user, tenant, space); return if performed?
 
     user_view     = UserView.new(user)
     tenant_view   = TenantView.new(tenant)
-    spaces        = Spaces.viewable(user.tenant)
+    spaces        = Space.viewable(user.tenant)
     space_views   = SpaceView.collection(spaces)
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
     calendar_view = CalendarView.new(date: date)

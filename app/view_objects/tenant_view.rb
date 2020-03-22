@@ -12,6 +12,14 @@ class TenantView < ViewObject
     tenant.tenant_name == "DemoGroup"
   end
 
+  def next_event(date_time = Time.now)
+    Reservation.tenant_next(tenant, date_time).first
+  end
+
+  def next_event_formated(date_time = Time.now)
+    next_event(date_time).start_date_time.strftime("%a %d %b %Y @ %H:%M")
+  end
+
   # attributes that allow nils
   def tenant_logo_url
     tenant.tenant_logo_url || "https://placeimg.com/80/80/arch/sepia"
