@@ -7,13 +7,14 @@ class ReservationsController < ApplicationController
     unauthorized_view(user, tenant, space); return if performed?
 
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
-    calendar_view = CalendarView.new(date: date)
     tenant_view   = TenantView.new(tenant)
     space_view    = SpaceView.new(space)
     reservations  = Reservation.where(space_id: space.id)
                               .where('start_date <= :date AND end_date >= :date', date: date)
     reservation_views = ReservationView.collection(reservations)
     user_view     = UserView.new(user)
+    calendar_view = CalendarView.new(tenant_view, user_view, date)
+
     respond_to do |format|
       format.html { render 'spaces/show', locals: { user: user_view,
                                                     tenant: tenant_view,
@@ -29,12 +30,8 @@ class ReservationsController < ApplicationController
     space         = Space.find(params[:space_id])
     tenant        = Tenant.find(params[:tenant_id])
     unauthorized_change(user, tenant, space); return if performed?
-    # remove subroute?
-    # tenant        = Tenant.find(params[:tenant_id])
-    # unauthorized_view(tenant, user); return if performed?
 
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
-    calendar_view = CalendarView.new(date: date)
     tenant_view   = TenantView.new(tenant)
     space_view    = SpaceView.new(space)
     user_view     = UserView.new(user)
@@ -56,8 +53,6 @@ class ReservationsController < ApplicationController
     tenant        = Tenant.find(params[:tenant_id])
     unauthorized_change(user, tenant, space); return if performed?
 
-    # date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
-    # calendar_view = CalendarView.new(date: date)
     tenant_view   = TenantView.new(tenant)
     space_view    = SpaceView.new(space)
     user_view     = UserView.new(user)
@@ -87,8 +82,6 @@ class ReservationsController < ApplicationController
     reservation   = Reservation.find(params[:id])
     unauthorized_change(user, tenant, space, reservation); return if performed?
 
-    # date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
-    # calendar_view = CalendarView.new(date: date)
     reservation_form = ReservationForm.new_from(reservation)
     tenant_view   = TenantView.new(tenant)
     space_view    = SpaceView.new(space)
@@ -112,8 +105,6 @@ class ReservationsController < ApplicationController
     reservation_form = ReservationForm.new(udpated_attrs)
     unauthorized_change(user, tenant, space, reservation_form.reservation); return if performed?
 
-    # date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
-    # calendar_view = CalendarView.new(date: date)
     tenant_view   = TenantView.new(tenant)
     space_view    = SpaceView.new(space)
     user_view     = UserView.new(user)

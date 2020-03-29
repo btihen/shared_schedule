@@ -22,13 +22,7 @@ class TenantsController < ApplicationController
     spaces        = Space.viewable(user_view.tenant)
     space_views   = SpaceView.collection(spaces)
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
-    calendar_view = CalendarView.new(date: date)
-
-    # spaces        = if user.tenant_id == tenant.id
-    #                   tenant.spaces.all
-    #                 else
-    #                   tenant.spaces.select{ |space| space.is_calendar_public? }
-    #                 end
+    calendar_view = CalendarView.new(tenant_view, user_view, date)
 
     respond_to do |format|
       format.html { render 'tenants/show', locals: {user: user_view,

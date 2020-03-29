@@ -42,38 +42,41 @@ module SeedDemoGroup
 
   def self.create_events
     tenant     = Tenant.find_by(tenant_name: "DemoGroup")
-
-    error_message = "DemoGroup not found please run: `bin/rails runner SeedDemoGroup.create`"
-
-
     spaces     = Space.where(tenant_id: tenant.id)
+    # error_message = "DemoGroup not found please run: `bin/rails runner SeedDemoGroup.create`"
 
     # recreate all Demo Reasons and Events
     reasons = []
-    5.times do
+    3.times do
       reason   = FactoryBot.create :reason, tenant: tenant
       reasons << reason
     end
 
-    (-2..4).each do |shift|
+    events = []
+    5.times do
+      event   = FactoryBot.create :event, reason: reasons.sample, tenant: tenant
+      events << event
+    end
+
+    (-2..2).each do |shift|
       date_0  = Date.today + (shift*2).weeks
       date_1  = date_0 + 1.day
       date_2  = date_0 + 2.days
       date_3  = date_0 + 3.days
       date_4  = date_0 + 4.days
       date_5  = date_0 + 5.days
-      event = FactoryBot.create :event, reason: reasons.sample, tenant: tenant
+      # event = FactoryBot.create :event, reason: reasons.sample, tenant: tenant
 
       # schedule events within spaces
       spaces.each do |space|
 
         time_slots = space.allowed_time_slots
 
-        event.reservations << FactoryBot.create(:reservation, space: space, tenant: tenant, start_date: date_0, start_time_slot: time_slots.second, end_date: date_2, end_time_slot: time_slots.last)
-        event.reservations << FactoryBot.create(:reservation, space: space, tenant: tenant, start_date: date_3, start_time_slot: time_slots.first,  end_date: date_3, end_time_slot: time_slots.first)
-        event.reservations << FactoryBot.create(:reservation, space: space, tenant: tenant, start_date: date_3, start_time_slot: time_slots.second, end_date: date_3, end_time_slot: time_slots.second)
-        event.reservations << FactoryBot.create(:reservation, space: space, tenant: tenant, start_date: date_5, start_time_slot: time_slots.sample, end_date: date_5, end_time_slot: time_slots.sample)
-        event.save
+        FactoryBot.create(:reservation, space: space, event: events.first,  tenant: tenant, start_date: date_0, start_time_slot: time_slots.second, end_date: date_2, end_time_slot: time_slots.last)
+        FactoryBot.create(:reservation, space: space, event: events.second, tenant: tenant, start_date: date_3, start_time_slot: time_slots.first,  end_date: date_3, end_time_slot: time_slots.second)
+        FactoryBot.create(:reservation, space: space, event: events.last,   tenant: tenant, start_date: date_3, start_time_slot: time_slots.last,   end_date: date_3, end_time_slot: time_slots.last)
+        FactoryBot.create(:reservation, space: space, event: events.sample, tenant: tenant, start_date: date_5, start_time_slot: time_slots.first,  end_date: date_5, end_time_slot: time_slots.sample)
+        # space.save
       end
     end
   end

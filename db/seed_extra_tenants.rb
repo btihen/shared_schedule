@@ -5,11 +5,17 @@ module SeedExtraTenants
     4.times do |index|
       tenant  = FactoryBot.create :tenant, is_publicly_viewable: index.even?
 
-      FactoryBot.create :reason, tenant: tenant
+      # FactoryBot.create :reason, tenant: tenant
       reasons = []
-      5.times do
+      3.times do
         reason   = FactoryBot.create :reason, tenant: tenant
         reasons << reason
+      end
+
+      events = []
+      5.times do
+        event   = FactoryBot.create :event, reason: reasons.sample, tenant: tenant
+        events << event
       end
 
       users  = []
@@ -46,15 +52,17 @@ module SeedExtraTenants
         date_3  = date_0 + 3.days
         date_4  = date_0 + 4.days
         date_5  = date_0 + 5.days
-        event = FactoryBot.create :event, reason: reasons.sample, tenant: tenant
+        # event = FactoryBot.create :event, reason: reasons.sample, tenant: tenant
 
         # schedule events within spaces
         spaces.each do |space|
+          time_slots = space.allowed_time_slots
+
           # make space reservation through event
-          event.reservations << FactoryBot.create(:reservation, space: space, tenant: tenant, start_date: date_0, start_time_slot: afternoon, end_date: date_2, end_time_slot: evening)
-          event.reservations << FactoryBot.create(:reservation, space: space, tenant: tenant, start_date: date_3, start_time_slot: morning, end_date: date_3, end_time_slot: morning)
-          event.reservations << FactoryBot.create(:reservation, space: space, tenant: tenant, start_date: date_3, start_time_slot: evening, end_date: date_3, end_time_slot: evening)
-          event.reservations << FactoryBot.create(:reservation, space: space, tenant: tenant, start_date: date_5, start_time_slot: evening, end_date: date_5, end_time_slot: evening)
+          FactoryBot.create(:reservation, space: space, event: events.first,  tenant: tenant, start_date: date_0, start_time_slot: time_slots.first, end_date: date_2, end_time_slot: time_slots.last)
+          FactoryBot.create(:reservation, space: space, event: events.second, tenant: tenant, start_date: date_3, start_time_slot: time_slots.first, end_date: date_3, end_time_slot: time_slots.first)
+          FactoryBot.create(:reservation, space: space, event: events.last,   tenant: tenant, start_date: date_3, start_time_slot: time_slots.last,  end_date: date_3, end_time_slot: time_slots.last)
+          FactoryBot.create(:reservation, space: space, event: events.sample, tenant: tenant, start_date: date_5, start_time_slot: time_slots.first, end_date: date_5, end_time_slot: time_slots.sample)
 
           # make event reservation through space probably most common
           # if space.is_double_booking_ok
@@ -65,7 +73,7 @@ module SeedExtraTenants
           #   event.reservations << FactoryBot.create(:reservation, space: space, tenant: tenant, date: date_3,  time_slot: lunch)
           #   event.reservations << FactoryBot.create(:reservation, space: space, tenant: tenant, date: date_3,  time_slot: dinner)
           # end
-          event.save
+          # event.save
         end
       end
     end

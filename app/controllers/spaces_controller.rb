@@ -11,7 +11,7 @@ class SpacesController < ApplicationController
     spaces        = Space.viewable(user_view.tenant)
     space_views   = SpaceView.collection(spaces)
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
-    calendar_view = CalendarView.new(date: date)
+    calendar_view = CalendarView.new(tenant_view, user_view, date)
 
     respond_to do |format|
       # is tenant really needed?
@@ -32,7 +32,7 @@ class SpacesController < ApplicationController
   #   # tenant_view   = TenantView.new(tenant)
   #   space_view    = SpaceView.new(space)
   #   date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
-  #   calendar_view = CalendarView.new(date: date)
+  #   calendar_view = CalendarView.new(tenant_view, user_view, date)
   #   user_view     = UserView.new(user)
   #   respond_to do |format|
   #     format.html { render 'spaces/show', locals: { user: user_view,

@@ -16,12 +16,16 @@ class Reservation < ApplicationRecord
   validates :end_time_slot,   presence: true
   validates :start_date_time, presence: true
 
-  scope :space_next,  ->(space_ids, date) { 
+  scope :in_date_range, ->(date_range) {
+                          where("start_date >= ?", date_range.first)
+                          .where("end_date <= ?", date_range.last)
+                        }
+  scope :space_next,  ->(space_ids, date_time) {
                           where(space_id: space_ids)
                           .where("start_date_time > ?", date_time)
                           .limit(1)
                         }
-  scope :tenant_next, ->(tenant, date_time) { 
+  scope :tenant_next, ->(tenant, date_time) {
                           where(tenant_id: tenant.id)
                           .where("start_date_time > ?", date_time)
                           .limit(1)
