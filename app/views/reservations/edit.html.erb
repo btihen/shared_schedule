@@ -2,9 +2,9 @@
 
 <h1>Edit Reservation</h1>
 <%= form_for( reservation, local: true,  # PATH MUST BE SINGULAR!!!
-              url: tenant_space_reservation_path(tenant, space, reservation),
+              url: tenant_space_reservation_path(tenant_id: tenant, space_id: space, id: reservation),
               id: "edit-reservation-form", class: "reservation" ) do |form|  %>
 
-  <%= render 'form', form: form, reservation: reservation, event: event, space: space, tenant: tenant %>
+  <%= render 'form', form: form, reservation: reservation, space: space, tenant: tenant %>
 
 <% end %>

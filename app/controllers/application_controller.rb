@@ -38,7 +38,6 @@ class ApplicationController < ActionController::Base
     end
 
     def unauthorized_change(user, tenant, space=nil, reservation=nil)
-binding.pry
       return if space.blank? && reservation.blank? &&
                 ( tenant.is_demo? ||
                   ((user.tenant.id == tenant.id) && user.may_edit?) )

@@ -41,11 +41,9 @@ class ReservationsController < ApplicationController
 
     reservation   = Reservation.new(space: space, start_date: date)
     reservation_form = ReservationForm.new_from(reservation)
-    event_view    = EventView.new(reservation_form.event)
     respond_to do |format|
       format.html { render 'reservations/new', locals: {user: user_view,
                                                         space: space_view,
-                                                        event: event_view,
                                                         tenant: tenant_view,
                                                         reservation: reservation_form} }
       # format.json { render :index, status: :ok, reservation: reservation_form }
@@ -65,19 +63,17 @@ class ReservationsController < ApplicationController
     user_view     = UserView.new(user)
 
     reservation_form = ReservationForm.new(reservation_params)
-    event_view    = EventView.new(reservation_form.event)
     if reservation_form.valid?
       reservation = reservation_form.reservation
       reservation.save!
 
-      flash[:notice] = "#{reservation.event.event_name} event was successfully created."
+      flash[:notice] = "#{reservation.event.event_name} event was successfully reserved."
       redirect_to tenant_path(tenant)
     else
       respond_to do |format|
         flash[:alert] = 'Please fix the errors'
         format.html { render 'reservations/new', locals: {user: user_view,
                                                           space: space_view,
-                                                          event: event_view,
                                                           tenant: tenant_view,
                                                           reservation: reservation_form} }
       end
@@ -94,7 +90,6 @@ class ReservationsController < ApplicationController
     # date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
     # calendar_view = CalendarView.new(date: date)
     reservation_form = ReservationForm.new_from(reservation)
-    event_view    = EventView.new(reservation_form.event)
     tenant_view   = TenantView.new(tenant)
     space_view    = SpaceView.new(space)
     user_view     = UserView.new(user)
@@ -102,7 +97,6 @@ class ReservationsController < ApplicationController
     respond_to do |format|
       format.html { render 'reservations/edit', locals: { user: user_view,
                                                           space: space_view,
-                                                          event: event_view,
                                                           tenant: tenant_view,
                                                           reservation: reservation_form } }
       # format.json { render :index, status: :ok, reservation: reservation_form }
@@ -113,8 +107,9 @@ class ReservationsController < ApplicationController
     user          = current_user || GuestUser.new
     space         = Space.find(params[:space_id])
     tenant        = Tenant.find(params[:tenant_id])
-    reservation_form = ReservationForm.new(reservation_params)
-binding.pry
+
+    udpated_attrs = reservation_params.merge(id: params[:id])
+    reservation_form = ReservationForm.new(udpated_attrs)
     unauthorized_change(user, tenant, space, reservation_form.reservation); return if performed?
 
     # date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
@@ -123,7 +118,6 @@ binding.pry
     space_view    = SpaceView.new(space)
     user_view     = UserView.new(user)
 
-    event_view    = EventView.new(reservation_form.event)
     if reservation_form.valid?
       reservation = reservation_form.reservation
       reservation.save!
@@ -135,7 +129,6 @@ binding.pry
         flash[:alert] = 'Please fix the errors'
         format.html { render 'reservations/edit', locals: {user: user_view,
                                                           space: space_view,
-                                                          event: event_view,
                                                           tenant: tenant_view,
                                                           reservation: reservation_form} }
       end
