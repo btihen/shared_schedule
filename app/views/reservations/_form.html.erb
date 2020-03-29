@@ -21,7 +21,7 @@
       <section>
         <div class="card">
           <header class="card-header">
-            <p class="card-header-title">Choose Existing Event</p>
+            <p class="card-header-title">Choose Event</p>
             <a class="card-header-icon card-toggle" id="existingEventToggle">
               <i class="fa fa-angle-down"></i>
             </a>
@@ -31,8 +31,9 @@
               <div class="field">
               <div class="control has-addons">
                 <%= form.collection_select :event_id, tenant.events,
-                          :id, :event_name, {include_blank: 'Select Event'},
-                          {class: 'select is-rounded is-danger'} %>
+                          :id, :event_name, { include_blank: 'Select Event',
+                                              selected: reservation.event.id },
+                          {class: 'select'} %>
                 <p class="help">Select the Event</p>
                 <%= error_message_on(form.object, :event_id) %>
               </div>
@@ -51,7 +52,9 @@
             <div class="content">
               <div class="field is-horizontal">
                 <div class="control has-icons-left">
-                  <%= form.text_field :event_name, placeholder: "Event Name", class: "input" %>
+                  <%= form.text_field :event_name,
+                                      placeholder: "Event Name",
+                                      class: "input" %>
                   <span class="icon is-small is-left">
                     <i class="fas fa-user"></i>
                   </span>
@@ -60,7 +63,9 @@
                 </div>
 
                 <div class="control has-icons-left">
-                  <%= form.text_field :event_description, placeholder: "Event Description (Optional)", class: "input" %>
+                  <%= form.text_field :event_description,
+                                      placeholder: "Event Description (Optional)",
+                                      class: "input" %>
                   <span class="icon is-small is-left">
                     <i class="fas fa-user"></i>
                   </span>
@@ -73,7 +78,7 @@
 
               <div class="card">
                 <header class="card-header">
-                  <p class="card-header-title">Choose Existing Reason</p>
+                  <p class="card-header-title">Choose Reason</p>
                   <a class="card-header-icon card-toggle" id="existingReasonToggle">
                     <i class="fa fa-angle-down"></i>
                   </a>
@@ -84,7 +89,7 @@
                     <div class="control has-addons">
                       <%= form.collection_select :reason_id, tenant.reasons,
                             :id, :reason_name, {include_blank: 'Select Reason'},
-                            {class: 'select is-rounded is-danger'} %>
+                            {class: 'select'} %>
                       <p class="help">Event Reason</p>
                       <%= error_message_on(form.object, :reason_id) %>
                     </div>
@@ -103,7 +108,9 @@
 
                     <div class="field is-horizontal">
                       <div class="control has-icons-left">
-                        <%= form.text_field :reason_name, placeholder: "Reason Name", class: "input" %>
+                        <%= form.text_field :reason_name,
+                                            placeholder: "Reason Name",
+                                            class: "input" %>
                         <span class="icon is-small is-left">
                           <i class="fas fa-user"></i>
                         </span>
@@ -111,7 +118,9 @@
                         <%= error_message_on(form.object, :reason_name) %>
                       </div>
                       <div class="control has-icons-left">
-                        <%= form.text_field :reason_description, placeholder: "Reason Description (Optional)", class: "input" %>
+                        <%= form.text_field :reason_description,
+                                            placeholder: "Reason Description (Optional)",
+                                            class: "input" %>
                         <span class="icon is-small is-left">
                           <i class="fas fa-user"></i>
                         </span>
@@ -137,7 +146,8 @@
         <div class="field has-addons is-grouped is-grouped-multiline">
           <div class="control">
             <%= form.collection_select :space_id, tenant.spaces,
-                      :id, :space_name, {}, {class: 'select space'} %>
+                      :id, :space_name, {selected: reservation.space.id},
+                      {class: 'select'} %>
             <p class="help">Required</p>
             <%= error_message_on(form.object, :space_id) %>
           </div>
@@ -164,7 +174,8 @@
           </div>
           <div class="control is-expanded">
             <%= form.collection_select :start_time_slot_id, space.allowed_time_slots,
-                      :id, :time_slot_name, {include_blank: 'Please Select'},
+                      :id, :time_slot_name, { include_blank: 'Please Select',
+                                              selected: reservation.start_time_slot.id },
                       {class: 'select'} %>
             <p class="help">Required</p>
             <%= error_message_on(form.object, :space_id) %>
@@ -186,8 +197,9 @@
           </div>
 
           <div class="control is-expanded">
-            <%= form.collection_select :end_time_slot_id,
-                      space.allowed_time_slots, :id, :time_slot_name, {include_blank: 'Please Select'},
+            <%= form.collection_select :end_time_slot_id, space.allowed_time_slots,
+                      :id, :time_slot_name, { include_blank: 'Please Select',
+                                              selected: reservation.end_time_slot.id },
                       {class: 'select'} %>
             <p class="help">Optional</p>
             <%= error_message_on(form.object, :space_id) %>

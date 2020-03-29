@@ -21,14 +21,13 @@ class ReservationForm < FormObject
   end
 
   # is user needed / helpful?
-  def self.new_from(reservation, tenant)
+  def self.new_from(reservation)
     attribs = {}
     if reservation.present?
       attribs_init = {id: reservation.id,
                       host: reservation.host,
                       event: reservation.event,
                       space: reservation.space,
-                      # tenant: tenant,
                       end_date: reservation.end_date,
                       start_date: reservation.start_date,
                       end_time_slot: reservation.end_time_slot,
@@ -93,6 +92,10 @@ class ReservationForm < FormObject
     # @reason          ||= (Reason.find_by(id: reason_id) || Reason.new)
   end
 
+  # def event_id
+  #   self.event_id || event.id
+  # end
+
   def event
     @event           ||= assign_event_attribs
     # @event           ||= (Event.find_by(id: event_id) || Event.new)
@@ -129,8 +132,9 @@ class ReservationForm < FormObject
   end
 
   def assign_reason_attribs
-    # get reason
-    return event.reason           if event_id.present?
+    # get reason from event if available
+    return event.reason           if event&.reason&.present?
+    # otherwise get incomming reseason info if available
     return Reason.find(reason_id) if reason_id.present?
 
     # create new reason
@@ -142,10 +146,12 @@ class ReservationForm < FormObject
   end
 
   def assign_event_attribs
-    # get event
-    return Event.find(event_id) if event_id.present?
+    # use event_id if available (to allow change in events)
+    return Event.find(event_id)             if event_id.present?
+    # get event from reservation if available
+    return Event.find(reservation.event.id) if reservation&.event&.present?
 
-    # create a new event
+    # create a new event if no other info available
     event = Event.new
     event.event_name        = event_name
     event.event_description = event_description

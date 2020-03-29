@@ -33,7 +33,7 @@
             <% if calendar.date_has_reservation?(day, space.reservations) && calendar.date_in_month_of_interest?(day) %>
               <button data-html="true"
                       data-href="https://randomuser.me/api/?results=10"
-                      data-modal="<%= calendar.choose_reservations_html(space, day, space.reservations) %>"
+                      data-modal="<%= calendar.choose_reservations_modal_html(space, day, space.reservations) %>"
                       data-target="<%= calendar.choose_modal_form(day, space.reservations) %>"
                       data-tooltip="<%= calendar.date_item_tooltip_data(day, space.reservations) %>"
                       class="date-item <%= calendar.date_item_class_string(day, space.reservations) %>">
@@ -84,7 +84,7 @@
     <footer class="modal-card-foot">
       <%# only show when edit permissions (or demogroup for testing) %>
       <% if tenant.is_demo? || (user.tenant.id == tenant.id) %>
-        <button class="button is-success">Edit</button>
+        <button class="button is-success">Fake Edit</button>
       <% end %>
       <button class="button">Dismiss</button>
     </footer>

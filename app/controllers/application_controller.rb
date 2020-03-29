@@ -15,12 +15,19 @@ class ApplicationController < ActionController::Base
     end
 
   private
-    def unauthorized_view(user, tenant, space=nil)
+    def unauthorized_view(user, tenant, space=nil, reservation=nil)
       return if space.blank? &&
                 ( tenant.is_demo? || tenant.is_publicly_viewable? ||
                   user.tenant.id == tenant.id )
 
-      return if space.present? && tenant.spaces.include?(space) &&
+      return if space.present? && reservation.blank? &&
+                tenant.spaces.include?(space) &&
+                ( tenant.is_demo? || tenant.is_publicly_viewable? ||
+                  user.tenant.id == tenant.id )
+
+      return if space.present? && reservation.present? &&
+                tenant.spaces.include?(space) &&
+                tenant.reservations.events.include?(reservation) &&
                 ( tenant.is_demo? || tenant.is_publicly_viewable? ||
                   user.tenant.id == tenant.id )
 
@@ -30,12 +37,20 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    def unauthorized_change(user, tenant, space=nil)
-      return if space.blank? &&
+    def unauthorized_change(user, tenant, space=nil, reservation=nil)
+binding.pry
+      return if space.blank? && reservation.blank? &&
                 ( tenant.is_demo? ||
                   ((user.tenant.id == tenant.id) && user.may_edit?) )
 
-      return if space.present? && tenant.spaces.include?(space) &&
+      return if space.present? && reservation.blank? &&
+                tenant.spaces.include?(space) &&
+                ( tenant.is_demo? ||
+                  ((user.tenant.id == tenant.id) && user.may_edit?) )
+
+      return if space.present? && reservation.present? &&
+                tenant.spaces.include?(space) &&
+                tenant.events.include?(reservation.event) &&
                 ( tenant.is_demo? ||
                   ((user.tenant.id == tenant.id) && user.may_edit?) )
 

@@ -1,4 +1,5 @@
 class ReservationsController < ApplicationController
+
   def index
     user          = current_user || GuestUser.new
     space         = Space.find(params[:space_id])
@@ -39,10 +40,12 @@ class ReservationsController < ApplicationController
     user_view     = UserView.new(user)
 
     reservation   = Reservation.new(space: space, start_date: date)
-    reservation_form = ReservationForm.new_from(reservation, tenant)
+    reservation_form = ReservationForm.new_from(reservation)
+    event_view    = EventView.new(reservation_form.event)
     respond_to do |format|
       format.html { render 'reservations/new', locals: {user: user_view,
                                                         space: space_view,
+                                                        event: event_view,
                                                         tenant: tenant_view,
                                                         reservation: reservation_form} }
       # format.json { render :index, status: :ok, reservation: reservation_form }
@@ -55,14 +58,14 @@ class ReservationsController < ApplicationController
     tenant        = Tenant.find(params[:tenant_id])
     unauthorized_change(user, tenant, space); return if performed?
 
-    date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
-    calendar_view = CalendarView.new(date: date)
+    # date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
+    # calendar_view = CalendarView.new(date: date)
     tenant_view   = TenantView.new(tenant)
     space_view    = SpaceView.new(space)
     user_view     = UserView.new(user)
 
-    attributes       = reservation_params
-    reservation_form = ReservationForm.new(attributes)
+    reservation_form = ReservationForm.new(reservation_params)
+    event_view    = EventView.new(reservation_form.event)
     if reservation_form.valid?
       reservation = reservation_form.reservation
       reservation.save!
@@ -71,9 +74,68 @@ class ReservationsController < ApplicationController
       redirect_to tenant_path(tenant)
     else
       respond_to do |format|
-        flash[:alert] = 'Please fix the form errors'
+        flash[:alert] = 'Please fix the errors'
         format.html { render 'reservations/new', locals: {user: user_view,
                                                           space: space_view,
+                                                          event: event_view,
+                                                          tenant: tenant_view,
+                                                          reservation: reservation_form} }
+      end
+    end
+  end
+
+  def edit
+    user          = current_user || GuestUser.new
+    space         = Space.find(params[:space_id])
+    tenant        = Tenant.find(params[:tenant_id])
+    reservation   = Reservation.find(params[:id])
+    unauthorized_change(user, tenant, space, reservation); return if performed?
+
+    # date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
+    # calendar_view = CalendarView.new(date: date)
+    reservation_form = ReservationForm.new_from(reservation)
+    event_view    = EventView.new(reservation_form.event)
+    tenant_view   = TenantView.new(tenant)
+    space_view    = SpaceView.new(space)
+    user_view     = UserView.new(user)
+
+    respond_to do |format|
+      format.html { render 'reservations/edit', locals: { user: user_view,
+                                                          space: space_view,
+                                                          event: event_view,
+                                                          tenant: tenant_view,
+                                                          reservation: reservation_form } }
+      # format.json { render :index, status: :ok, reservation: reservation_form }
+    end
+  end
+
+  def update
+    user          = current_user || GuestUser.new
+    space         = Space.find(params[:space_id])
+    tenant        = Tenant.find(params[:tenant_id])
+    reservation_form = ReservationForm.new(reservation_params)
+binding.pry
+    unauthorized_change(user, tenant, space, reservation_form.reservation); return if performed?
+
+    # date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
+    # calendar_view = CalendarView.new(date: date)
+    tenant_view   = TenantView.new(tenant)
+    space_view    = SpaceView.new(space)
+    user_view     = UserView.new(user)
+
+    event_view    = EventView.new(reservation_form.event)
+    if reservation_form.valid?
+      reservation = reservation_form.reservation
+      reservation.save!
+
+      flash[:notice] = "#{reservation.event.event_name} event was successfully updated."
+      redirect_to tenant_path(tenant)
+    else
+      respond_to do |format|
+        flash[:alert] = 'Please fix the errors'
+        format.html { render 'reservations/edit', locals: {user: user_view,
+                                                          space: space_view,
+                                                          event: event_view,
                                                           tenant: tenant_view,
                                                           reservation: reservation_form} }
       end

@@ -57,12 +57,28 @@ class CalendarView
     I18n.t("date.abbr_month_names")[month_number]
   end
 
-  def choose_reservations_html(space, date, reservations = [])
+  def choose_reservations_modal_html(space, date, reservations = [])
     dates_reservations = reservations.select{ |r| r.date_range.include?(date) }
 
-    items = dates_reservations.map{ |r| %Q{<dl class="is-medium"><dt>#{r.date_range_string}</dt><dd>Event: <big><b>#{r.event_name}</b></big><br>Host: #{r.host_name.blank? ? "No one" : r.host_name}</dd></dl>} }
+    items = dates_reservations.map do |dr|
+      %Q{ <dl class="is-medium">
+            <dt>#{dr.start_time_slot}</dt>
+            <dd>Event: <big><b>#{dr.event_name}</b></big><br>
+                Host: #{dr.host_name.blank? ? "No one" : dr.host_name}<br>
+                <a  class="button is-success"
+                    href="#{dr.edit_reservation_path}">
+                  Edit
+                </a>
+            </dd>
+          </dl>}
+    end
 
-    %Q{<div class="content is-medium">Space: <b>#{space.space_name}</b><br>Date: <b>#{display_date(date)}</b><hr><ul>#{items.join}</ul></div>}
+    %Q{ <div class="content is-medium">
+          Space: <b>#{space.space_name}</b><br>
+          Date: <b>#{display_date(date)}</b>
+          <hr>
+          <ul>#{items.join}</ul>
+        </div>}
   end
 
   def choose_modal_form(date, reservations = [])
