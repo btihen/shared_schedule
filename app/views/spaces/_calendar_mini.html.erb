@@ -57,6 +57,11 @@
                           new_tenant_space_reservation_path(tenant_id: tenant.id, space_id: space.id, date: calendar.display_date(day)),
                           class: "date-item button is-light" %>
 
+            <% elsif day == Date.today %>
+              <div class="date-item is-today">
+                <%= day.mday %>
+              </div>
+
             <%# date-item without event and user without permission to make new events %>
             <% else %>
               <div class="date-item">
@@ -82,10 +87,6 @@
       List Reservations
     </section>
     <footer class="modal-card-foot">
-      <%# only show when edit permissions (or demogroup for testing) %>
-      <% if tenant.is_demo? || (user.tenant.id == tenant.id) %>
-        <button class="button is-success">Fake Edit</button>
-      <% end %>
       <button class="button">Dismiss</button>
     </footer>
   </div>
