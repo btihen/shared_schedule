@@ -1,14 +1,14 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.6.5'
+ruby '2.6.6'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.0.2', '>= 6.0.2.1'
 # Use postgresql as the database for Active Record
 gem 'pg', '>= 0.18', '< 2.0'
 # Use Puma as the app server
-gem 'puma', '~> 4.1'
+gem 'puma' #, '~> 4.1'
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 6'
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
@@ -45,28 +45,32 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
-###########
-# MY GEMS #
-###########
+##############
+# ADDED GEMS #
+##############
 
 # BACK END
 ##########
+gem 'devise'
+
 # time of day - with timezones and localizations
 gem 'tod'
-
-gem 'devise' # , '~> 4.7'  # rails 6.0 requires 4.7.0 or greater
 
 # FRONT END
 ###########
 gem 'bulma-rails'
-gem 'bulma-extensions-rails'
+# gem 'bulma-extensions-rails'
 
 # DEV / TESTS
 #############
 group :development, :test do
+  gem 'awesome_print'        # formats pry (& irb outputs into readable formats)
+
   gem 'pry-rails'
-  gem 'pry-byebug'
-  gem 'pry-stack_explorer'
+  gem 'pry-byebug'           # Adds byebug's step debugging and stack navigation
+  # gem 'pry-debugger'       # adds step, continue, etc (alternative to pry-byebug)
+  gem 'pry-stack_explorer'   # easy stack traces when debugging
+  # more pry gems if needed at: https://spin.atomicobject.com/2012/08/06/live-and-let-pry/
 
   gem 'factory_bot_rails'
   gem 'faker'
@@ -78,21 +82,13 @@ group :development, :test do
   gem 'spring-commands-rspec'
 end
 
-group :test do
-  # allow cucumber to do JavaScript testing too
-  gem 'selenium-webdriver'
-  # https://mikecoutermarsh.com/rails-capybara-selenium-chrome-driver-setup/
-  # download chromedriver from: http://chromedriver.chromium.org/
-  # or use brew cask install chromedriver
-  # finally in features/env.rb - switch the browser to :chrome
-  # gem 'chromedriver-helper'
-  gem 'webdrivers' # , '~> 3.0'
 
+group :test do
   # easier tests (inside rspec)
-  gem 'shoulda-matchers' # , '~> 3.1'
+  gem 'shoulda-matchers'
 
   # cucumber can test emails (rspec too?)
-  gem 'email_spec'
+  # gem 'email_spec'
 
   # code coverage
   gem 'simplecov'
@@ -100,33 +96,57 @@ group :test do
 end
 
 group :development do
-  # security check gems
+  # capture emails in the web browser (when testing by hand)
+  # gem 'letter_opener'
+  #
+  # also consider using: https://mailcatcher.me/
+  # (can view email layout in browser)
+
+  # KEEP GEMS up-to-date using:
+  #############################
+  # bundle outdated
+
+  # MOST OF THE FOLLOWING can be integrated into CI systems
+  ################################
+  # GEM DEPENDENCY SECURITY CHECKS
+  ################################
+  gem 'bundler-audit', require: false
+  # bundle audit check --update
+
+  # CODE QUALITY
+  ##############
+  # code smells & churn - static code analysis
+  # also includes the gems: reek, flay & flog
+  gem 'rubycritic', require: false
+  # usage (checks everything in the app folder):
+  # rubycritic app
+
+  # rubocop - ruby linter (formatting checks)
+  gem 'rubocop', require: false
+  # Syle and Layout - can be noisy and person use:
+  # rubocop --except Style Layout
+  #
+  # to just do security checks use:
+  # rubocop --only Security
+  #
+  # or to exclude folders, etc use:
+  # rubocop -c .rubocop_security.yml
+
+  # security checks
+  #################
   # https://www.occamslabs.com/blog/securing-your-ruby-and-rails-codebase
   # http://fretless.com/blog/static-security-analysis-of-your-ruby-and-rails-applications/
+
+  # check code for security coding mistakes
   gem 'brakeman', require: false
   # brakeman
   # or the opensource version
   # gem 'railroader', :require => false
   # railroader
-
-  # code smells & churn
-  gem 'rubycritic', require: false
-  # rubycritic app
-
-  gem 'bundler-audit', require: false
-  # bundle audit check --update
+  # checks gems for security flaws
 
   # also useful for sinatra, etc. (checks CVE-2013-6421 records)
-  gem 'dawnscanner', :require=>false
+  gem 'dawnscanner', require: false
   # bundle install
   # dawn --console .
-
-  # rubocop (security checks with: )
-  gem 'rubocop', require: false
-  # rubocop --only Security
-  # or
-  # rubocop -c .rubocop_security.yml
-
-  # capture emails in the web browser
-  # gem 'letter_opener'
 end
