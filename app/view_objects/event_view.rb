@@ -18,23 +18,23 @@ class EventView < ViewObject
 
   # view_objects for relationships
   def tenant
-    TenantView.new(event.tenant)
+    @tenant ||= TenantView.new(event.tenant)
   end
 
   def reason
-    ReasonView.new(event.reason)
+    @reason ||= ReasonView.new(event.reason)
   end
 
   def spaces
-    SpaceView.collection(event.spaces).uniq
+    @spaces ||= SpaceView.collection(event.spaces).uniq
   end
 
   def reserved_time_slots
-    TimeSlotView.collection(event.reserved_time_slots)
+    @reserved_time_slots ||= TimeSlotView.collection(event.reserved_time_slots)
   end
 
   def event_reservations
-    EventReservation.collection(event.reservations)
+    @event_reservations ||= EventReservation.collection(event.reservations)
   end
 
 end

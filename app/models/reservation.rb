@@ -17,7 +17,8 @@ class Reservation < ApplicationRecord
   validates :start_date_time, presence: true
 
   scope :in_date_range, ->(date_range) {
-                          where("start_date >= ?", date_range.first)
+                          includes(:event, :space, :tenant, :start_time_slot)
+                          .where("start_date >= ?", date_range.first)
                           .where("end_date <= ?", date_range.last)
                         }
   scope :space_next,  ->(space_ids, date_time) {
