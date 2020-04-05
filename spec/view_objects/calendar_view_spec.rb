@@ -2,24 +2,24 @@ require 'rails_helper'
 
 RSpec.describe CalendarView, type: :model do
 
-  let(:subject)   { described_class.new(date: date) }
+  let(:user)      { GuestUser.new }
+  let(:date)      { Date.new(2010, 2, 10) }
+  let(:tenant)    { FactoryBot.create :tenant }
+  let(:subject)   { described_class.new(tenant, user, date) }
 
   context "Given a date get #year_number" do
-    let(:date)    { Date.new(2010, 2, 10) }
     it "returns the four digit year" do
       expect(subject.year_number).to eq 2010
     end
   end
 
   context "Given a date get #full_month_name" do
-    let(:date)    { Date.new(2010, 2, 10) }
     it "returns the full month name" do
-      expect(subject.full_month_name).to eq ("February")
+      expect(subject.full_month_name).to eq date.strftime("%B")
     end
   end
 
   context "Given a date get #abbr_month_name" do
-    let(:date)    { Date.new(2010, 2, 10) }
     it "returns the abbreviated month name" do
       expect(subject.abbr_month_name).to eq ("Feb")
     end
@@ -27,7 +27,6 @@ RSpec.describe CalendarView, type: :model do
 
   context "Given a date get #date_range" do
     describe "Feb 2010 (non-leap year) - start on a Monday and ends on a Sunday" do
-      let(:date)    { Date.new(2010, 2, 10) }
       it "shows the correct 4 week range" do
         expect(subject.date_range).to eq (Date.new(2010, 2, 1)..Date.new(2010, 2, 28))
       end
@@ -54,7 +53,7 @@ RSpec.describe CalendarView, type: :model do
 
   context "Detect if #date_in_month_of_interest?" do
     describe "Feb of a non-leap year starting on a Monday ending on a Sunday" do
-      let(:date)      { Date.new(2010, 2, 10) }
+      # let(:date)      { Date.new(2010, 2, 10) }
       it "Jan is out of range" do
         test_date = Date.new(2010, 1, 15)
         expect(subject.date_in_month_of_interest?(test_date)).to be_falsey
