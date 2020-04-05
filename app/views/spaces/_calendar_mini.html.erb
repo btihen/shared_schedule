@@ -26,35 +26,42 @@
       </div>
 
       <div class="calendar-body">
+        <% reservations = space.reservations(calendar.date_range) %>
         <% calendar.date_range.each do |day| %>
-          <div class="<%= calendar.date_class_string(day, space.reservations) %>">
+          <div class="<%= calendar.date_class_string(day, reservations) %>">
 
             <%# date-item has reservation and within month of interest - with tool-tips and modal pop-ups %>
-            <% if calendar.date_has_reservation?(day, space.reservations) && calendar.date_in_month_of_interest?(day) %>
+            <% if calendar.date_has_reservation?(day, reservations) && calendar.date_in_month_of_interest?(day) %>
               <button data-html="true"
                       data-href="https://randomuser.me/api/?results=10"
-                      data-modal="<%= calendar.choose_reservations_html(space, day, space.reservations) %>"
-                      data-target="<%= calendar.choose_modal_form(day, space.reservations) %>"
-                      data-tooltip="<%= calendar.date_item_tooltip_data(day, space.reservations) %>"
-                      class="date-item <%= calendar.date_item_class_string(day, space.reservations) %>">
+                      data-modal="<%= calendar.choose_reservations_modal_html(space, day, reservations) %>"
+                      data-target="<%= calendar.choose_modal_form(day, reservations) %>"
+                      data-tooltip="<%= calendar.date_item_tooltip_data(day, reservations) %>"
+                      class="date-item <%= calendar.date_item_class_string(day, reservations) %>">
                 <%= day.mday %>
               </button>
 
             <%# date-item has reservation and NOT in month of interest - needs is-active for green dot %>
             <%#  - get tool-tips working %>
-            <% elsif calendar.date_has_reservation?(day, space.reservations) && !calendar.date_in_month_of_interest?(day) %>
+            <% elsif calendar.date_has_reservation?(day, reservations) && !calendar.date_in_month_of_interest?(day) %>
               <button data-html="true"
-                      data-tooltip="<%= calendar.date_item_tooltip_data(day, space.reservations) %>"
+                      data-tooltip="<%= calendar.date_item_tooltip_data(day, reservations) %>"
                       class="date-item modal-button is-active">
                 <%= day.mday %>
               </button>
 
             <%# when person is allowed to add new events on empty days %>
-            <% elsif tenant.is_demo? && calendar.date_in_month_of_interest?(day) %>
+            <% elsif (tenant.is_demo? || (user.tenant.id == tenant.id)) &&
+                      calendar.date_in_month_of_interest?(day) %>
               <%# date-item button for a new link %>
               <%= link_to day.mday,
                           new_tenant_space_reservation_path(tenant_id: tenant.id, space_id: space.id, date: calendar.display_date(day)),
                           class: "date-item button is-light" %>
+
+            <% elsif day == Date.today %>
+              <div class="date-item is-today">
+                <%= day.mday %>
+              </div>
 
             <%# date-item without event and user without permission to make new events %>
             <% else %>
@@ -81,80 +88,7 @@
       List Reservations
     </section>
     <footer class="modal-card-foot">
-      <%# only show when edit permissions (or demogroup for testing) %>
-      <% if tenant.is_demo?  %>
-        <button class="button is-success">Edit</button>
-      <% end %>
       <button class="button">Dismiss</button>
     </footer>
   </div>
 </div>
-
-<%
-=begin%>
- <script>
-'use strict';
-
-// https://siongui.github.io/2018/09/27/vuejs-bulma-modal/
-// https://siongui.github.io/2018/02/11/bulma-modal-with-javascript/
-
-document.addEventListener('DOMContentLoaded', function () {
-
-  // Modals
-  var rootEl = document.documentElement;
-  var $modals = getAll('.modal');
-  var $modalButtons = getAll('.modal-button');
-  var $modalCloses = getAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button');
-
-  if ($modalButtons.length > 0) {
-    $modalButtons.forEach(function ($el) {
-      $el.addEventListener('click', function () {
-
-        // identify element that was clicked
-        var target = $el.dataset.target;
-        var $target = document.getElementById(target);
-
-        // get the html with the reservations info
-        var dataHtml = this.getAttribute("data-modal");
-        // inject html from the date-modal attribute
-        document.getElementById(`${target}-body`).innerHTML = dataHtml
-
-        // 'is-active' - activates / open the modal
-        // 'is-clipped' allows the modal to scroll instead of background
-        rootEl.classList.add('is-clipped');
-        $target.classList.add('is-active');
-      });
-    });
-  }
-
-  if ($modalCloses.length > 0) {
-    $modalCloses.forEach(function ($el) {
-      $el.addEventListener('click', function () {
-        closeModals();
-      });
-    });
-  }
-
-  document.addEventListener('keydown', function (event) {
-    var e = event || window.event;
-    if (e.keyCode === 27) {
-      closeModals();
-    }
-  });
-
-  function closeModals() {
-    rootEl.classList.remove('is-clipped');
-    $modals.forEach(function ($el) {
-      $el.classList.remove('is-active');
-    });
-  }
-
-  // Functions
-  function getAll(selector) {
-    return Array.prototype.slice.call(document.querySelectorAll(selector), 0);
-  }
-
-});
-</script> 
-<%
-=end%>

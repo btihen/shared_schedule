@@ -14,9 +14,9 @@
     </div>
 
     <div class="content">
-      <%= tenant.tenant_description %>
+      <%= tenant.tenant_description.truncate(100, separator: ' ', omission: '...') %>
       <br>
-      Next Event: <b><time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time></b>
+      Next Event Start:<br><b><time datetime="2016-1-1"><%= tenant.next_event_formated %></time></b>
     </div>
   </div>
 

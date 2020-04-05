@@ -1,8 +1,12 @@
 class TenantsController < ApplicationController
 
   def index
-    tenants      = Tenant.where(is_publicly_viewable: true)
-    tenant_views = TenantView.collection(tenants)
+    user          = current_user || GuestUser.new
+    user_view     = UserView.new(user)
+    tenants       = Tenant.viewable(user_view.tenant)
+    # tenants       = Tenant.where(is_publicly_viewable: true)    # public tenants
+    #                       .or(Tenant.where(id: user.tenant.id)) # user tenant
+    tenant_views  = TenantView.collection(tenants)
     respond_to do |format|
       format.html { render 'tenants/index', locals: {tenants: tenant_views} }
     end
@@ -10,62 +14,65 @@ class TenantsController < ApplicationController
 
   def show
     user          = current_user || GuestUser.new
-    date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
-    calendar_view = CalendarView.new(date: date)
     tenant        = Tenant.find(params[:id])
-    # not_auhorized unless tenant.is_publicly_viewable? || tenant.id == user.tenant_id
+    unauthorized_view(user, tenant); return if performed?
+
+    user_view     = UserView.new(user)
     tenant_view   = TenantView.new(tenant)
-    spaces        = tenant.spaces.all
+    spaces        = Space.viewable(user_view.tenant)
     space_views   = SpaceView.collection(spaces)
+    date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
+    calendar_view = CalendarView.new(tenant_view, user_view, date)
+
     respond_to do |format|
-      format.html { render 'tenants/show',
-                    locals: { tenant: tenant_view,
-                              spaces: space_views,
-                              calendar: calendar_view }
-                  }
+      format.html { render 'tenants/show', locals: {user: user_view,
+                                                    tenant: tenant_view,
+                                                    spaces: space_views,
+                                                    calendar: calendar_view} }
     end
   end
 
-  def new
-    @tenant = Tenant.new
-  end
+  # def edit
+  # end
 
-  def edit
-  end
+  # def update
+  #   respond_to do |format|
+  #     if @tenant.update(tenant_params)
+  #       format.html { redirect_to @tenant, notice: 'Tenant was successfully updated.' }
+  #       format.json { render :show, status: :ok, location: @tenant }
+  #     else
+  #       format.html { render :edit }
+  #       format.json { render json: @tenant.errors, status: :unprocessable_entity }
+  #     end
+  #   end
+  # end
 
-  def create
-    @tenant = Tenant.new(tenant_params)
 
-    respond_to do |format|
-      if @tenant.save
-        format.html { redirect_to @tenant, notice: 'Tenant was successfully created.' }
-        format.json { render :show, status: :created, location: @tenant }
-      else
-        format.html { render :new }
-        format.json { render json: @tenant.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  # def new
+  #   @tenant = Tenant.new
+  # end
 
-  def update
-    respond_to do |format|
-      if @tenant.update(tenant_params)
-        format.html { redirect_to @tenant, notice: 'Tenant was successfully updated.' }
-        format.json { render :show, status: :ok, location: @tenant }
-      else
-        format.html { render :edit }
-        format.json { render json: @tenant.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  # def create
+  #   @tenant = Tenant.new(tenant_params)
 
-  def destroy
-    @tenant.destroy
-    respond_to do |format|
-      format.html { redirect_to tenants_url, notice: 'Tenant was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
+  #   respond_to do |format|
+  #     if @tenant.save
+  #       format.html { redirect_to @tenant, notice: 'Tenant was successfully created.' }
+  #       format.json { render :show, status: :created, location: @tenant }
+  #     else
+  #       format.html { render :new }
+  #       format.json { render json: @tenant.errors, status: :unprocessable_entity }
+  #     end
+  #   end
+  # end
+
+  # def destroy
+  #   @tenant.destroy
+  #   respond_to do |format|
+  #     format.html { redirect_to tenants_url, notice: 'Tenant was successfully destroyed.' }
+  #     format.json { head :no_content }
+  #   end
+  # end
 
   private
     # Only allow a list of trusted parameters through.

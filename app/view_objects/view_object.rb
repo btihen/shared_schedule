@@ -7,6 +7,24 @@ class ViewObject
 
   attr_reader :view_context, :root_model
 
+  # needed with serializing like when sending an email
+  # we must send a stored model to a job (so it can be serialized with the id)
+  # to that end, we can't include the view_context for email - thus this is how to include urls in emails
+  # https://makandracards.com/makandra/1511-how-to-use-rails-url-helpers-in-any-ruby-class
+  delegate :url_helpers, to: 'Rails.application.routes'
+  # for nested routes add method directly using:
+  # def space_path
+  #   url_helpers.tenant_space_path(space_id: space.id, id: id)
+  # end
+  # for non-nested routes add alias, ie:
+  # alias_method :tenant_path, :root_model_path
+  def root_model_path
+    url_helpers.send("#{root_model.class.name.downcase}_path".to_sym, root_model)
+  end
+  def root_model_url
+    url_helpers.send("#{root_model.class.name.downcase}_url".to_sym, root_model)
+  end
+
   # Models inherits from ` ActiveRecord::Base` which already define the following methods:
   # `to_param` and `model_name` are needed for `link_to`
   # `id` is just important to have for the view to render the model properly
@@ -36,42 +54,4 @@ class ViewObject
     end
   end
 
-  # needed with serializing like when sending an email
-  # we must send a stored model to a job (so it can be serialized with the id)
-  # to that end, we can't include the view_context for email - thus this is how to include urls in emails
-  # https://makandracards.com/makandra/1511-how-to-use-rails-url-helpers-in-any-ruby-class
-  delegate :url_helpers, to: 'Rails.application.routes'
-
-  def root_model_path
-    url_helpers.send("#{root_model.class.downcase}_path".to_sym, root_model)
-  end
-
-  def root_model_url
-    url_helpers.send("#{root_model.class.downcase}_url".to_sym, root_model)
-  end
-
-  # might be good in a helper?
-  # def rails_path(model)
-  #   # url_helpers.initiative_path(model) # concrete example
-  #   url_helpers.send("#{model.class.downcase}_path".to_sym, model)
-  # end
-
-  # def rails_url(model)
-  #   # url_helpers.initiative_url(model) # concrete example
-  #   url_helpers.send("#{model.class.downcase}_url".to_sym, model)
-  # end
-
-  # # USAGE IN VIEW
-  # # <%= url_for :controller => 'login', :action => 'verify',
-  # #             :guid => @user.new_user.guid, :only_path => false,
-  # #             :host => 'http://plantality.com' %>
-
-  # # OTHER OPTION - sub class needs and alias: 
-  # # i.e.: alias_method :user_url, :root_model_url
-  # # def root_model_url
-  # #   # "#{request.original_url}"
-  # #   # "#{base_url}/initiatives/#{initiative_id}"
-  # #   "https://innclass.org/initiatives/#{initiative_id}"
-  # #   # url_for initiative_path(@contact_view.initiative)
-  # # end
 end

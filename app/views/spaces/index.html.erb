@@ -1,4 +1,4 @@
-<p hidden id='tenant_spaces_show_<%= tenant.id %>' class='pageName'>tenant_spaces_show_<%= tenant.id %></p>
+<p hidden id='tenant_<%= tenant.id %>_spaces_index' class='pageName'>Tenant-<%= tenant.id %> Spaces Index</p>
 
 <div class="container">
 
@@ -20,7 +20,7 @@
                     tenant_space_path(id: space.id, tenant_id: tenant.id),
                     class: "card-footer-item" %>
       </p>
-      <%= render 'calendar_mini', space: space, tenant: tenant, calendar: calendar,
+      <%= render 'calendar_mini', user: user, space: space, tenant: tenant, calendar: calendar,
                                   prev_month_path: tenant_spaces_path( tenant_id: tenant.id,
                                                                       date: calendar.prev_month_string),
                                   next_month_path: tenant_spaces_path( tenant_id: tenant.id,

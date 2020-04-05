@@ -6,10 +6,21 @@ class TenantView < ViewObject
   alias_method :tenant_path, :root_model_path
 
   # delegate to model for attributes needed
-  delegate  :tenant_name, to: :tenant
+  delegate  :tenant_name, :is_demo?, :is_publicly_viewable?, to: :tenant
 
   def is_demo?
     tenant.tenant_name == "DemoGroup"
+  end
+
+  def next_event(date_time = Time.now)
+    Reservation.tenant_next(tenant, date_time).first
+  end
+
+  def next_event_formated(date_time = Time.now)
+    reservation = next_event(date_time)
+    return "---"  if reservation.blank? || reservation.start_date_time.blank?
+
+    reservation.start_date_time.strftime("%a %d %b %Y @ %H:%M")
   end
 
   # attributes that allow nils

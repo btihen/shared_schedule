@@ -2,8 +2,8 @@ class ReasonView < ViewObject
 
   # alias method allows use to rename view_object to a clear name without the initializer
   alias_method :reason,      :root_model
-  alias_method :reason_url,  :root_model_url
-  alias_method :reason_path, :root_model_path
+  # alias_method :reason_url,  :root_model_url
+  # alias_method :reason_path, :root_model_path
 
   # delegate to model for attributes needed
   delegate  :reason_name, to: :reason

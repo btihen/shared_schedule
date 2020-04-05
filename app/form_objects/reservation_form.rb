@@ -2,33 +2,32 @@ class ReservationForm < FormObject
 
   # alias_method :reservation, :root_model
 
-  delegate :id, :host, :event, :space, :start_date, :end_date,
-            :start_time_slot, :end_time_slot, :persisted?,
+  # when the model will never already stored then use the following instead:
+  # def persisted?
+  #   return true  if id.present?
+  #   return false
+  # end
+  delegate :id, :persisted?, :host, :event, :space, :tenant,
+            :start_date, :end_date, :start_time_slot, :end_time_slot,
             to: :reservation,  allow_nil: true
 
   # All the models that are apart of our form should be part attr_accessor.
   # This allows the form to be initialized with existing instances.
-  attr_accessor :id, :host, :event, :reason, :space, :tenant,
+  attr_accessor :id, :host, :event, :reason, :space, #:tenant,
                 :start_date, :end_date, :start_time_slot, :end_time_slot
-
-  # def initialize(attribs)
-  #   super
-  #   @root_model ||= Reservation.new
-  # end
 
   def self.model_name
     ActiveModel::Name.new(self, nil, 'Reservation')
   end
 
   # is user needed / helpful?
-  def self.new_from(reservation, tenant)
+  def self.new_from(reservation)
     attribs = {}
     if reservation.present?
       attribs_init = {id: reservation.id,
                       host: reservation.host,
                       event: reservation.event,
                       space: reservation.space,
-                      tenant: tenant,
                       end_date: reservation.end_date,
                       start_date: reservation.start_date,
                       end_time_slot: reservation.end_time_slot,
@@ -38,10 +37,8 @@ class ReservationForm < FormObject
     new(attribs)
   end
 
-  # when the model will never already stored then use the following:
-  # def persisted?
-  #   return true  if id.present?
-  #   return false
+  # def initialize(attrs={})
+  #   super
   # end
 
   # list attributes - which accept any form (Arrays)
@@ -54,7 +51,7 @@ class ReservationForm < FormObject
   attribute :event_id,            :integer
   attribute :space_id,            :integer
   attribute :reason_id,           :integer
-  attribute :tenant_id,           :integer
+  # attribute :tenant_id,           :integer
   attribute :host,                :squished_string
   attribute :event_name,          :squished_string
   attribute :event_description,   :squished_string
@@ -75,30 +72,28 @@ class ReservationForm < FormObject
     @reservation     ||= assign_reservation_attribs
   end
 
+  def reason
+    @reason          ||= assign_reason_attribs
+  end
+
+  def event
+    @event           ||= assign_event_attribs
+  end
+
+  def tenant
+    @tenant          ||= space.tenant
+  end
+
+  def space
+    @space           ||= (Space.find_by(id: space_id) || Space.new)
+  end
+
   def start_time_slot
     @start_time_slot ||= (TimeSlot.find_by(id: start_time_slot_id) || TimeSlot.new)
   end
 
   def end_time_slot
     @end_time_slot   ||= (TimeSlot.find_by(id: end_time_slot_id) || start_time_slot)
-  end
-
-  def tenant
-    @tenant          ||= (Tenant.find_by(id: tenant_id) || Tenant.find_by(tenant_name: "DemoGroup"))
-  end
-
-  def reason
-    @reason          ||= assign_reason_attribs
-    # @reason          ||= (Reason.find_by(id: reason_id) || Reason.new)
-  end
-
-  def event
-    @event           ||= assign_event_attribs
-    # @event           ||= (Event.find_by(id: event_id) || Event.new)
-  end
-
-  def space
-    @space           ||= (Space.find_by(id: space_id) || Space.new)
   end
 
   private
@@ -112,36 +107,45 @@ class ReservationForm < FormObject
     reservation.end_time_slot    = end_time_slot
     reservation.event            = event
     reservation.space            = space
+    reservation.tenant           = space.tenant
     reservation.start_date       = start_date
     reservation.end_date         = (end_date.blank? ? start_date : end_date)
+    reservation.start_date_time  = start_date_time  # calculated start-time for sorting
     reservation.host             = host
     reservation
   end
 
   def assign_reason_attribs
-    # get reason
-    return event.reason           if event_id.present?
+    # use incomming reason_id if available (should be there unless new)
     return Reason.find(reason_id) if reason_id.present?
+    return event.reason           if event_id.present?
 
     # create new reason
-    reason = Reason.new
-    reason.reason_name        = reason_name
-    reason.reason_description = reason_description
-    reason.tenant             = tenant
-    reason
+    new_reason = Reason.new
+    new_reason.reason_name        = reason_name
+    new_reason.reason_description = reason_description
+    new_reason.tenant             = tenant
+    new_reason
   end
 
   def assign_event_attribs
-    # get event
-    return Event.find(event_id)          if event_id.present?
+    # use incomming event_id if available
+    return Event.find(event_id)             if event_id.present?
 
-    # create a new event
-    event = Event.new
-    event.event_name        = event_name
-    event.event_description = event_description
-    event.reason            = reason
-    event.tenant            = tenant
-    event
+    # create a new event if no other info available
+    new_event = Event.new
+    new_event.event_name        = event_name
+    new_event.event_description = event_description
+    new_event.reason            = reason
+    new_event.tenant            = tenant
+    new_event
+  end
+
+  def start_date_time
+    return nil unless start_date.present? && start_time_slot.valid?
+
+    start_date_obj = start_date.is_a?(String) ? Date.parse(start_date) : start_date
+    DateTime.new(start_date_obj.year, start_date_obj.month, start_date_obj.day, start_time_slot.begin_time.hour, start_time_slot.begin_time.min, 0) #, "ECT")
   end
 
   def validate_reason

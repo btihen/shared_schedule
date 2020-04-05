@@ -26,8 +26,16 @@ class User < ApplicationRecord
 
   validate  :validate_password_complexity
 
+  def to_s
+    "#{first_name} #{last_name}"
+  end
+
   def guest?
     id.blank?
+  end
+
+  def may_edit?
+    %w[manager scheduler].include? user_role
   end
 
   private

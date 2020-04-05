@@ -6,13 +6,15 @@ class CalendarView
   # end
 
   private
-  attr_reader :month_begin_date, :month_end_date,
-              :date_of_interest, :month_number
+  attr_reader :month_begin_date, :month_end_date, :user,
+              :date_of_interest, :month_number, :today
 
   public
   attr_reader :year_number, :month_number
 
-  def initialize(date: Date.today)
+  def initialize(tenant, user = GuestUser.new, date = Date.today)
+    @user               = user
+    @today              = Date.today
     @date_of_interest   = date
     @year_number        = date.year
     @month_number       = date.month
@@ -57,12 +59,46 @@ class CalendarView
     I18n.t("date.abbr_month_names")[month_number]
   end
 
-  def choose_reservations_html(space, date, reservations = [])
+  def choose_reservations_modal_html(space, date, reservations = [])
     dates_reservations = reservations.select{ |r| r.date_range.include?(date) }
 
-    items = dates_reservations.map{ |r| %Q{<dl class="is-medium"><dt>#{r.date_range_string}</dt><dd>Event: <big><b>#{r.event_name}</b></big><br>Host: #{r.host_name.blank? ? "No one" : r.host_name}</dd></dl>} }
+    items = dates_reservations.map do |dr|
+      %Q{ <dl class="is-medium">
+            <dt>#{dr.start_time_slot}</dt>
+            <dd>Event: <big><b>#{dr.event_name}</b></big><br>
+                Host: #{dr.host_name.blank? ? "No one" : dr.host_name}
+                #{edit_button_html(dr)}
+            </dd>
+          </dl>}
+    end
 
-    %Q{<div class="content is-medium">Space: <b>#{space.space_name}</b><br>Date: <b>#{display_date(date)}</b><hr><ul>#{items.join}</ul></div>}
+    %Q{ <div class="content is-medium">
+          Space: <b>#{space.space_name}</b><br>
+          Date: <b>#{display_date(date)}</b>
+          <hr>
+          <ul>#{items.join}</ul>
+        </div>
+      }
+  end
+
+  def edit_button_html(reservation_date)
+    return ""  if user_cannot_edit?(reservation_date)
+
+    %Q{ <br>
+        <a  class="button is-success"
+            href="#{reservation_date.edit_reservation_path}">
+          Edit
+        </a>
+      }
+  end
+
+  def user_cannot_edit?(reservation_date)
+    !user_can_edit?(reservation_date)
+  end
+
+  def user_can_edit?(reservation_date)
+    reservation_date.tenant.is_demo? ||
+      (user.tenant.id == reservation_date.tenant.id)
   end
 
   def choose_modal_form(date, reservations = [])
@@ -75,7 +111,7 @@ class CalendarView
 
   def date_item_class_string(date, reservations = [])
     strings = ["modal-button"]
-    strings << "is-today"   if date == Date.today
+    strings << "is-today"   if date == today
     strings << "is-active"  if date_has_reservation?(date, reservations)
     strings.join(" ")
   end
