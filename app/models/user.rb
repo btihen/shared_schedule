@@ -33,6 +33,7 @@ class User < ApplicationRecord
   def guest?
     id.blank?
   end
+  alias_method :is_guest?, :guest?
 
   def may_edit?
     %w[manager scheduler].include? user_role

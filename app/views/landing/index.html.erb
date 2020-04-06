@@ -11,14 +11,32 @@
 <section class="hero is-primary">
   <div class="hero-body">
     <div class="container">
-      <p class="title">
-        Shared Schedules
-      </p>
-      <p class="subtitle">
-        Where groups come to share their space and schedule and keep informed.
-      </p>
-      <%= link_to "Publicly Listed Groups", tenants_path,
-                  class: "button hero-button is-light" %>
+      <div class="columns is-multiline">
+        <% unless tenant.tenant_logo_url.blank? %>
+        <div class="column is-2">
+          <img src="<%= tenant.tenant_logo_url %>" alt="<%= tenant.tenant_name %> logo">
+        </div>
+        <% end %>
+        <div class="column">
+          <p class="title">
+            <%= tenant.tenant_name %>
+          </p>
+          <p class="subtitle">
+            <% unless tenant.tenant_site_url.blank? %>
+              <a href="<%= tenant.tenant_site_url %>"><%= tenant.tenant_site_url %></a>
+              <br><br>
+            <% end %>
+            <%= tenant.tenant_tagline %>
+          </p>
+          <p class="subtitle is-6">
+            <%= tenant.tenant_description %>
+          </p>
+          <% if tenant.is_demo? %>
+            <%= link_to "Other Groups", tenants_path,
+                        class: "button hero-button is-light" %>
+          <% end %>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -26,19 +44,8 @@
 <section class="hero">
   <div class="hero-body">
     <div class="container">
-
-      <p class="title is-3">
-        <%= tenant.tenant_name %>
-      </p>
-      <p class="subtitle is-5">
-        <%= tenant.tenant_tagline %>
-      </p>
-      <p class="subtitle is-6">
-        <%= tenant.tenant_description %>
-      </p>
-
       <div class="columns is-centered is-multiline">
-      <% tenant.spaces.each do |space| %>
+      <% spaces.each do |space| %>
         <div class="column is-full-mobile is-half-tablet is-one-third-widescreen is-centered">
           <p class="title is-5">
             <%= link_to space.space_name,
@@ -46,13 +53,12 @@
                         class: "card-footer-item" %>
           </p>
           <%= render 'spaces/calendar_mini',
-                        space: space, tenant: tenant, calendar: calendar,
+                        user: user, space: space, tenant: tenant, calendar: calendar,
                         prev_month_path: root_path(date: calendar.prev_month_string),
                         next_month_path: root_path(date: calendar.next_month_string) %>
         </div>
       <% end %>
       </div>
-
     </div>
   </div>
 </section>

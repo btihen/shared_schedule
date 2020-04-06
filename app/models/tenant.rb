@@ -16,7 +16,7 @@ class Tenant < ApplicationRecord
                                     }
 
   def is_demo?
-    tenant_name == "DemoGroup"
+    is_demo_tenant && is_publicly_viewable
   end
 
   def is_publicly_viewable?

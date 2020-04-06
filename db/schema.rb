@@ -88,6 +88,7 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
     t.string "tenant_site_url"
     t.string "tenant_logo_url"
     t.text "tenant_description"
+    t.boolean "is_demo_tenant", default: false, null: false
     t.boolean "is_publicly_viewable", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

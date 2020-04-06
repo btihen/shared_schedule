@@ -20,7 +20,7 @@ class GuestUser
   end
 
   def tenant
-    @tenant ||= Tenant.find_by(tenant_name: 'DemoGroup')
+    @tenant ||= Tenant.find_by(is_demo_tenant: true)
   end
 
   def tenant_id
