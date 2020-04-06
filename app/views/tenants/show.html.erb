@@ -8,64 +8,6 @@
 
 <p hidden id='tenant_show_<%= tenant.id %>' class='pageName'>tenant_show_<%= tenant.id %></p>
 
-<div class="container">
-
-  <section class="hero is-primary">
-    <div class="hero-body">
-      <div class="container">
-        <div class="columns is-multiline">
-          <% unless tenant.tenant_logo_url.blank? %>
-          <div class="column is-2">
-            <img src="<%= tenant.tenant_logo_url %>" alt="<%= tenant.tenant_name %> logo">
-          </div>
-          <% end %>
-          <div class="column">
-            <p class="title">
-              <%= tenant.tenant_name %>
-            </p>
-            <p class="subtitle">
-              <% unless tenant.tenant_site_url.blank? %>
-                <a href="<%= tenant.tenant_site_url %>"><%= tenant.tenant_site_url %></a>
-                <br><br>
-              <% end %>
-              <%= tenant.tenant_tagline %>
-            </p>
-            <p class="subtitle is-6">
-              <%= tenant.tenant_description %>
-            </p>
-            <% if tenant.is_demo? %>
-              <%= link_to "Other Groups", tenants_path,
-                          class: "button hero-button is-light" %>
-            <% end %>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-  <section class="hero">
-    <div class="hero-body">
-      <div class="container">
-        <div class="columns is-centered is-multiline">
-        <% spaces.each do |space| %>
-          <div class="column is-full-mobile is-half-tablet is-one-third-widescreen is-centered has-text-centered">
-          <%# <div class="column is-full-mobile is-half-desktop is-one-third-fullhd is-centered has-text-centered"> %>
-            <p class="title is-5">
-              <%= space.space_name %>
-              <%# link_to space.space_name,
-                          tenant_space_path(id: space.id, tenant_id: tenant.id),
-                          class: "card-footer-item" %>
-            </p>
-            <%= render 'spaces/calendar_mini',
-                          user: user, space: space, tenant: tenant, calendar: calendar,
-                          prev_month_path: root_path(date: calendar.prev_month_string),
-                          next_month_path: root_path(date: calendar.next_month_string) %>
-          </div>
-        <% end %>
-        </div>
-      </div>
-    </div>
-  </section>
-
-</div>
+<%= render 'tenants/display',
+            user: user, spaces: spaces,
+            tenant: tenant, calendar: calendar %>

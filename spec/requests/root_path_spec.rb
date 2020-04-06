@@ -8,7 +8,9 @@ RSpec.describe "RootPath", type: :request do
   let(:middle_this_month) { today.at_beginning_of_month + 14.days }
   let(:end_this_month)    { today.at_beginning_of_month.next_month - 1.day }
   let(:start_next_month)  { today.at_beginning_of_month.next_month }
-  let(:tenant)            { FactoryBot.create :tenant, :demo_group }
+  let(:tenant)            { FactoryBot.create :tenant, :demo_group,
+                                                tenant_name: "Shared Schedules",
+                                                tenant_description: "Where groups come to share their space and schedule and keep informed."}
   let(:reason1)           { FactoryBot.create :reason, tenant: tenant }
   let(:reason2)           { FactoryBot.create :reason, tenant: tenant }
   let(:morning)           { FactoryBot.create :time_slot, time_slot_name: 'morning',   begin_time: '08:00', end_time: '12:00', tenant: tenant }
@@ -62,7 +64,7 @@ RSpec.describe "RootPath", type: :request do
       expect(response.body).to      match "Where groups come to share their space and schedule and keep informed."
 
       # shows the DemoGroup (tenant) on the root page
-      expect(response.body).not_to  match "#{tenant.tenant_name}"
+      expect(response.body).to      match "#{tenant.tenant_name}"
     end
     it "shows Demo Group without login" do
       expect(start_event).to      be

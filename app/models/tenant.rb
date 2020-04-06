@@ -10,10 +10,20 @@ class Tenant < ApplicationRecord
   validates :tenant_name, presence: true
 
   # all public viewable and also own tenant if private
-  scope :viewable,  ->(user_tenant) { where(is_publicly_viewable: true)
-                                      .or(Tenant.where(id: user_tenant.id))
-                                      .order(:id)
-                                    }
+  # .where(is_demo_tenant: true).or(Tenant.where(is_publicly_viewable: true)).first || DemoTenant.new
+  scope :landing_page, ->(user) { tenant = if user.guest?
+                                              where(is_demo_tenant: true)
+                                              .or(Tenant.where(is_publicly_viewable: true))
+                                              .first
+                                            else
+                                              where(id: user_tenant.id).first
+                                            end
+                                  tenant.blank? ? DemoTenant.new : tenant
+                                }
+  scope :viewable_by, ->(user)  { where(is_publicly_viewable: true)
+                                  .or(Tenant.where(id: user.tenant.id))
+                                  .order(:id)
+                                }
 
   def is_demo?
     is_demo_tenant && is_publicly_viewable
