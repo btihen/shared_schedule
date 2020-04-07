@@ -15,7 +15,7 @@
     <%= yield(:head) %>
     <% end %>
 
-    <title>SharedSpaces</title>
+    <title><%= ApplicationHelper.site_title %></title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
