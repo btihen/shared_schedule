@@ -46,7 +46,7 @@ module SeedDemoGroup
   end
 
   def self.create_events
-    tenant     = Tenant.find_by(tenant_name: "DemoGroup", is_demo_tenant: true)
+    tenant     = Tenant.find_by(is_demo_tenant: true)
     spaces     = Space.where(tenant_id: tenant.id)
     # error_message = "DemoGroup not found please run: `bin/rails runner SeedDemoGroup.create`"
 
