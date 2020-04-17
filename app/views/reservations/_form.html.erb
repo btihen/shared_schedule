@@ -164,6 +164,18 @@
     </div>
 
     <div class="field is-horizontal">
+      <div class="field-label is-normal">Cancelled?</div>
+      <div class="field-body">
+        <div class="field has-addons is-grouped is-grouped-multiline">
+          <div class="control">
+            <%= form.check_box :is_cancelled, value: reservation.is_cancelled, class: "checkbox" %>
+            <%= error_message_on(form.object, :is_cancelled) %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
       <div class="field-label is-normal">Start Info</div>
       <div class="field-body">
         <div class="field has-addons is-grouped is-grouped-multiline">

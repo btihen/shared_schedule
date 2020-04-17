@@ -4,7 +4,7 @@
 # # sample generic InputForm
 class FormObject
 
-  attr_reader :root_model
+  # attr_reader :root_model
 
   # ActiveModel provides validations & form_for tools
   include ActiveModel::Model
@@ -16,8 +16,9 @@ class FormObject
   # delegate :id, :persisted?,  to: :root_model,  allow_nil: true
   # attr_accessor :id
 
-  # def initialize(root_model)
-  #   @root_model   = root_model
+  # def initialize(attribs)
+  #   super
+  #   @root_model   = self # ?
   # end
 
   # The Rails form builder methods (form_for and the rest) need model_name to be defined.

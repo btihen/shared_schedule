@@ -16,7 +16,7 @@ class Tenant < ApplicationRecord
                                               .or(Tenant.where(is_publicly_viewable: true))
                                               .first
                                             else
-                                              where(id: user_tenant.id).first
+                                              where(id: user.tenant.id).first
                                             end
                                   tenant.blank? ? DemoTenant.new : tenant
                                 }

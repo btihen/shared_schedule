@@ -7,7 +7,9 @@ class ReservationForm < FormObject
   #   return true  if id.present?
   #   return false
   # end
-  delegate :id, :persisted?, :host, :event, :space, :tenant,
+  delegate :id, :persisted?, to: :reservation,  allow_nil: true
+
+  delegate :host, :event, :space, :tenant,
             :start_date, :end_date, :start_time_slot, :end_time_slot,
             to: :reservation,  allow_nil: true
 
@@ -30,6 +32,7 @@ class ReservationForm < FormObject
                       space: reservation.space,
                       end_date: reservation.end_date,
                       start_date: reservation.start_date,
+                      is_cancelled: reservation.is_cancelled,
                       end_time_slot: reservation.end_time_slot,
                       start_time_slot: reservation.start_time_slot}
       attribs = attribs.merge(attribs_init)
@@ -52,6 +55,7 @@ class ReservationForm < FormObject
   attribute :space_id,            :integer
   attribute :reason_id,           :integer
   # attribute :tenant_id,           :integer
+  attribute :is_cancelled,        :boolean, default: false
   attribute :host,                :squished_string
   attribute :event_name,          :squished_string
   attribute :event_description,   :squished_string
@@ -100,19 +104,20 @@ class ReservationForm < FormObject
 
   def assign_reservation_attribs
     # get / create instance
-    reservation = Reservation.find_by(id: id) || Reservation.new
+    new_reservation = Reservation.find_by(id: id) || Reservation.new
 
     # update reservation attributes
-    reservation.start_time_slot  = start_time_slot
-    reservation.end_time_slot    = end_time_slot
-    reservation.event            = event
-    reservation.space            = space
-    reservation.tenant           = space.tenant
-    reservation.start_date       = start_date
-    reservation.end_date         = (end_date.blank? ? start_date : end_date)
-    reservation.start_date_time  = start_date_time  # calculated start-time for sorting
-    reservation.host             = host
-    reservation
+    new_reservation.start_time_slot  = start_time_slot
+    new_reservation.end_time_slot    = end_time_slot
+    new_reservation.event            = event
+    new_reservation.space            = space
+    new_reservation.tenant           = space.tenant
+    new_reservation.start_date       = start_date
+    new_reservation.end_date         = (end_date.blank? ? start_date : end_date)
+    new_reservation.start_date_time  = start_date_time  # calculated start-time for sorting
+    new_reservation.is_cancelled     = is_cancelled
+    new_reservation.host             = host
+    new_reservation
   end
 
   def assign_reason_attribs
