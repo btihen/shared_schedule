@@ -68,7 +68,7 @@ RSpec.describe "Landing", type: :request do
       expect(response.body).to  match "<p hidden id='landing_index' class='pageName'>Landing Index</p>"
 
       # navbar present
-      expect(response.body).to  match "SharedSpace"
+      expect(response.body).to  match "Shared Schedules"
 
       # The hero section on webpage
       expect(response.body).to  match "Shared Schedules"
