@@ -32,5 +32,7 @@ class Reservation < ApplicationRecord
                           .limit(1)
                         }
 
-
+  def is_cancelled?
+    is_cancelled
+  end
 end

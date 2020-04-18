@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
 
   create_table "reservations", force: :cascade do |t|
     t.string "host"
+    t.text "change_note"
     t.datetime "start_date_time", null: false
     t.date "start_date", null: false
     t.date "end_date", null: false
