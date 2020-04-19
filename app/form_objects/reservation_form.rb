@@ -1,15 +1,15 @@
 class ReservationForm < FormObject
 
-  # alias_method :reservation, :root_model
+  alias_method :reservation, :root_model
 
   # when the model will never already stored then use the following instead:
   # def persisted?
   #   return true  if id.present?
   #   return false
   # end
-  delegate :id, :persisted?, to: :reservation,  allow_nil: true
+  delegate :id, :persisted?, to: :root_model,  allow_nil: true
 
-  delegate :host, :event, :space, :tenant,
+  delegate :host, :event, :space, :tenant, :start_date_time,
             :start_date, :end_date, :start_time_slot, :end_time_slot,
             to: :reservation,  allow_nil: true
 
@@ -35,7 +35,9 @@ class ReservationForm < FormObject
                       is_cancelled: reservation.is_cancelled,
                       change_notice: reservation.change_notice,
                       end_time_slot: reservation.end_time_slot,
-                      start_time_slot: reservation.start_time_slot}
+                      start_time_slot: reservation.start_time_slot,
+                      start_date_time: reservation.start_date_time,
+                    }
       attribs = attribs.merge(attribs_init)
     end
     new(attribs)
@@ -78,7 +80,7 @@ class ReservationForm < FormObject
   end
 
   def category
-    @category          ||= assign_category_attribs
+    @category        ||= assign_category_attribs
   end
 
   def event
@@ -115,7 +117,7 @@ class ReservationForm < FormObject
     new_reservation.tenant           = space.tenant
     new_reservation.start_date       = start_date
     new_reservation.end_date         = (end_date.blank? ? start_date : end_date)
-    new_reservation.start_date_time  = start_date_time  # calculated start-time for sorting
+    new_reservation.start_date_time  = calculate_start_date_time  # for sorting
     new_reservation.change_notice    = change_notice
     new_reservation.is_cancelled     = is_cancelled
     new_reservation.host             = host
@@ -148,7 +150,7 @@ class ReservationForm < FormObject
     new_event
   end
 
-  def start_date_time
+  def calculate_start_date_time
     return nil unless start_date.present? && start_time_slot.valid?
 
     start_date_obj = start_date.is_a?(String) ? Date.parse(start_date) : start_date

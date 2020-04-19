@@ -63,7 +63,7 @@ class CalendarView
 
   def choose_reservations_modal_html(space, date, reservations = [])
     dates_reservations = reservations.select{ |r| r.date_range.include?(date) }
-
+                                     .sort_by{|r| r.start_date_time}
     items = dates_reservations.each_with_index.map do |dr, index|
       background_color_class = if dr.is_cancelled? || dr.change_notice.present?
                                   'has-background-warning'
