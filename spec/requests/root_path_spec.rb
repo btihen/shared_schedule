@@ -11,8 +11,8 @@ RSpec.describe "RootPath", type: :request do
   let(:tenant)            { FactoryBot.create :tenant, :demo_group,
                                                 tenant_name: "Shared Schedules",
                                                 tenant_description: "Where groups come to share their space and schedule and keep informed."}
-  let(:reason1)           { FactoryBot.create :reason, tenant: tenant }
-  let(:reason2)           { FactoryBot.create :reason, tenant: tenant }
+  let(:category1)         { FactoryBot.create :category, tenant: tenant }
+  let(:category2)         { FactoryBot.create :category, tenant: tenant }
   let(:morning)           { FactoryBot.create :time_slot, time_slot_name: 'morning',   begin_time: '08:00', end_time: '12:00', tenant: tenant }
   let(:brunch)            { FactoryBot.create :time_slot, time_slot_name: 'brunch',    begin_time: '10:00', end_time: '14:00', tenant: tenant }
   let(:afternoon)         { FactoryBot.create :time_slot, time_slot_name: 'afternoon', begin_time: '13:00', end_time: '17:00', tenant: tenant }
@@ -25,7 +25,7 @@ RSpec.describe "RootPath", type: :request do
                             space.allowed_time_slots << [morning, brunch, afternoon, evening]
                             space.save
                             space.reload }
-  let(:start_event)       { event = FactoryBot.create :event, event_name: "Event 1", reason: reason1, tenant: tenant
+  let(:start_event)       { event = FactoryBot.create :event, event_name: "Event 1", category: category1, tenant: tenant
                             event.reservations << Reservation.create(space: space1, start_date: end_last_month,   start_time_slot: brunch,    end_date: end_last_month,   end_time_slot: brunch)
                             event.reservations << Reservation.create(space: space1, start_date: end_last_month,   start_time_slot: evening,   end_date: end_last_month,   end_time_slot: evening)
                             event.reservations << Reservation.create(space: space1, start_date: start_this_month, start_time_slot: morning,   end_date: start_this_month, end_time_slot: morning)
@@ -33,7 +33,7 @@ RSpec.describe "RootPath", type: :request do
                             event.reservations << Reservation.create(space: space1, start_date: start_this_month, start_time_slot: evening,   end_date: start_this_month, end_time_slot: evening)
                             event.save
                             event.reload }
-  let(:middle_event)      { event = FactoryBot.create :event, event_name: "Event 2", reason: reason2, tenant: tenant
+  let(:middle_event)      { event = FactoryBot.create :event, event_name: "Event 2", category: category2, tenant: tenant
                             event.reservations << Reservation.create(space: space2, start_date: middle_this_month - 1.day, start_time_slot: evening,   end_date: middle_this_month - 1.day, end_time_slot: evening)
                             event.reservations << Reservation.create(space: space2, start_date: middle_this_month,         start_time_slot: evening,   end_date: middle_this_month,         end_time_slot: evening)
                             event.reservations << Reservation.create(space: space2, start_date: middle_this_month + 1.day, start_time_slot: morning,   end_date: middle_this_month + 1.day, end_time_slot: morning)
@@ -41,7 +41,7 @@ RSpec.describe "RootPath", type: :request do
                             event.reservations << Reservation.create(space: space2, start_date: middle_this_month + 1.day, start_time_slot: evening,   end_date: middle_this_month + 1.day, end_time_slot: evening)
                             event.save
                             event.reload }
-  let(:end_event)         { event = FactoryBot.create :event, event_name: "Event 3", reason: reason2, tenant: tenant
+  let(:end_event)         { event = FactoryBot.create :event, event_name: "Event 3", category: category2, tenant: tenant
                             event.reservations << Reservation.create(space: space1, start_date: end_this_month,   start_time_slot: brunch,    end_date: end_this_month,   end_time_slot: brunch)
                             event.reservations << Reservation.create(space: space1, start_date: end_this_month,   start_time_slot: evening,   end_date: end_this_month,   end_time_slot: evening)
                             event.reservations << Reservation.create(space: space1, start_date: start_next_month, start_time_slot: morning,   end_date: start_next_month, end_time_slot: morning)

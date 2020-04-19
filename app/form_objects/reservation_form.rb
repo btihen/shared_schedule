@@ -15,7 +15,7 @@ class ReservationForm < FormObject
 
   # All the models that are apart of our form should be part attr_accessor.
   # This allows the form to be initialized with existing instances.
-  attr_accessor :id, :host, :event, :reason, :space, #:tenant,
+  attr_accessor :id, :host, :event, :category, :space, #:tenant,
                 :start_date, :end_date, :start_time_slot, :end_time_slot
 
   def self.model_name
@@ -54,14 +54,14 @@ class ReservationForm < FormObject
   attribute :start_time_slot_id,  :integer
   attribute :event_id,            :integer
   attribute :space_id,            :integer
-  attribute :reason_id,           :integer
+  attribute :category_id,         :integer
   # attribute :tenant_id,           :integer
   attribute :change_notice,       :trimmed_text
   attribute :host,                :squished_string
   attribute :event_name,          :squished_string
   attribute :event_description,   :squished_string
-  attribute :reason_name,         :squished_string
-  attribute :reason_description,  :squished_string
+  attribute :category_name,       :squished_string
+  attribute :category_description,:squished_string
   attribute :is_cancelled,        :boolean, default: false
 
   validates :start_date,          presence: true
@@ -69,7 +69,7 @@ class ReservationForm < FormObject
 
   validate :validate_space
   validate :validate_event
-  validate :validate_reason
+  validate :validate_category
   validate :validate_time_slots
   validate :validate_dates_and_times_available
 
@@ -77,8 +77,8 @@ class ReservationForm < FormObject
     @reservation     ||= assign_reservation_attribs
   end
 
-  def reason
-    @reason          ||= assign_reason_attribs
+  def category
+    @category          ||= assign_category_attribs
   end
 
   def event
@@ -122,17 +122,17 @@ class ReservationForm < FormObject
     new_reservation
   end
 
-  def assign_reason_attribs
-    # use incomming reason_id if available (should be there unless new)
-    return Reason.find(reason_id) if reason_id.present?
-    return event.reason           if event_id.present?
+  def assign_category_attribs
+    # use incomming category_id if available (should be there unless new)
+    return Category.find(category_id) if category_id.present?
+    return event.category           if event_id.present?
 
-    # create new reason
-    new_reason = Reason.new
-    new_reason.reason_name        = reason_name
-    new_reason.reason_description = reason_description
-    new_reason.tenant             = tenant
-    new_reason
+    # create new category
+    new_category = Category.new
+    new_category.category_name        = category_name
+    new_category.category_description = category_description
+    new_category.tenant             = tenant
+    new_category
   end
 
   def assign_event_attribs
@@ -143,7 +143,7 @@ class ReservationForm < FormObject
     new_event = Event.new
     new_event.event_name        = event_name
     new_event.event_description = event_description
-    new_event.reason            = reason
+    new_event.category            = category
     new_event.tenant            = tenant
     new_event
   end
@@ -155,11 +155,11 @@ class ReservationForm < FormObject
     DateTime.new(start_date_obj.year, start_date_obj.month, start_date_obj.day, start_time_slot.begin_time.hour, start_time_slot.begin_time.min, 0) #, "ECT")
   end
 
-  def validate_reason
-    return if reason.valid?
+  def validate_category
+    return if category.valid?
 
-    reason.errors.each do |attribute_name, desc|
-      attribute_sym = attribute_name.to_s.eql?(id) ? :reason_id : attribute_name.to_sym
+    category.errors.each do |attribute_name, desc|
+      attribute_sym = attribute_name.to_s.eql?(id) ? :category_id : attribute_name.to_sym
       errors.add(attribute_sym, desc)
     end
   end

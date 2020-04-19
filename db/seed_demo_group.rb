@@ -37,9 +37,9 @@ module SeedDemoGroup
     error_message = "DemoGroup not found please run: `bin/rails runner SeedDemoGroup.create`"
     raise StandardError, error_message  if tenant.blank?
 
-    # destroy all Demo Reasons and Events
-    reasons    = Reason.where(tenant_id: tenant.id)
-    reasons.destroy_all
+    # destroy all Demo Categories and Events
+    categories    = Category.where(tenant_id: tenant.id)
+    categories.destroy_all
 
     # re-create all events
     create_events
@@ -50,16 +50,16 @@ module SeedDemoGroup
     spaces     = Space.where(tenant_id: tenant.id)
     # error_message = "DemoGroup not found please run: `bin/rails runner SeedDemoGroup.create`"
 
-    # recreate all Demo Reasons and Events
-    reasons = []
+    # recreate all Demo Categories and Events
+    categories = []
     3.times do
-      reason   = FactoryBot.create :reason, tenant: tenant
-      reasons << reason
+      category   = FactoryBot.create :category, tenant: tenant
+      categories << category
     end
 
     events = []
     5.times do
-      event   = FactoryBot.create :event, reason: reasons.sample, tenant: tenant
+      event   = FactoryBot.create :event, category: categories.sample, tenant: tenant
       events << event
     end
 
@@ -70,7 +70,7 @@ module SeedDemoGroup
       date_3  = date_0 + 3.days
       date_4  = date_0 + 4.days
       date_5  = date_0 + 5.days
-      # event = FactoryBot.create :event, reason: reasons.sample, tenant: tenant
+      # event = FactoryBot.create :event, category: categories.sample, tenant: tenant
 
       # schedule events within spaces
       spaces.each do |space|

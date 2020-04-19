@@ -135,7 +135,8 @@ class CalendarView
   def edit_button_html(reservation_date)
     return ""  if user_cannot_edit?(reservation_date)
 
-    %Q{ <a class="button is-primary is-pulled-right"
+    %Q{ <br>
+        <a class="button is-primary is-pulled-right"
             href="#{reservation_date.edit_reservation_path}">
           Edit
         </a>
