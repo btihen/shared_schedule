@@ -1,13 +1,13 @@
 class ReservationForm < FormObject
 
-  alias_method :reservation, :root_model
+  # alias_method :reservation, :root_model
 
   # when the model will never already stored then use the following instead:
   # def persisted?
   #   return true  if id.present?
   #   return false
   # end
-  delegate :id, :persisted?, to: :root_model,  allow_nil: true
+  delegate :id, :persisted?, to: :reservation,  allow_nil: true
 
   delegate :host, :event, :space, :tenant, :start_date_time,
             :start_date, :end_date, :start_time_slot, :end_time_slot,
