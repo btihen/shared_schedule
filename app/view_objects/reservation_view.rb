@@ -7,7 +7,7 @@ class ReservationView < ViewObject
   # alias_method :reservation_path, :root_model_path
 
   # delegate to model for attributes needed
-  delegate  :start_date, :end_date, :host, to: :reservation
+  delegate  :start_date, :end_date, :host, :is_cancelled?, to: :reservation
 
   def reservation_path
     url_helpers.tenant_space_reservation_path(tenant_id: tenant.id, space_id: space.id, id: id)
@@ -22,6 +22,10 @@ class ReservationView < ViewObject
   end
 
   # methods for attribuits
+  def change_notice
+    reservation.change_notice || ""
+  end
+
   def host_name
     @host_name ||= host || ""
   end

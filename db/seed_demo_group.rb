@@ -1,7 +1,12 @@
 module SeedDemoGroup
   def self.create
-    tenant    = FactoryBot.create :tenant, tenant_name: "DemoGroup", tenant_description: "Data reset every 24hrs",
-                                  tenant_tagline: "Try it out",      tenant_logo_url: "https://loremflickr.com/g/96/96/bern",
+    tenant    = FactoryBot.create :tenant,
+                                  tenant_name: "Shared Schedules",
+                                  tenant_tagline: "Try it out!  Where groups schedule shared resources.",
+                                  tenant_description: "Data reset every 24hrs",
+                                  # tenant_logo_url: "https://loremflickr.com/g/96/96/bern",
+                                  tenant_site_url: "http://localhost:3000/",
+                                  is_demo_tenant: true,
                                   is_publicly_viewable: true
 
     breakfast = TimeSlot.create time_slot_name: "Breakfast", begin_time: "06:00", end_time: "10:00", tenant: tenant
@@ -27,7 +32,7 @@ module SeedDemoGroup
 
   def self.reset_events
     # identify objects we are working with
-    tenant        = Tenant.find_by(tenant_name: "DemoGroup")
+    tenant        = Tenant.find_by(is_demo_tenant: true)
 
     error_message = "DemoGroup not found please run: `bin/rails runner SeedDemoGroup.create`"
     raise StandardError, error_message  if tenant.blank?
@@ -41,7 +46,7 @@ module SeedDemoGroup
   end
 
   def self.create_events
-    tenant     = Tenant.find_by(tenant_name: "DemoGroup")
+    tenant     = Tenant.find_by(is_demo_tenant: true)
     spaces     = Space.where(tenant_id: tenant.id)
     # error_message = "DemoGroup not found please run: `bin/rails runner SeedDemoGroup.create`"
 

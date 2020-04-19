@@ -3,9 +3,11 @@ class LandingController < ApplicationController
   def index
     user          = current_user || GuestUser.new
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
-    tenant        = Tenant.find_by(tenant_name: "DemoGroup")
+    tenant        = Tenant.landing_page(user) || DemoTenant.new
     tenant_view   = TenantView.new(tenant)
-    spaces_view   = tenant_view.spaces
+
+    spaces        = Space.viewable_by(user, tenant)
+    spaces_view   = SpaceView.collection(spaces)
     user_view     = UserView.new(user)
     calendar_view = CalendarView.new(tenant_view, user_view, date)
 

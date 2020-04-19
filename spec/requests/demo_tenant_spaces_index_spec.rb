@@ -67,7 +67,7 @@ RSpec.describe "Spaces Show", type: :request do
       expect(response.body).to  match "<p hidden id='tenant_#{tenant.id}_spaces_index' class='pageName'>Tenant-#{tenant.id} Spaces Index</p>"
 
       # navbar present
-      expect(response.body).to  match "SharedSpace"
+      expect(response.body).to  match "DemoGroup"
 
       # Spaces are present
       expect(response.body).to  match "#{space1.space_name}"

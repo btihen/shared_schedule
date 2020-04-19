@@ -3,9 +3,7 @@ class TenantsController < ApplicationController
   def index
     user          = current_user || GuestUser.new
     user_view     = UserView.new(user)
-    tenants       = Tenant.viewable(user_view.tenant)
-    # tenants       = Tenant.where(is_publicly_viewable: true)    # public tenants
-    #                       .or(Tenant.where(id: user.tenant.id)) # user tenant
+    tenants       = Tenant.viewable_by(user)
     tenant_views  = TenantView.collection(tenants)
     respond_to do |format|
       format.html { render 'tenants/index', locals: {tenants: tenant_views} }
@@ -19,7 +17,7 @@ class TenantsController < ApplicationController
 
     user_view     = UserView.new(user)
     tenant_view   = TenantView.new(tenant)
-    spaces        = Space.viewable(user_view.tenant)
+    spaces        = Space.viewable_by(user, tenant)
     space_views   = SpaceView.collection(spaces)
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
     calendar_view = CalendarView.new(tenant_view, user_view, date)

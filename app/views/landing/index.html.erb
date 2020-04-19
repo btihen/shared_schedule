@@ -8,51 +8,7 @@
 
 <p hidden id='landing_index' class='pageName'>Landing Index</p>
 
-<section class="hero is-primary">
-  <div class="hero-body">
-    <div class="container">
-      <p class="title">
-        Shared Schedules
-      </p>
-      <p class="subtitle">
-        Where groups come to share their space and schedule and keep informed.
-      </p>
-      <%= link_to "Publicly Listed Groups", tenants_path,
-                  class: "button hero-button is-light" %>
-    </div>
-  </div>
-</section>
+<%= render 'tenants/display',
+            user: user, spaces: spaces,
+            tenant: tenant, calendar: calendar %>
 
-<section class="hero">
-  <div class="hero-body">
-    <div class="container">
-
-      <p class="title is-3">
-        <%= tenant.tenant_name %>
-      </p>
-      <p class="subtitle is-5">
-        <%= tenant.tenant_tagline %>
-      </p>
-      <p class="subtitle is-6">
-        <%= tenant.tenant_description %>
-      </p>
-
-      <div class="columns is-centered is-multiline">
-      <% tenant.spaces.each do |space| %>
-        <div class="column is-full-mobile is-half-tablet is-one-third-widescreen is-centered">
-          <p class="title is-5">
-            <%= link_to space.space_name,
-                        tenant_space_path(id: space.id, tenant_id: tenant.id),
-                        class: "card-footer-item" %>
-          </p>
-          <%= render 'spaces/calendar_mini',
-                        space: space, tenant: tenant, calendar: calendar,
-                        prev_month_path: root_path(date: calendar.prev_month_string),
-                        next_month_path: root_path(date: calendar.next_month_string) %>
-        </div>
-      <% end %>
-      </div>
-
-    </div>
-  </div>
-</section>

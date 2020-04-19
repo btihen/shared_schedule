@@ -21,7 +21,7 @@
       <section>
         <div class="card">
           <header class="card-header">
-            <p class="card-header-title">Choose Event</p>
+            <p class="card-header-title">Choose an Event</p>
             <a class="card-header-icon card-toggle" id="existingEventToggle">
               <i class="fa fa-angle-down"></i>
             </a>
@@ -78,7 +78,7 @@
 
               <div class="card">
                 <header class="card-header">
-                  <p class="card-header-title">Choose Reason</p>
+                  <p class="card-header-title">Choose a Reason</p>
                   <a class="card-header-icon card-toggle" id="existingReasonToggle">
                     <i class="fa fa-angle-down"></i>
                   </a>
@@ -192,7 +192,7 @@
         <div class="field has-addons is-grouped is-grouped-multiline">
           <div class="control">
             <%= form.date_field :end_date, class: "input" %>
-            <p class="help">Optional - defaults to start info</p>
+            <p class="help">Defaults to Start Info</p>
             <%= error_message_on(form.object, :date) %>
           </div>
 
@@ -201,8 +201,34 @@
                       :id, :time_slot_name, { include_blank: 'Please Select',
                                               selected: reservation.end_time_slot.id },
                       {class: 'select'} %>
-            <p class="help">Optional</p>
+            <p class="help">Defaults to Start Info</p>
             <%= error_message_on(form.object, :space_id) %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">Cancelled?</div>
+      <div class="field-body">
+        <div class="field has-addons is-grouped is-grouped-multiline">
+          <div class="control">
+            <%= form.check_box :is_cancelled, value: reservation.is_cancelled, class: "checkbox" %>
+            <%= error_message_on(form.object, :is_cancelled) %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">Change Notice</div>
+      <div class="field-body">
+        <div class="field has-addons is-grouped is-grouped-multiline">
+          <div class="control">
+            <%= form.text_area :change_notice, class: "textarea" %>
+            <%# form.text_area :change_notice, value: reservation.change_notice, class: "textarea" %>
+            <p class="help">Explain changes or needed info about the event</p>
+            <%= error_message_on(form.object, :change_notice) %>
           </div>
         </div>
       </div>
@@ -219,8 +245,6 @@
             <%= link_to 'Back', tenant_path(tenant), class: 'button is-link is-danger is-outlined' %>
           </div>
         </div>
-        <%# form.button("Save", class: "button") %>
-        <%# button_to "Submit", { action: "create" }, remote: true, class: "button" %>
       </div>
     </div>
 

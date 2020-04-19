@@ -8,20 +8,9 @@ class TenantView < ViewObject
   # delegate to model for attributes needed
   delegate  :tenant_name, :is_demo?, :is_publicly_viewable?, to: :tenant
 
-  def is_demo?
-    tenant.tenant_name == "DemoGroup"
-  end
-
-  def next_event(date_time = Time.now)
-    Reservation.tenant_next(tenant, date_time).first
-  end
-
-  def next_event_formated(date_time = Time.now)
-    reservation = next_event(date_time)
-    return "---"  if reservation.blank? || reservation.start_date_time.blank?
-
-    reservation.start_date_time.strftime("%a %d %b %Y @ %H:%M")
-  end
+  # def is_demo?
+  #   tenant.is_demo?
+  # end
 
   # attributes that allow nils
   def tenant_logo_url
@@ -37,25 +26,43 @@ class TenantView < ViewObject
     tenant.tenant_description || ""
   end
 
+  def next_event(date_time = Time.now)
+    Reservation.tenant_next(tenant, date_time).first
+  end
+
+  def next_event_formated(date_time = Time.now)
+    reservation = next_event(date_time)
+    return "---"  if reservation.blank? || reservation.start_date_time.blank?
+
+    reservation.start_date_time.strftime("%a %d %b %Y @ %H:%M")
+  end
+
   # relationships
   def users
-    UserView.collection(tenant.users)
+    @users   ||= UserView.collection(tenant.users)
   end
 
   def spaces
-    SpaceView.collection(tenant.spaces)
+    @spaces  ||= SpaceView.collection(tenant.spaces)
+  end
+
+  def spaces_viewable_by(user)
+    # only show spaces if not logged in
+    # guest user only sees public, logged in sees public and private in own tenant
+    spaces = Space.viewable_by(user, tenant)
+    @spaces  ||= SpaceView.collection(spaces)
   end
 
   def reasons
-    ReasonView.collection(tenant.reasons)
+    @reasons ||= ReasonView.collection(tenant.reasons)
   end
 
   def events
-    EventView.collection(tenant.events)
+    @events  ||= EventView.collection(tenant.events)
   end
 
   def time_slots
-    TimeSlotView.collection(tenant.events)
+    @time_slots ||+ TimeSlotView.collection(tenant.events)
   end
 
 end

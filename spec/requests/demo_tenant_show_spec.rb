@@ -65,7 +65,7 @@ RSpec.describe "TenantsPath - Demo", type: :request do
       expect(response.body).to  match "<p hidden id='tenant_show_#{tenant.id}' class='pageName'>tenant_show_#{tenant.id}</p>"
 
       # navbar present
-      expect(response.body).to  match "SharedSpace"
+      expect(response.body).to  match "DemoGroup"
 
       # shows the DemoGroup (tenant) on the root page
       expect(response.body).to  match "#{tenant.tenant_name}"

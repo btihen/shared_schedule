@@ -1,5 +1,7 @@
 class CalendarView
 
+  delegate :url_helpers, to: 'Rails.application.routes'
+
   # # 1 == Monday & 7 == Sunday
   # def self.day_of_week(date: Date.today)
   #   date.cwday
@@ -62,30 +64,78 @@ class CalendarView
   def choose_reservations_modal_html(space, date, reservations = [])
     dates_reservations = reservations.select{ |r| r.date_range.include?(date) }
 
-    items = dates_reservations.map do |dr|
-      %Q{ <dl class="is-medium">
-            <dt>#{dr.start_time_slot}</dt>
-            <dd>Event: <big><b>#{dr.event_name}</b></big><br>
-                Host: #{dr.host_name.blank? ? "No one" : dr.host_name}
-                #{edit_button_html(dr)}
+    items = dates_reservations.each_with_index.map do |dr, index|
+      background_color_class = if dr.is_cancelled? || dr.change_notice.present?
+                                  'has-background-warning'
+                                elsif index.even?
+                                  'has-background-light'
+                                else
+                                  'has-background-grey-lighter'
+                                end
+      %Q{<div class="#{background_color_class}">
+          <dl class="is-medium reservation">
+            <dt>
+              #{"<big><b>CANCELLED</b></big><br>" if dr.is_cancelled? }
+              #{"<strike>" if dr.is_cancelled?}#{dr.start_time_slot}#{"</strike>" if dr.is_cancelled?}
+            </dt>
+            <dd>
+              #{"<strike>" if dr.is_cancelled?}Event: <big><b>#{dr.event_name}</b></big><br>
+              Host: #{dr.host_name.blank? ? "No one" : dr.host_name}#{"</strike>" if dr.is_cancelled?}
+              #{change_notice(dr)}
+              #{edit_button_html(dr)}
             </dd>
-          </dl>}
+          </dl>
+        </div>}
     end
 
-    %Q{ <div class="content is-medium">
-          Space: <b>#{space.space_name}</b><br>
-          Date: <b>#{display_date(date)}</b>
+    %Q{ <section class="modal-card-body">
+          <div class="content is-medium has-text-centered">
+            Space: <b>#{space.space_name}</b><br>
+            Date: <b>#{display_date(date)}</b>
+          </div>
           <hr>
-          <ul>#{items.join}</ul>
-        </div>
+          <div class="content is-medium has-text-left">
+            #{items.join}
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          #{new_button_html(space, date)}
+        </footer>
+      }
+  end
+
+  def new_button_html(space, date)
+    return ""  if user_cannot_reserve?(space, date)
+
+    %Q{ <a class="button is-success"
+            href="#{url_helpers.new_tenant_space_reservation_path(tenant_id: space.tenant.id,
+                                                                  space_id: space.id,
+                                                                  date: display_date(date))}">
+          Add Reservation
+        </a>
+      }
+  end
+
+  def user_cannot_reserve?(space, date)
+    !user_can_reserve?(space, date)
+  end
+
+  def user_can_reserve?(space, date)
+    space.tenant.is_demo? || (user.tenant.id == space.tenant.id)
+  end
+
+  def change_notice(reservation_date)
+    return "" if reservation_date.change_notice.blank?
+
+    %Q{ <br>
+        <b>CHANGE NOTICE:<br>#{reservation_date.change_notice}</b>
       }
   end
 
   def edit_button_html(reservation_date)
     return ""  if user_cannot_edit?(reservation_date)
 
-    %Q{ <br>
-        <a  class="button is-success"
+    %Q{ <a class="button is-primary is-pulled-right"
             href="#{reservation_date.edit_reservation_path}">
           Edit
         </a>

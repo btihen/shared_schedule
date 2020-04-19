@@ -130,10 +130,8 @@ class ReservationsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def reservation_params
       params.require(:reservation)
-            .permit(:host, :space_id, :event_id, :reason_id,
-                    :start_date, :end_date,
-                    :start_time_slot_id, :end_time_slot_id,
-                    :event_name, :event_description,
-                    :reason_name, :reason_description)
+            .permit(:host, :space_id, :event_id, :reason_id, :start_date, :end_date,
+                    :is_cancelled, :change_notice, :start_time_slot_id, :end_time_slot_id,
+                    :event_name, :event_description, :reason_name, :reason_description)
     end
 end

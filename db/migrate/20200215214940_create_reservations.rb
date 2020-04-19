@@ -2,9 +2,11 @@ class CreateReservations < ActiveRecord::Migration[6.0]
   def change
     create_table :reservations do |t|
       t.string     :host
+      t.text       :change_notice
+      t.datetime   :start_date_time,  null: false
       t.date       :start_date,       null: false
       t.date       :end_date,         null: false
-      t.datetime   :start_date_time,  null: false
+      t.boolean    :is_cancelled,     null: false, default: false
       t.belongs_to :event,            null: false, foreign_key: true
       t.belongs_to :space,            null: false, foreign_key: true
       t.belongs_to :tenant,           null: false, foreign_key: true

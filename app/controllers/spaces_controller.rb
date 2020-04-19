@@ -8,7 +8,7 @@ class SpacesController < ApplicationController
 
     user_view     = UserView.new(user)
     tenant_view   = TenantView.new(tenant)
-    spaces        = Space.viewable(user_view.tenant)
+    spaces        = Space.viewable_by(user, tenant)
     space_views   = SpaceView.collection(spaces)
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
     calendar_view = CalendarView.new(tenant_view, user_view, date)

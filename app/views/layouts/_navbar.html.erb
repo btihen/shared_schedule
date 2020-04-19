@@ -1,9 +1,9 @@
 <nav class="navbar is-light" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item" href="/">
-      <h1 id="title" class="navbar-item">
-        SharedSpace
-      </h1>
+      <p class="title is-3">
+        <span><%= ApplicationHelper.site_title %></span>
+      </p>
     </a>
 
     <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -16,7 +16,9 @@
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
       <% if current_user %>
-        <%= link_to "#{current_user.tenant.tenant_name}", tenant_path(current_user.tenant), class: 'navbar-item' %>
+        <%= link_to "Home", tenant_path(current_user.tenant), class: 'navbar-item' %>
+      <% else %>
+        <%= link_to "Home", root_path, class: 'navbar-item' %>
       <% end %>
 
       <% if current_user && current_user.user_role == "manager" %>
@@ -46,11 +48,10 @@
         </div>
       <% end %>
 
-      <div class="navbar-item has-dropdown is-hoverable">
+      <div class="navbar-item has-dropdown is-hoverable is-left">
         <a class="navbar-link">
           Other
         </a>
-
         <div class="navbar-dropdown">
           <a class="navbar-item">
             About
@@ -68,6 +69,15 @@
     </div>
 
     <div class="navbar-end">
+
+      <% if Tenant.all.count != 1 %>
+      <div class="navbar-item">
+        <div class="buttons">
+          <%= link_to "All Schedules", tenants_path, class: 'button is-light'  %>
+        </div>
+      </div>
+      <% end %>
+
       <div class="navbar-item">
         <div class="buttons">
         <% if user_signed_in? %>
@@ -79,6 +89,7 @@
         <% end %>
         </div>
       </div>
+
     </div>
   </div>
 </nav>
