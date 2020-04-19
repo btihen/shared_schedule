@@ -4,7 +4,7 @@
 
 # add to: config/initializers/types.rb
 # ActiveModel::Type.register(:trimmed_text, TrimmedText)
-# reason:
+# usage:
 # attribute :title, :trimmed_text, default: ''
 
 class TrimmedText < ActiveRecord::Type::String

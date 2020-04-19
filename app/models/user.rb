@@ -8,7 +8,7 @@ class User < ApplicationRecord
   belongs_to :tenant
 
   has_many :user_interests, inverse_of: :user, dependent: :destroy
-  has_many :interests, through: :user_interests, source: :reason
+  has_many :interests, through: :user_interests, source: :category
 
   validates :tenant,      presence: true
   validates :last_name,   presence: true

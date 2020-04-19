@@ -5,7 +5,7 @@
 
 # add to: config/initializers/types.rb
 # ActiveModel::Type.register(:squished_string, SquishedString)
-# reason:
+# usage:
 # attribute :title, :squished_string, default: ''
 
 class SquishedString < ActiveRecord::Type::String

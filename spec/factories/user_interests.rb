@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :user_interest do
-    reason  { FactoryBot.create :reason }
-    user    { FactoryBot.create :user }
+    category  { FactoryBot.create :category }
+    user      { FactoryBot.create :user }
   end
 end

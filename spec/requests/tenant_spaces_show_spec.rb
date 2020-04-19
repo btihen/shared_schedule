@@ -11,8 +11,8 @@ RSpec.describe "Spaces Show", type: :request do
   let(:end_this_month)    { today.at_beginning_of_month.next_month - 1.day }
   let(:start_next_month)  { today.at_beginning_of_month.next_month }
   let(:tenant)            { FactoryBot.create :tenant }
-  let(:reason1)           { FactoryBot.create :reason, tenant: tenant }
-  let(:reason2)           { FactoryBot.create :reason, tenant: tenant }
+  let(:category1)         { FactoryBot.create :category, tenant: tenant }
+  let(:category2)         { FactoryBot.create :category, tenant: tenant }
   let(:morning)           { FactoryBot.create :time_slot, time_slot_name: 'morning',   begin_time: '08:00', end_time: '12:00', tenant: tenant }
   let(:brunch)            { FactoryBot.create :time_slot, time_slot_name: 'brunch',    begin_time: '10:00', end_time: '14:00', tenant: tenant }
   let(:afternoon)         { FactoryBot.create :time_slot, time_slot_name: 'afternoon', begin_time: '13:00', end_time: '17:00', tenant: tenant }
@@ -22,7 +22,7 @@ RSpec.describe "Spaces Show", type: :request do
                             space.save
                             space.reload
                           }
-  let(:start_event)       { event = FactoryBot.create :event, reason: reason1, tenant: tenant
+  let(:start_event)       { event = FactoryBot.create :event, category: category1, tenant: tenant
                             event.reservations << Reservation.create(date: end_last_month,   space: space1, time_slot: brunch)
                             event.reservations << Reservation.create(date: end_last_month,   space: space1, time_slot: evening)
                             event.reservations << Reservation.create(date: start_this_month, space: space1, time_slot: morning)
@@ -31,7 +31,7 @@ RSpec.describe "Spaces Show", type: :request do
                             event.save
                             event.reload
                           }
-  let(:middle_event)      { event = FactoryBot.create :event, reason: reason2, tenant: tenant
+  let(:middle_event)      { event = FactoryBot.create :event, category: category2, tenant: tenant
                             event.reservations << Reservation.create(date: middle_this_month - 1.day, space: space1, time_slot: evening)
                             event.reservations << Reservation.create(date: middle_this_month,         space: space1, time_slot: evening)
                             event.reservations << Reservation.create(date: middle_this_month + 1.day, space: space1, time_slot: morning)
@@ -40,7 +40,7 @@ RSpec.describe "Spaces Show", type: :request do
                             event.save
                             event.reload
                           }
-  let(:end_event)         { event = FactoryBot.create :event, reason: reason3, tenant: tenant
+  let(:end_event)         { event = FactoryBot.create :event, category: category3, tenant: tenant
                             event.reservations << Reservation.create(date: end_this_month,   space: space1, time_slot: brunch)
                             event.reservations << Reservation.create(date: end_this_month,   space: space1, time_slot: evening)
                             event.reservations << Reservation.create(date: start_next_month, space: space1, time_slot: morning)

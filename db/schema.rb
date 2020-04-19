@@ -15,25 +15,25 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "categories", force: :cascade do |t|
+    t.string "category_name", null: false
+    t.string "category_description"
+    t.bigint "tenant_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["category_name", "tenant_id"], name: "index_categories_on_category_name_and_tenant_id", unique: true
+    t.index ["tenant_id"], name: "index_categories_on_tenant_id"
+  end
+
   create_table "events", force: :cascade do |t|
     t.string "event_name", null: false
     t.string "event_description"
-    t.bigint "reason_id", null: false
+    t.bigint "category_id", null: false
     t.bigint "tenant_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["reason_id"], name: "index_events_on_reason_id"
+    t.index ["category_id"], name: "index_events_on_category_id"
     t.index ["tenant_id"], name: "index_events_on_tenant_id"
-  end
-
-  create_table "reasons", force: :cascade do |t|
-    t.string "reason_name", null: false
-    t.string "reason_description"
-    t.bigint "tenant_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["reason_name", "tenant_id"], name: "index_reasons_on_reason_name_and_tenant_id", unique: true
-    t.index ["tenant_id"], name: "index_reasons_on_tenant_id"
   end
 
   create_table "reservations", force: :cascade do |t|
@@ -110,12 +110,12 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
   end
 
   create_table "user_interests", force: :cascade do |t|
-    t.bigint "reason_id", null: false
+    t.bigint "category_id", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["reason_id", "user_id"], name: "index_user_interests_on_reason_id_and_user_id", unique: true
-    t.index ["reason_id"], name: "index_user_interests_on_reason_id"
+    t.index ["category_id", "user_id"], name: "index_user_interests_on_category_id_and_user_id", unique: true
+    t.index ["category_id"], name: "index_user_interests_on_category_id"
     t.index ["user_id"], name: "index_user_interests_on_user_id"
   end
 
@@ -151,9 +151,9 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
-  add_foreign_key "events", "reasons"
+  add_foreign_key "categories", "tenants"
+  add_foreign_key "events", "categories"
   add_foreign_key "events", "tenants"
-  add_foreign_key "reasons", "tenants"
   add_foreign_key "reservations", "events"
   add_foreign_key "reservations", "spaces"
   add_foreign_key "reservations", "tenants"
@@ -163,7 +163,7 @@ ActiveRecord::Schema.define(version: 2020_02_15_214940) do
   add_foreign_key "space_time_slots", "time_slots"
   add_foreign_key "spaces", "tenants"
   add_foreign_key "time_slots", "tenants"
-  add_foreign_key "user_interests", "reasons"
+  add_foreign_key "user_interests", "categories"
   add_foreign_key "user_interests", "users"
   add_foreign_key "users", "tenants"
 end

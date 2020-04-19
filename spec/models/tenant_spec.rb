@@ -13,29 +13,29 @@ RSpec.describe Tenant, type: :model do
     it { is_expected.to have_many(:users) }
     it { is_expected.to have_many(:events) }
     it { is_expected.to have_many(:spaces) }
-    it { is_expected.to have_many(:reasons) }
+    it { is_expected.to have_many(:categories) }
     it { is_expected.to have_many(:time_slots) }
   end
 
   describe "destroy records - check dependents" do
-    let(:tenant1) { FactoryBot.create :tenant }
-    let(:tenant2) { FactoryBot.create :tenant }
-    let(:reason1) { FactoryBot.create :reason, tenant: tenant1 }
-    let(:reason2) { FactoryBot.create :reason, tenant: tenant2 }
-    let(:time1)   { FactoryBot.create :time_slot, begin_time: '08:00', end_time: '12:00', tenant: tenant1 }
-    let(:time2)   { FactoryBot.create :time_slot, begin_time: '08:00', end_time: '12:00', tenant: tenant2 }
-    let(:space1)  { space = FactoryBot.create :space, tenant: tenant1
-                    space.allowed_time_slots << time1
-                    space.save
-                    space.reload
-                  }
-    let(:space2)  { space = FactoryBot.create :space, tenant: tenant2
-                    space.allowed_time_slots << time2
-                    space.save
-                    space.reload
-                  }
-    let(:event1)  { event = FactoryBot.create :event, reason: reason1, tenant: tenant1 }
-    let(:event2)  { event = FactoryBot.create :event, reason: reason2, tenant: tenant2 }
+    let(:tenant1)   { FactoryBot.create :tenant }
+    let(:tenant2)   { FactoryBot.create :tenant }
+    let(:category1) { FactoryBot.create :category, tenant: tenant1 }
+    let(:category2) { FactoryBot.create :category, tenant: tenant2 }
+    let(:time1)     { FactoryBot.create :time_slot, begin_time: '08:00', end_time: '12:00', tenant: tenant1 }
+    let(:time2)     { FactoryBot.create :time_slot, begin_time: '08:00', end_time: '12:00', tenant: tenant2 }
+    let(:space1)    { space = FactoryBot.create :space, tenant: tenant1
+                      space.allowed_time_slots << time1
+                      space.save
+                      space.reload
+                    }
+    let(:space2)    { space = FactoryBot.create :space, tenant: tenant2
+                      space.allowed_time_slots << time2
+                      space.save
+                      space.reload
+                    }
+    let(:event1)    { event = FactoryBot.create :event, category: category1, tenant: tenant1 }
+    let(:event2)    { event = FactoryBot.create :event, category: category2, tenant: tenant2 }
     let(:reservation1) { FactoryBot.create(:reservation, event: event1, space: space1, tenant: tenant1, start_date: Date.today, start_time_slot: time1, end_date: Date.today, end_time_slot: time1) }
     let(:reservation2) { FactoryBot.create(:reservation, event: event2, space: space2, tenant: tenant2, start_date: Date.today, start_time_slot: time2, end_date: Date.today, end_time_slot: time2) }
     it "#destroy_all" do
@@ -45,7 +45,7 @@ RSpec.describe Tenant, type: :model do
 
       expect(Event.all).to                  eq []
       expect(Space.all).to                  eq []
-      expect(Reason.all).to                 eq []
+      expect(Category.all).to               eq []
       expect(Tenant.all).to                 eq []
       expect(TimeSlot.all).to               eq []
       expect(SpaceTimeSlot.all).to          eq []
@@ -58,7 +58,7 @@ RSpec.describe Tenant, type: :model do
 
       expect(Space.all.pluck(:id)).to       eq [space2.id]
       expect(Event.all.pluck(:id)).to       eq [event2.id]
-      expect(Reason.all.pluck(:id)).to      eq [reason2.id]
+      expect(Category.all.pluck(:id)).to    eq [category2.id]
       expect(Tenant.all.pluck(:id)).to      eq [tenant2.id]
       expect(TimeSlot.all.pluck(:id)).to    eq [time2.id]
       expect(SpaceTimeSlot.all.pluck(:space_id).sort).to          eq [space2.id]

@@ -49,16 +49,16 @@ class TenantView < ViewObject
   def spaces_viewable_by(user)
     # only show spaces if not logged in
     # guest user only sees public, logged in sees public and private in own tenant
-    spaces = Space.viewable_by(user, tenant)
-    @spaces  ||= SpaceView.collection(spaces)
+    spaces        = Space.viewable_by(user, tenant)
+    @spaces     ||= SpaceView.collection(spaces)
   end
 
-  def reasons
-    @reasons ||= ReasonView.collection(tenant.reasons)
+  def categories
+    @categories ||= CategoryView.collection(tenant.categories)
   end
 
   def events
-    @events  ||= EventView.collection(tenant.events)
+    @events     ||= EventView.collection(tenant.events)
   end
 
   def time_slots

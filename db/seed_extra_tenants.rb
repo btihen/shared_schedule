@@ -5,16 +5,16 @@ module SeedExtraTenants
     4.times do |index|
       tenant  = FactoryBot.create :tenant, is_publicly_viewable: index.even?
 
-      # FactoryBot.create :reason, tenant: tenant
-      reasons = []
+      # FactoryBot.create :category, tenant: tenant
+      categories = []
       3.times do
-        reason   = FactoryBot.create :reason, tenant: tenant
-        reasons << reason
+        category   = FactoryBot.create :category, tenant: tenant
+        categories << category
       end
 
       events = []
       5.times do
-        event   = FactoryBot.create :event, reason: reasons.sample, tenant: tenant
+        event   = FactoryBot.create :event, category: categories.sample, tenant: tenant
         events << event
       end
 
@@ -22,8 +22,8 @@ module SeedExtraTenants
       users << FactoryBot.create(:user, email: "manager#{index}@group#{index}.ch", tenant: tenant, user_role: 'manager', password: "Let-M3-In!", password_confirmation:  "Let-M3-In!")
       ApplicationHelper::USER_ROLES.each do |role|
         user = FactoryBot.create :user, tenant: tenant, user_role: role, password: "Let-M3-In!", password_confirmation:  "Let-M3-In!"
-        interests_count = rand(1..(reasons.length-1))
-        user.interests  << reasons.sample(interests_count)
+        interests_count = rand(1..(categories.length-1))
+        user.interests  << categories.sample(interests_count)
         user.save!
         users << user
       end
@@ -52,7 +52,7 @@ module SeedExtraTenants
         date_3  = date_0 + 3.days
         date_4  = date_0 + 4.days
         date_5  = date_0 + 5.days
-        # event = FactoryBot.create :event, reason: reasons.sample, tenant: tenant
+        # event = FactoryBot.create :event, category: categories.sample, tenant: tenant
 
         # schedule events within spaces
         spaces.each do |space|

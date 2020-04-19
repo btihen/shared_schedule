@@ -15,17 +15,17 @@ RSpec.describe User, type: :model do
   end
 
   describe "destroy records - check dependents" do
-    let(:tenant)  { FactoryBot.create :tenant }
-    let(:reason)  { FactoryBot.create :reason, tenant: tenant }
-    let(:user_1)  { FactoryBot.create :user, interests: [reason], tenant: tenant }
-    let(:user_2)  { FactoryBot.create :user, interests: [reason], tenant: tenant }
+    let(:tenant)    { FactoryBot.create :tenant }
+    let(:category)  { FactoryBot.create :category, tenant: tenant }
+    let(:user_1)    { FactoryBot.create :user, interests: [category], tenant: tenant }
+    let(:user_2)    { FactoryBot.create :user, interests: [category], tenant: tenant }
 
     it "#destroy_all" do
       expect(user_1).to             be
       expect(user_2).to             be
       described_class.destroy_all
       expect(User.all).to           eq []
-      expect(Reason.all).to         eq [reason]
+      expect(Category.all).to       eq [category]
       expect(Tenant.all).to         eq [tenant]
       expect(UserInterest.all).to   eq []
       # expect(TenantManager.all).to  eq []
@@ -35,7 +35,7 @@ RSpec.describe User, type: :model do
       expect(user_2).to       be
       user_1.destroy
       expect(User.all).to     eq [user_2]
-      expect(Reason.all).to   eq [reason]
+      expect(Category.all).to   eq [category]
       expect(Tenant.all).to   eq [tenant]
       expect(UserInterest.all.pluck(:user_id)).to     eq UserInterest.where(user: user_2).all.pluck(:user_id)
       # expect(TenantManager.all.pluck(:manager_id)).to eq TenantManager.where(manager: user_2).all.pluck(:manager_id)

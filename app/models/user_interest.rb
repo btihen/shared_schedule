@@ -1,8 +1,8 @@
 class UserInterest < ApplicationRecord
 
   belongs_to :user
-  belongs_to :reason  # a user is interested in reasons
+  belongs_to :category  # a user is interested in categories
 
-  validates :user,  presence: true
-  validates :reason, presence: true
+  validates :user,     presence: true
+  validates :category, presence: true
 end

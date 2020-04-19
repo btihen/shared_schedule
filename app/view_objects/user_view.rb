@@ -19,7 +19,7 @@ class UserView < ViewObject
   end
 
   def interests
-    ReasonView.collection(user.interests)
+    CategoryView.collection(user.interests)
   end
 
 end

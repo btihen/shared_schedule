@@ -78,54 +78,54 @@
 
               <div class="card">
                 <header class="card-header">
-                  <p class="card-header-title">Choose a Reason</p>
-                  <a class="card-header-icon card-toggle" id="existingReasonToggle">
+                  <p class="card-header-title">Choose a Category</p>
+                  <a class="card-header-icon card-toggle" id="existingCategoryToggle">
                     <i class="fa fa-angle-down"></i>
                   </a>
                 </header>
-                <div class="card-content" id="existingReasonContent">
+                <div class="card-content" id="existingCategoryContent">
                   <div class="content">
                     <div class="field">
                     <div class="control has-addons">
-                      <%= form.collection_select :reason_id, tenant.reasons,
-                            :id, :reason_name, {include_blank: 'Select Reason'},
+                      <%= form.collection_select :category_id, tenant.categories,
+                            :id, :category_name, {include_blank: 'Select Category'},
                             {class: 'select'} %>
-                      <p class="help">Event Reason</p>
-                      <%= error_message_on(form.object, :reason_id) %>
+                      <p class="help">Event Category</p>
+                      <%= error_message_on(form.object, :category_id) %>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="card">
                 <header class="card-header">
-                  <p class="card-header-title">Create New Reason</p>
-                  <a class="card-header-icon card-toggle" id="newReasonToggle">
+                  <p class="card-header-title">Create New Category</p>
+                  <a class="card-header-icon card-toggle" id="newCategoryToggle">
                     <i class="fa fa-angle-down"></i>
                   </a>
                 </header>
-                <div class="card-content is-hidden" id="newReasonContent">
+                <div class="card-content is-hidden" id="newCategoryContent">
                   <div class="content">
 
                     <div class="field is-horizontal">
                       <div class="control has-icons-left">
-                        <%= form.text_field :reason_name,
-                                            placeholder: "Reason Name",
+                        <%= form.text_field :category_name,
+                                            placeholder: "Category Name",
                                             class: "input" %>
                         <span class="icon is-small is-left">
                           <i class="fas fa-user"></i>
                         </span>
-                        <p class="help">Reason Name - Required</p>
-                        <%= error_message_on(form.object, :reason_name) %>
+                        <p class="help">Category Name - Required</p>
+                        <%= error_message_on(form.object, :category_name) %>
                       </div>
                       <div class="control has-icons-left">
-                        <%= form.text_field :reason_description,
-                                            placeholder: "Reason Description (Optional)",
+                        <%= form.text_field :category_description,
+                                            placeholder: "Category Description (Optional)",
                                             class: "input" %>
                         <span class="icon is-small is-left">
                           <i class="fas fa-user"></i>
                         </span>
                         <p class="help">Description Optional</p>
-                        <%= error_message_on(form.object, :reason_description) %>
+                        <%= error_message_on(form.object, :category_description) %>
                       </div>
                     </div>
                   </div>
@@ -286,11 +286,11 @@ document.getElementById("existingEventToggle").onclick = function(){
   $target = document.getElementById("reservation_event_description")
   $target.value=''
   // clear all sub-forms too
-  $target = document.getElementById("reservation_reason_id")
+  $target = document.getElementById("reservation_category_id")
   $target.selectedIndex = 0;
-  $target = document.getElementById("reservation_reason_name")
+  $target = document.getElementById("reservation_category_name")
   $target.value=''
-  $target = document.getElementById("reservation_reason_description")
+  $target = document.getElementById("reservation_category_description")
   $target.value=''
 
   // close the new event card
@@ -301,40 +301,40 @@ document.getElementById("existingEventToggle").onclick = function(){
   event.preventDefault();
 }
 
-document.getElementById("newReasonToggle").onclick = function(){
+document.getElementById("newCategoryToggle").onclick = function(){
   var $target
 
-  // open the new reason card
-  $target = document.getElementById("newReasonContent");
+  // open the new category card
+  $target = document.getElementById("newCategoryContent");
   $target.setAttribute('class', 'card-content');
 
-  // clear existing reasons
-  $target = document.getElementById("reservation_reason_id")
+  // clear existing categories
+  $target = document.getElementById("reservation_category_id")
   $target.selectedIndex = 0;
 
-  // close the existing reason card
-  $target = document.getElementById("existingReasonContent");
+  // close the existing category card
+  $target = document.getElementById("existingCategoryContent");
   $target.setAttribute('class', 'card-content is-hidden');
 
   // prevent form submission
   event.preventDefault();
 }
 
-document.getElementById("existingReasonToggle").onclick = function(){
+document.getElementById("existingCategoryToggle").onclick = function(){
   var $target
 
-  // open the existing reason card
-  $target = document.getElementById("existingReasonContent");
+  // open the existing category card
+  $target = document.getElementById("existingCategoryContent");
   $target.setAttribute('class', 'card-content');
 
-  // clear the new reason form
-  $target = document.getElementById("reservation_reason_name")
+  // clear the new category form
+  $target = document.getElementById("reservation_category_name")
   $target.value=''
-  $target = document.getElementById("reservation_reason_description")
+  $target = document.getElementById("reservation_category_description")
   $target.value=''
 
-  // close the new reason card
-  $target = document.getElementById("newReasonContent");
+  // close the new category card
+  $target = document.getElementById("newCategoryContent");
   $target.setAttribute('class', 'card-content is-hidden');
 
   // prevent form submission

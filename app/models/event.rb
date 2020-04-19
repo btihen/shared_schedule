@@ -1,6 +1,6 @@
 class Event < ApplicationRecord
 
-  belongs_to :reason
+  belongs_to :category
   belongs_to :tenant
 
   has_many :reservations, inverse_of: :event, dependent: :destroy
@@ -8,7 +8,7 @@ class Event < ApplicationRecord
   # has_many :reserved_time_slots, through: :reservations, source: :time_slot
   # has_many :reserved_time_slots, through: :reservations, source: :time_slot
 
-  validates :reason,     presence: true
+  validates :category,   presence: true
   validates :tenant,     presence: true
   validates :event_name, presence: true
 
