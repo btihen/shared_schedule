@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
 
   # before_action :authenticate_user_or_guest
+  before_action :tenant_count
 
   protected
 
@@ -15,6 +16,12 @@ class ApplicationController < ActionController::Base
     end
 
   private
+    def tenant_count
+      demo_tenant   = Tenant.where(is_demo_tenant: true)
+      @tenant_count = (Tenant.all - demo_tenant).count
+      @demo_present = demo_tenant.present?
+    end
+
     def unauthorized_view(user, tenant, space=nil, reservation=nil)
       return if space.blank? &&
                 ( tenant.is_demo? || tenant.is_publicly_viewable? ||
