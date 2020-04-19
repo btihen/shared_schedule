@@ -33,6 +33,7 @@ class ReservationForm < FormObject
                       end_date: reservation.end_date,
                       start_date: reservation.start_date,
                       is_cancelled: reservation.is_cancelled,
+                      change_notice: reservation.change_notice,
                       end_time_slot: reservation.end_time_slot,
                       start_time_slot: reservation.start_time_slot}
       attribs = attribs.merge(attribs_init)
@@ -55,13 +56,13 @@ class ReservationForm < FormObject
   attribute :space_id,            :integer
   attribute :reason_id,           :integer
   # attribute :tenant_id,           :integer
-  attribute :is_cancelled,        :boolean, default: false
+  attribute :change_notice,       :trimmed_text
   attribute :host,                :squished_string
   attribute :event_name,          :squished_string
   attribute :event_description,   :squished_string
   attribute :reason_name,         :squished_string
   attribute :reason_description,  :squished_string
-  # attribute :description,         :trimmed_text
+  attribute :is_cancelled,        :boolean, default: false
 
   validates :start_date,          presence: true
   # validates :end_date,            presence: true
@@ -115,6 +116,7 @@ class ReservationForm < FormObject
     new_reservation.start_date       = start_date
     new_reservation.end_date         = (end_date.blank? ? start_date : end_date)
     new_reservation.start_date_time  = start_date_time  # calculated start-time for sorting
+    new_reservation.change_notice    = change_notice
     new_reservation.is_cancelled     = is_cancelled
     new_reservation.host             = host
     new_reservation

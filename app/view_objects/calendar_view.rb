@@ -65,7 +65,7 @@ class CalendarView
     dates_reservations = reservations.select{ |r| r.date_range.include?(date) }
 
     items = dates_reservations.each_with_index.map do |dr, index|
-      background_color_class = if dr.is_cancelled?
+      background_color_class = if dr.is_cancelled? || dr.change_notice.present?
                                   'has-background-warning'
                                 elsif index.even?
                                   'has-background-light'
@@ -73,10 +73,10 @@ class CalendarView
                                   'has-background-grey-lighter'
                                 end
       %Q{<div class="#{background_color_class}">
-          <dl class="is-medium">
+          <dl class="is-medium reservation">
             <dt>
+              #{"<big><b>CANCELLED</b></big><br>" if dr.is_cancelled? }
               #{"<strike>" if dr.is_cancelled?}#{dr.start_time_slot}#{"</strike>" if dr.is_cancelled?}
-              #{" - <big><b>CANCELLED</b></big>" if dr.is_cancelled? }
             </dt>
             <dd>
               #{"<strike>" if dr.is_cancelled?}Event: <big><b>#{dr.event_name}</b></big><br>
@@ -128,17 +128,14 @@ class CalendarView
     return "" if reservation_date.change_notice.blank?
 
     %Q{ <br>
-        <p class="has-text-danger">
-          CHANGE NOTICE: #{reservation_date.change_notice}
-        </p>
-        <br>}
+        <b>CHANGE NOTICE:<br>#{reservation_date.change_notice}</b>
+      }
   end
 
   def edit_button_html(reservation_date)
     return ""  if user_cannot_edit?(reservation_date)
 
-    %Q{ <br>
-        <a class="button is-primary"
+    %Q{ <a class="button is-primary is-pulled-right"
             href="#{reservation_date.edit_reservation_path}">
           Edit
         </a>

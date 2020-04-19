@@ -22,10 +22,9 @@ class ReservationView < ViewObject
   end
 
   # methods for attribuits
-  def change_note
-    reservation.change_note || ""
+  def change_notice
+    reservation.change_notice || ""
   end
-  alias_method :change_notice, :change_note
 
   def host_name
     @host_name ||= host || ""
