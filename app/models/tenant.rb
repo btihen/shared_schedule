@@ -13,7 +13,7 @@ class Tenant < ApplicationRecord
   # .where(is_demo_tenant: true).or(Tenant.where(is_publicly_viewable: true)).first || DemoTenant.new
   scope :landing_page, ->(user) { tenant = if user.guest?
                                               where(is_demo_tenant: true)
-                                              .or(Tenant.where(is_publicly_viewable: true))
+                                              .or(self.where(is_publicly_viewable: true))
                                               .first
                                             else
                                               where(id: user.tenant.id).first
@@ -21,7 +21,7 @@ class Tenant < ApplicationRecord
                                   tenant.blank? ? DemoTenant.new : tenant
                                 }
   scope :viewable_by, ->(user)  { where(is_publicly_viewable: true)
-                                  .or(Tenant.where(id: user.tenant.id))
+                                  .or(self.where(id: user.tenant.id))
                                   .order(:id)
                                 }
 

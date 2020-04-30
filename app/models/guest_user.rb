@@ -20,11 +20,11 @@ class GuestUser
   end
 
   def tenant
-    @tenant ||= Tenant.find_by(is_demo_tenant: true) || DemoTenant.new
+    @tenant ||= Tenant.unscoped.landing_page(self)
   end
 
   def tenant_id
-    @tenant.id
+    @tenant_id ||= @tenant.id
   end
 
   # answer "" for all unexpected calls
