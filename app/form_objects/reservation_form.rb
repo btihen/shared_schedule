@@ -52,6 +52,7 @@ class ReservationForm < FormObject
 
   attribute :end_date,            :date
   attribute :start_date,          :date
+  attribute :start_date_time,     :datetime
   attribute :end_time_slot_id,    :integer
   attribute :start_time_slot_id,  :integer
   attribute :event_id,            :integer
