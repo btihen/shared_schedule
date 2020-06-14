@@ -13,7 +13,7 @@ gem 'puma' #, '~> 4.1'
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 6'
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem 'webpacker', '~> 4.0'
+gem 'webpacker' #, '~> 4.0'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -36,8 +36,8 @@ end
 
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
-  gem 'web-console', '>= 3.3.0'
-  gem 'listen', '>= 3.0.5', '< 3.2'
+  gem 'web-console' #, '>= 3.3.0'
+  gem 'listen' #, '>= 3.0.5', '< 3.2'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
@@ -111,19 +111,19 @@ group :development do
   ################################
   # GEM DEPENDENCY SECURITY CHECKS
   ################################
-  gem 'bundler-audit', require: false
+  # gem 'bundler-audit', require: false
   # bundle audit check --update
 
   # CODE QUALITY
   ##############
   # code smells & churn - static code analysis
   # also includes the gems: reek, flay & flog
-  gem 'rubycritic', require: false
+  # gem 'rubycritic', require: false
   # usage (checks everything in the app folder):
   # rubycritic app
 
   # rubocop - ruby linter (formatting checks)
-  gem 'rubocop', require: false
+  # gem 'rubocop', require: false
   # Syle and Layout - can be noisy and person use:
   # rubocop --except Style Layout
   #
@@ -139,7 +139,7 @@ group :development do
   # http://fretless.com/blog/static-security-analysis-of-your-ruby-and-rails-applications/
 
   # check code for security coding mistakes
-  gem 'brakeman', require: false
+  # gem 'brakeman', require: false
   # brakeman
   # or the opensource version
   # gem 'railroader', :require => false
@@ -147,7 +147,7 @@ group :development do
   # checks gems for security flaws
 
   # also useful for sinatra, etc. (checks CVE-2013-6421 records)
-  gem 'dawnscanner', require: false
+  # gem 'dawnscanner', require: false
   # bundle install
   # dawn --console .
 end

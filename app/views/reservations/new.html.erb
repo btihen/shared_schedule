@@ -3,7 +3,7 @@
 <h1>New Reservation</h1>
 
 <%= form_for( reservation, local: true,
-              url: tenant_space_reservations_path(tenant_id: tenant.id, space_id: space.id, id: reservation.id),
+              url: space_reservations_path(space_id: space.id),
               id: "new-reservation-form", class: "reservation" ) do |form|  %>
 
   <%= render 'form', form: form, reservation: reservation, space: space, tenant: tenant %>

@@ -2,23 +2,24 @@ class ReservationView < ViewObject
 
   # alias method allows use to rename view_object to a clear name without the initializer
   alias_method :reservation,      :root_model
-  # can't use root_model aliases with nested urls
-  # alias_method :reservation_url,  :root_model_url
-  # alias_method :reservation_path, :root_model_path
 
   # delegate to model for attributes needed
   delegate  :start_date_time, :start_date, :end_date, :host, :is_cancelled?, to: :reservation
 
+  # can't use root_model aliases with nested urls, ie:
+  # alias_method :reservation_url,  :root_model_url
+  # alias_method :reservation_path, :root_model_path
+  # so creating paths with url_helpers
   def reservation_path
-    url_helpers.tenant_space_reservation_path(tenant_id: tenant.id, space_id: space.id, id: id)
+    url_helpers.space_reservation_path(space_id: space.id, id: id)
   end
 
   def edit_reservation_path
-    url_helpers.edit_tenant_space_reservation_path(tenant_id: tenant.id, space_id: space.id, id: id)
+    url_helpers.edit_space_reservation_path(space_id: space.id, id: id)
   end
 
   def reservation_url
-    url_helpers.tenant_space_reservation_url(tenant_id: tenant.id, space_id: space.id, id: id)
+    url_helpers.space_reservation_url(space_id: space.id, id: id)
   end
 
   # methods for attribuits
