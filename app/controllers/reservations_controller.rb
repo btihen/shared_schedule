@@ -3,7 +3,7 @@ class ReservationsController < ApplicationController
   def index
     user          = current_user || GuestUser.new
     space         = Space.find(params[:space_id])
-    tenant        = Tenant.find(params[:tenant_id])
+    tenant        = space.tenant
     unauthorized_view(user, tenant, space); return if performed?
 
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
@@ -28,7 +28,7 @@ class ReservationsController < ApplicationController
   def new
     user          = current_user || GuestUser.new
     space         = Space.find(params[:space_id])
-    tenant        = Tenant.find(params[:tenant_id])
+    tenant        = space.tenant
     unauthorized_change(user, tenant, space); return if performed?
 
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
@@ -50,7 +50,7 @@ class ReservationsController < ApplicationController
   def create
     user          = current_user || GuestUser.new
     space         = Space.find(params[:space_id])
-    tenant        = Tenant.find(params[:tenant_id])
+    tenant        = space.tenant
     unauthorized_change(user, tenant, space); return if performed?
 
     tenant_view   = TenantView.new(tenant)
@@ -78,7 +78,7 @@ class ReservationsController < ApplicationController
   def edit
     user          = current_user || GuestUser.new
     space         = Space.find(params[:space_id])
-    tenant        = Tenant.find(params[:tenant_id])
+    tenant        = space.tenant
     reservation   = Reservation.find(params[:id])
     unauthorized_change(user, tenant, space, reservation); return if performed?
 
@@ -99,7 +99,7 @@ class ReservationsController < ApplicationController
   def update
     user          = current_user || GuestUser.new
     space         = Space.find(params[:space_id])
-    tenant        = Tenant.find(params[:tenant_id])
+    tenant        = space.tenant
 
     udpated_attrs = reservation_params.merge(id: params[:id])
     reservation_form = ReservationForm.new(udpated_attrs)

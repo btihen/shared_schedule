@@ -108,9 +108,8 @@ class CalendarView
     return ""  if user_cannot_reserve?(space, date)
 
     %Q{ <a class="button is-success"
-            href="#{url_helpers.new_tenant_space_reservation_path(tenant_id: space.tenant.id,
-                                                                  space_id: space.id,
-                                                                  date: display_date(date))}">
+            href="#{url_helpers.new_space_reservation_path(space_id: space.id,
+                                                           date: display_date(date))}">
           Add Reservation
         </a>
       }

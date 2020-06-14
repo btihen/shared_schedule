@@ -55,7 +55,7 @@
                       calendar.date_in_month_of_interest?(day) %>
               <%# date-item button for a new link %>
               <%= link_to day.mday,
-                          new_tenant_space_reservation_path(tenant_id: tenant.id, space_id: space.id, date: calendar.display_date(day)),
+                          new_space_reservation_path(space_id: space.id, date: calendar.display_date(day)),
                           class: "date-item button is-light" %>
 
             <% elsif day == Date.today %>
