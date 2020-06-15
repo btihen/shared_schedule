@@ -9,6 +9,8 @@ RSpec.describe "RootPath", type: :request do
   let(:end_this_month)    { today.at_beginning_of_month.next_month - 1.day }
   let(:start_next_month)  { today.at_beginning_of_month.next_month }
   let(:tenant)            { FactoryBot.create :tenant, :demo_group,
+                                                is_demo_tenant: true,
+                                                is_publicly_viewable: true,
                                                 tenant_name: "Shared Schedules",
                                                 tenant_description: "Where groups come to share their space and schedule and keep informed."}
   let(:category1)         { FactoryBot.create :category, tenant: tenant }
@@ -17,7 +19,7 @@ RSpec.describe "RootPath", type: :request do
   let(:brunch)            { FactoryBot.create :time_slot, time_slot_name: 'brunch',    begin_time: '10:00', end_time: '14:00', tenant: tenant }
   let(:afternoon)         { FactoryBot.create :time_slot, time_slot_name: 'afternoon', begin_time: '13:00', end_time: '17:00', tenant: tenant }
   let(:evening)           { FactoryBot.create :time_slot, time_slot_name: 'evening',   begin_time: '18:00', end_time: '22:00', tenant: tenant }
-  let(:space1)            { space = FactoryBot.create :space, space_name: 'Space 1',   tenant: tenant
+  let(:space1)            { space = FactoryBot.create :space, space_name: 'Space 1',   tenant: tenant, is_calendar_public: true
                             space.allowed_time_slots << [morning, brunch, afternoon, evening]
                             space.save
                             space.reload }
@@ -50,7 +52,26 @@ RSpec.describe "RootPath", type: :request do
                             event.save
                             event.reload }
   describe "GET /" do
+    it "shows blank landing page when no data present" do
+      get root_path
+
+      expect(response).to           have_http_status(200)
+      expect(response.body).to      match "<p hidden id='landing_index' class='pageName'>Landing Index</p>"
+
+      # navbar present
+      expect(response.body).to      match "Shared Schedules"
+
+      # The hero section on webpage
+      expect(response.body).to      match "Where groups come to share their space and schedule and keep informed."
+
+      # shows the DemoGroup (tenant) on the root page
+      expect(response.body).to      match "#{tenant.tenant_name}"
+    end
+  end
+  describe "GET /" do
     it "shows landing page without DemoGroup" do
+      expect(tenant).to be_truthy
+      expect(space1).to be_truthy
       get root_path
 
       expect(response).to           have_http_status(200)

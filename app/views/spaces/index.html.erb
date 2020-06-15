@@ -17,7 +17,7 @@
     <div class="column is-full-mobile is-half-tablet is-one-third-widescreen is-centered">
       <p class="title is-6">
         <%= link_to space.space_name,
-                    tenant_space_path(id: space.id, tenant_id: tenant.id),
+                    tenant_space_path(tenant_id: tenant.id, id: space.id),
                     class: "card-footer-item" %>
       </p>
       <%= render 'calendar_mini', user: user, space: space, tenant: tenant, calendar: calendar,

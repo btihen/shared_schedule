@@ -3,7 +3,7 @@ class TenantsController < ApplicationController
   def index
     user          = current_user || GuestUser.new
     user_view     = UserView.new(user)
-    tenants       = Tenant.viewable_by(user)
+    tenants       = Tenant.viewable_by(user) || user.tenant
     tenant_views  = TenantView.collection(tenants)
     respond_to do |format|
       format.html { render 'tenants/index', locals: {tenants: tenant_views} }

@@ -17,10 +17,17 @@ class Space < ApplicationRecord
   validate :validate_reserved_time_slots_alowed
   validate :vaidate_reserved_time_slots_not_overlapping
 
-  scope :viewable_by, ->(user, tenant){ if user.tenant.id == tenant.id
+  scope :viewable_by, ->(user, tenant){ if tenant.users.include?(user)
+                                          # if the user owns the tenant - show everything
                                           where(tenant_id: user.tenant.id)
-                                        else  # if user.guest? or user.tenant.id != tenant.id
+                                        elsif tenant.is_demo?
+                                          # show all calendars if demo
+                                          where(tenant_id: user.tenant.id)
+                                        elsif tenant.is_publicly_viewable?
+                                          # show only tenants that are public and their public calendars
                                           where(tenant_id: tenant.id).where(is_calendar_public: true)
+                                        else
+                                          []
                                         end
                                       }
 

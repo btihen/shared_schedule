@@ -17,12 +17,12 @@ RSpec.describe "Spaces Show", type: :request do
   let(:brunch)            { FactoryBot.create :time_slot, time_slot_name: 'brunch',    begin_time: '10:00', end_time: '14:00', tenant: tenant }
   let(:afternoon)         { FactoryBot.create :time_slot, time_slot_name: 'afternoon', begin_time: '13:00', end_time: '17:00', tenant: tenant }
   let(:evening)           { FactoryBot.create :time_slot, time_slot_name: 'evening',   begin_time: '18:00', end_time: '22:00', tenant: tenant }
-  let(:space1)            { space = FactoryBot.create :space, space_name: 'Space 1',   tenant: tenant
+  let(:space1)            { space = FactoryBot.create :space, space_name: 'Space 1',   tenant: tenant, is_calendar_public: true
                             space.allowed_time_slots << [morning, brunch, afternoon, evening]
                             space.save
                             space.reload
                           }
-  let(:space2)            { space = FactoryBot.create :space, space_name: 'Space 2',   tenant: tenant
+  let(:space2)            { space = FactoryBot.create :space, space_name: 'Space 2',   tenant: tenant, is_calendar_public: true
                             space.allowed_time_slots << [morning, brunch, afternoon, evening]
                             space.save
                             space.reload
@@ -57,6 +57,8 @@ RSpec.describe "Spaces Show", type: :request do
 
   describe "GET /tenant/1/spaces" do
     it "shows Demo Group without login" do
+      expect(space1).to           be
+      expect(space2).to           be
       expect(start_event).to      be
       expect(middle_event).to     be
       expect(end_event).to        be

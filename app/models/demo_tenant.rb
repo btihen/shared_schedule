@@ -1,4 +1,10 @@
 class DemoTenant
+  attr_reader :users, :spaces
+
+  def initialize
+    @users  = []
+    @spaces = []
+  end
   def id
     0
   end

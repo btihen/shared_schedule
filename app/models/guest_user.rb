@@ -2,6 +2,16 @@
 
 # keep views simple - when an object is nil at least return "" in view
 class GuestUser
+  attr_reader :tenant
+
+  def initialize
+    demo_tenant = Tenant.find_by(is_demo_tenant: true, is_publicly_viewable: true)
+    @tenant     = if demo_tenant.blank?
+                    DemoTenant.new
+                  else
+                    demo_tenant
+                  end
+  end
 
   def id
     0
@@ -18,10 +28,7 @@ class GuestUser
   def guest?
     true
   end
-
-  def tenant
-    @tenant ||= Tenant.unscoped.landing_page(self)
-  end
+  alias_method :is_guest?, :guest?
 
   def tenant_id
     @tenant_id ||= @tenant.id

@@ -14,7 +14,7 @@ raise StandardError, error_msg  unless Rails.env.development? || Rails.env.test?
 Tenant.destroy_all
 
 # create demo group - for guests to try
-SeedDemoGroup.create
+# SeedDemoGroup.create
 
 if File.exists? Rails.root.join('db', 'seed_private_tenant.rb')
   require './db/seed_private_tenant.rb'

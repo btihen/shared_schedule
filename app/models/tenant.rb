@@ -16,9 +16,9 @@ class Tenant < ApplicationRecord
                                               .or(self.where(is_publicly_viewable: true))
                                               .first
                                             else
-                                              where(id: user.tenant.id).first
+                                              find_by(id: user.tenant.id)
                                             end
-                                  tenant.blank? ? DemoTenant.new : tenant
+                                  tenant.blank? ? user.tenant : tenant
                                 }
   scope :viewable_by, ->(user)  { where(is_publicly_viewable: true)
                                   .or(self.where(id: user.tenant.id))
@@ -29,8 +29,9 @@ class Tenant < ApplicationRecord
     is_demo_tenant && is_publicly_viewable
   end
 
-  def is_publicly_viewable?
+  def is_public?
     is_publicly_viewable
   end
+  alias_method :is_publicly_viewable?, :is_public?
 
 end

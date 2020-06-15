@@ -51,7 +51,7 @@
               </button>
 
             <%# when person is allowed to add new events on empty days %>
-            <% elsif (tenant.is_demo? || (user.tenant.id == tenant.id)) &&
+            <% elsif (tenant.is_demo? || tenant.users.include?(user)) &&
                       calendar.date_in_month_of_interest?(day) %>
               <%# date-item button for a new link %>
               <%= link_to day.mday,
