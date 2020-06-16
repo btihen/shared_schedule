@@ -31,7 +31,8 @@
           <div class="<%= calendar.date_class_string(day, reservations) %>">
 
             <%# date-item has reservation and within month of interest - with tool-tips and modal pop-ups %>
-            <% if calendar.date_has_reservation?(day, reservations) && calendar.date_in_month_of_interest?(day) %>
+            <% if calendar.date_in_month_of_interest?(day) &&
+                      calendar.date_has_reservation?(day, reservations) %>
               <button data-html="true"
                       data-href="https://randomuser.me/api/?results=10"
                       data-modal="<%= calendar.choose_reservations_modal_html(space, day, reservations) %>"
@@ -41,22 +42,34 @@
                 <%= day.mday %>
               </button>
 
+            <%# when person is allowed to add new events on empty days %>
+            <% elsif calendar.date_in_month_of_interest?(day) &&
+                      ( tenant.is_demo? || tenant.users.map(&:user).include?(user.user) ) &&
+                      day == Date.today %>
+              <%# date-item button for a new link %>
+              <%= link_to day.mday,
+                          new_space_reservation_path(space_id: space.id, date: calendar.display_date(day)),
+                          class: "date-item button is-light is-today" %>
+
+
+            <%# when person is allowed to add new events on empty days %>
+            <% elsif calendar.date_in_month_of_interest?(day) &&
+                    ( tenant.is_demo? || tenant.users.map(&:user).include?(user.user) ) %>
+              <%# date-item button for a new link %>
+              <%= link_to day.mday,
+                          new_space_reservation_path(space_id: space.id, date: calendar.display_date(day)),
+                          class: "date-item button is-light" %>
+
+
             <%# date-item has reservation and NOT in month of interest - needs is-active for green dot %>
             <%#  - get tool-tips working %>
-            <% elsif calendar.date_has_reservation?(day, reservations) && !calendar.date_in_month_of_interest?(day) %>
+            <% elsif !calendar.date_in_month_of_interest?(day) &&
+                      calendar.date_has_reservation?(day, reservations)  %>
               <button data-html="true"
                       data-tooltip="<%= calendar.date_item_tooltip_data(day, reservations) %>"
                       class="date-item modal-button is-active">
                 <%= day.mday %>
               </button>
-
-            <%# when person is allowed to add new events on empty days %>
-            <% elsif (tenant.is_demo? || tenant.users.include?(user)) &&
-                      calendar.date_in_month_of_interest?(day) %>
-              <%# date-item button for a new link %>
-              <%= link_to day.mday,
-                          new_space_reservation_path(space_id: space.id, date: calendar.display_date(day)),
-                          class: "date-item button is-light" %>
 
             <% elsif day == Date.today %>
               <div class="date-item is-today">
