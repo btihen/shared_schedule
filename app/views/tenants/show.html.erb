@@ -6,8 +6,10 @@
   <meta name="turbolinks-visit-control" content="reload">
 <% end %>
 
-<p hidden id='tenant_show_<%= tenant.id %>' class='pageName'>tenant_show_<%= tenant.id %></p>
+<p hidden id='tenant_show_<%= tenant_view.id %>' class='pageName'>
+  tenant_show_<%= tenant_view.id %>
+</p>
 
 <%= render 'tenants/display',
-            user: user, spaces: spaces,
-            tenant: tenant, calendar: calendar %>
+            user_view: user_view, spaces_view: spaces_view,
+            tenant_view: tenant_view, calendar_view: calendar_view %>

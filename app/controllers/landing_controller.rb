@@ -12,10 +12,11 @@ class LandingController < ApplicationController
     calendar_view = CalendarView.new(tenant_view, user_view, date)
 
     respond_to do |format|
-      format.html { render 'landing/index', locals: { user: user_view,
-                                                      spaces: spaces_view,
-                                                      tenant: tenant_view,
-                                                      calendar: calendar_view } }
+      format.html { render 'landing/index',
+                            locals: { user_view: user_view,
+                                      spaces_view: spaces_view,
+                                      tenant_view: tenant_view,
+                                      calendar_view: calendar_view } }
     end
   end
 

@@ -62,7 +62,7 @@ RSpec.describe "TenantsPath - Demo", type: :request do
       get tenant_path(tenant)
 
       expect(response).to       have_http_status(200)
-      expect(response.body).to  match "<p hidden id='tenant_show_#{tenant.id}' class='pageName'>tenant_show_#{tenant.id}</p>"
+      expect(response.body).to  match "<p hidden id='tenant_show_#{tenant.id}' class='pageName'>"
 
       # navbar present
       expect(response.body).to  match "DemoGroup"

@@ -4,9 +4,10 @@ class TenantsController < ApplicationController
     user          = current_user || GuestUser.new
     user_view     = UserView.new(user)
     tenants       = Tenant.viewable_by(user) || user.tenant
-    tenant_views  = TenantView.collection(tenants)
+    tenants_views = TenantView.collection(tenants)
     respond_to do |format|
-      format.html { render 'tenants/index', locals: {tenants: tenant_views} }
+      format.html { render 'tenants/index',
+                            locals: {tenants_view: tenants_views} }
     end
   end
 
@@ -23,10 +24,11 @@ class TenantsController < ApplicationController
     calendar_view = CalendarView.new(tenant_view, user_view, date)
 
     respond_to do |format|
-      format.html { render 'tenants/show', locals: {user: user_view,
-                                                    tenant: tenant_view,
-                                                    spaces: space_views,
-                                                    calendar: calendar_view} }
+      format.html { render 'tenants/show',
+                            locals: { user_view: user_view,
+                                      tenant_view: tenant_view,
+                                      spaces_view: space_views,
+                                      calendar_view: calendar_view } }
     end
   end
 
