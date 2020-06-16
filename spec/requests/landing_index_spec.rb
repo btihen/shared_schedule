@@ -65,7 +65,7 @@ RSpec.describe "Landing", type: :request do
       get root_path
 
       expect(response).to       have_http_status(200)
-      expect(response.body).to  match "<p hidden id='landing_index' class='pageName'>Landing Index</p>"
+      expect(response.body).to  match "<p hidden id='landing_index' class='pageName'>"
 
       # navbar present
       expect(response.body).to  match "Shared Schedules"
