@@ -59,7 +59,7 @@ RSpec.describe "ReservationsPath - DemoTenant", type: :request do
       follow_redirect!
 
       expect(response).to       have_http_status(200)
-      expect(response.body).to  match "<p hidden id='tenant_show_#{tenant.id}' class='pageName'>tenant_show_#{tenant.id}</p>"
+      expect(response.body).to  match "<p hidden id='tenant_show_#{tenant.id}' class='pageName'>"
 
       # shows the DemoGroup (tenant) on the root page
       expect(response.body).to  match "#{tenant.tenant_name}"

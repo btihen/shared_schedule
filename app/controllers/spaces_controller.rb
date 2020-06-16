@@ -15,10 +15,10 @@ class SpacesController < ApplicationController
 
     respond_to do |format|
       # is tenant really needed?
-      format.html { render 'spaces/index', locals: {user: user_view,
-                                                    tenant: tenant_view,
-                                                    spaces: space_views,
-                                                    calendar: calendar_view} }
+      format.html { render 'spaces/index', locals: {user_view: user_view,
+                                                    tenant_view: tenant_view,
+                                                    spaces_view: space_views,
+                                                    calendar_view: calendar_view} }
     end
   end
 
@@ -35,8 +35,8 @@ class SpacesController < ApplicationController
   #   calendar_view = CalendarView.new(tenant_view, user_view, date)
   #   user_view     = UserView.new(user)
   #   respond_to do |format|
-  #     format.html { render 'spaces/show', locals: { user: user_view,
-  #                                                   space: space_view,
+  #     format.html { render 'spaces/show', locals: { user_view: user_view,
+  #                                                   space_view: space_view,
   #                                                   today: Date.today} }
   #   end
   # end
@@ -47,11 +47,11 @@ class SpacesController < ApplicationController
   # def update
   #   respond_to do |format|
   #     if @space.update(space_params)
-  #       format.html { redirect_to @space, notice: 'Space was successfully updated.' }
-  #       format.json { render :show, status: :ok, location: @space }
+  #       format.html { redirect_to space_view, notice: 'Space was successfully updated.' }
+  #       format.json { render :show, status: :ok, location: space_view }
   #     else
   #       format.html { render :edit }
-  #       format.json { render json: @space.errors, status: :unprocessable_entity }
+  #       format.json { render json: space_view.errors, status: :unprocessable_entity }
   #     end
   #   end
   # end

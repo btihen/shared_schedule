@@ -1,9 +1,9 @@
 <h1 class="title">Tenants</h1>
 
 <div class="columns is-multiline">
-<% tenants.each do |tenant| %>
+<% tenants_view.each do |tenant_view| %>
   <div class="column is-half-tablet is-one-third-desktop is-one-quarter-fullhd ">
-    <%= render 'tenant_card', tenant: tenant %>
+    <%= render 'tenant_card', tenant: tenant_view %>
   </div>
 <% end %>
 </div>

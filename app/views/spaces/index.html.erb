@@ -1,30 +1,33 @@
-<p hidden id='tenant_<%= tenant.id %>_spaces_index' class='pageName'>Tenant-<%= tenant.id %> Spaces Index</p>
+<p hidden id='tenant_<%= tenant_view.id %>_spaces_index' class='pageName'>
+  Tenant-<%= tenant_view.id %> Spaces Index
+</p>
 
 <div class="container">
 
   <p class="title is-3">
-    <%= tenant.tenant_name %>
+    <%= tenant_view.tenant_name %>
   </p>
   <p class="subtitle is-5">
-    <%= tenant.tenant_tagline %>
+    <%= tenant_view.tenant_tagline %>
   </p>
   <p class="subtitle is-6">
-    <%= tenant.tenant_description %>
+    <%= tenant_view.tenant_description %>
   </p>
 
   <div class="columns is-centered is-multiline">
-  <% spaces.each do |space| %>
+  <% spaces_view.each do |space_view| %>
     <div class="column is-full-mobile is-half-tablet is-one-third-widescreen is-centered">
       <p class="title is-6">
-        <%= link_to space.space_name,
-                    tenant_space_path(tenant_id: tenant.id, id: space.id),
+        <%= link_to space_view.space_name,
+                    tenant_space_path(tenant_id: tenant_view.id, id: space_view.id),
                     class: "card-footer-item" %>
       </p>
-      <%= render 'calendar_mini', user: user, space: space, tenant: tenant, calendar: calendar,
-                                  prev_month_path: tenant_spaces_path( tenant_id: tenant.id,
-                                                                      date: calendar.prev_month_string),
-                                  next_month_path: tenant_spaces_path( tenant_id: tenant.id,
-                                                                      date: calendar.next_month_string)  %>
+      <%= render 'calendar_mini', user_view: user_view, space_view: space_view,
+                                  tenant_view: tenant_view, calendar_view: calendar_view,
+                                  prev_month_path: tenant_spaces_path( tenant_id: tenant_view.id,
+                                                                      date: calendar_view.prev_month_string),
+                                  next_month_path: tenant_spaces_path( tenant_id: tenant_view.id,
+                                                                      date: calendar_view.next_month_string)  %>
     </div>
   <% end %>
   </div>
