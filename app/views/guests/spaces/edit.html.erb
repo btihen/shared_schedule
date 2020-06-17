@@ -1,0 +1,10 @@
+<p hidden id='edit-space-<%= space_view.id %>' class='pageName'>
+  Edit Space <%= space_view.id %>
+</p>
+
+<h1>Editing Space</h1>
+
+<%= render 'guests/spaces/form', space_view: space_view %>
+
+<%= link_to 'Show', space_view %> |
+<%= link_to 'Back', spaces_path %>

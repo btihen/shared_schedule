@@ -1,26 +1,27 @@
 class SpacesController < ApplicationController
 
-  # show mini-calendars for each space in Tenant
-  def index
-    user          = current_user || GuestUser.new
-    tenant        = Tenant.find(params[:tenant_id])
-    unauthorized_view(user, tenant); return if performed?
-
-    user_view     = UserView.new(user)
-    tenant_view   = TenantView.new(tenant)
-    spaces        = Space.viewable_by(user, tenant)
-    space_views   = SpaceView.collection(spaces)
-    date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
-    calendar_view = CalendarView.new(tenant_view, user_view, date)
-
-    respond_to do |format|
-      # is tenant really needed?
-      format.html { render 'spaces/index', locals: {user_view: user_view,
-                                                    tenant_view: tenant_view,
-                                                    spaces_view: space_views,
-                                                    calendar_view: calendar_view} }
-    end
-  end
+  # # show mini-calendars for each space in Tenant
+  # def index
+  #   user          = current_user || GuestUser.new
+  #   tenant        = Tenant.find(params[:tenant_id])
+  #   unauthorized_view(user, tenant); return if performed?
+  #
+  #   user_view     = UserView.new(user)
+  #   tenant_view   = TenantView.new(tenant)
+  #   spaces        = Space.viewable_by(user, tenant)
+  #   space_views   = SpaceView.collection(spaces)
+  #   date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
+  #   calendar_view = CalendarView.new(tenant_view, user_view, date)
+  #
+  #   respond_to do |format|
+  #     # is tenant really needed?
+  #     format.html { render 'spaces/index',
+  #                           locals: { user_view: user_view,
+  #                                     tenant_view: tenant_view,
+  #                                     spaces_view: space_views,
+  #                                     calendar_view: calendar_view } }
+  #   end
+  # end
 
   # # larger (but responsive) calendar for chosen space
   # def show

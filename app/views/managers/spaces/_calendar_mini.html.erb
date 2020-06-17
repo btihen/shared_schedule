@@ -1,0 +1,104 @@
+<!-- https://codepen.io/wikiki/pen/KvqKzK?editors=0100 -->
+<div class="column">
+  <div class="calendar">
+    <div class="calendar-nav">
+      <div class="calendar-nav-left">
+        <%= link_to prev_month_path, class: "button is-link" do %>
+          <i class="fa fa-chevron-left"></i>
+        <% end %>
+      </div>
+      <div><%= calendar_view.full_month_name %> <%= calendar_view.year_number %></div>
+      <div class="calendar-nav-right">
+        <%= link_to next_month_path, class: "button is-link" do %>
+          <i class="fa fa-chevron-right"></i>
+        <% end %>
+      </div>
+    </div>
+    <div class="calendar-container">
+      <div class="calendar-header">
+        <div class="calendar-date"><%= I18n.t("date.week_day.mon") %></div>
+        <div class="calendar-date"><%= I18n.t("date.week_day.tue") %></div>
+        <div class="calendar-date"><%= I18n.t("date.week_day.wed") %></div>
+        <div class="calendar-date"><%= I18n.t("date.week_day.thu") %></div>
+        <div class="calendar-date"><%= I18n.t("date.week_day.fri") %></div>
+        <div class="calendar-date"><%= I18n.t("date.week_day.sat") %></div>
+        <div class="calendar-date"><%= I18n.t("date.week_day.sun") %></div>
+      </div>
+
+      <div class="calendar-body">
+        <% reservations = space_view.reservations(calendar_view.date_range) %>
+        <% calendar_view.date_range.each do |day| %>
+          <div class="<%= calendar_view.date_class_string(day, reservations) %>">
+
+            <%# date-item has reservation and within month of interest - with tool-tips and modal pop-ups %>
+            <% if calendar_view.date_in_month_of_interest?(day) &&
+                      calendar_view.date_has_reservation?(day, reservations) %>
+              <button data-html="true"
+                      data-href="https://randomuser.me/api/?results=10"
+                      data-modal="<%= calendar_view.choose_reservations_modal_html(space_view, day, reservations) %>"
+                      data-target="<%= calendar_view.choose_modal_form(day, reservations) %>"
+                      data-tooltip="<%= calendar_view.date_item_tooltip_data(day, reservations) %>"
+                      class="date-item <%= calendar_view.date_item_class_string(day, reservations) %>">
+                <%= day.mday %>
+              </button>
+
+            <%# when person is allowed to add new events on empty days %>
+            <% elsif calendar_view.date_in_month_of_interest?(day) &&
+                      ( tenant_view.is_demo? || tenant_view.users.map(&:user).include?(user_view.user) ) &&
+                      day == Date.today %>
+              <%# date-item button for a new link %>
+              <%= link_to day.mday,
+                          new_space_reservation_path(space_id: space_view.id, date: calendar_view.display_date(day)),
+                          class: "date-item button is-light is-today" %>
+
+
+            <%# when person is allowed to add new events on empty days %>
+            <% elsif calendar_view.date_in_month_of_interest?(day) &&
+                    ( tenant_view.is_demo? || tenant_view.users.map(&:user).include?(user_view.user) ) %>
+              <%# date-item button for a new link %>
+              <%= link_to day.mday,
+                          new_space_reservation_path(space_id: space_view.id, date: calendar_view.display_date(day)),
+                          class: "date-item button is-light" %>
+
+
+            <%# date-item has reservation and NOT in month of interest - needs is-active for green dot %>
+            <%#  - get tool-tips working %>
+            <% elsif !calendar_view.date_in_month_of_interest?(day) &&
+                      calendar_view.date_has_reservation?(day, reservations)  %>
+              <button data-html="true"
+                      data-tooltip="<%= calendar_view.date_item_tooltip_data(day, reservations) %>"
+                      class="date-item modal-button is-active">
+                <%= day.mday %>
+              </button>
+
+            <% elsif day == Date.today %>
+              <div class="date-item is-today">
+                <%= day.mday %>
+              </div>
+
+            <%# date-item without event and user without permission to make new events %>
+            <% else %>
+              <div class="date-item">
+                <%= day.mday %>
+              </div>
+            <% end %>
+
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="reservation-details" class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title has-text-centered">Reservation(s)</p>
+      <button class="delete" aria-label="close"></button>
+    </header>
+      <div id="reservation-details-body">
+        Reservations
+      </div>
+  </div>
+</div>

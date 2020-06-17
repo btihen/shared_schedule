@@ -1,0 +1,343 @@
+<% if reservation.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= pluralize(reservation.errors.count, "error") %> prohibited this reservation from being saved:</h2>
+
+    <ul>
+      <% reservation.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<div class="card">
+  <div class="card-content">
+
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        Event
+      </div>
+      <div class="field-body">
+      <section>
+        <div class="card">
+          <header class="card-header">
+            <p class="card-header-title">Choose an Event</p>
+            <a class="card-header-icon card-toggle" id="existingEventToggle">
+              <i class="fa fa-angle-down"></i>
+            </a>
+          </header>
+          <div class="card-content" id="existingEventContent">
+            <div class="content">
+              <div class="field">
+              <div class="control has-addons">
+                <%= form.collection_select :event_id, tenant.events,
+                          :id, :event_name, { include_blank: 'Select Event',
+                                              selected: reservation.event.id },
+                          {class: 'select'} %>
+                <p class="help">Select the Event</p>
+                <%= error_message_on(form.object, :event_id) %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <header class="card-header">
+            <p class="card-header-title">Create New Event</p>
+            <a class="card-header-icon card-toggle" id="newEventToggle">
+              <i class="fa fa-angle-down"></i>
+            </a>
+          </header>
+          <div class="card-content is-hidden" id="newEventContent">
+            <div class="content">
+              <div class="field is-horizontal">
+                <div class="control has-icons-left">
+                  <%= form.text_field :event_name,
+                                      placeholder: "Event Name",
+                                      class: "input" %>
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-user"></i>
+                  </span>
+                  <p class="help">Event Name Required</p>
+                  <%= error_message_on(form.object, :event_name) %>
+                </div>
+
+                <div class="control has-icons-left">
+                  <%= form.text_field :event_description,
+                                      placeholder: "Event Description (Optional)",
+                                      class: "input" %>
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-user"></i>
+                  </span>
+                  <p class="help">Description Optional</p>
+                  <%= error_message_on(form.object, :event_description) %>
+                </div>
+              </div>
+
+              <br>
+
+              <div class="card">
+                <header class="card-header">
+                  <p class="card-header-title">Choose a Category</p>
+                  <a class="card-header-icon card-toggle" id="existingCategoryToggle">
+                    <i class="fa fa-angle-down"></i>
+                  </a>
+                </header>
+                <div class="card-content" id="existingCategoryContent">
+                  <div class="content">
+                    <div class="field">
+                    <div class="control has-addons">
+                      <%= form.collection_select :category_id, tenant.categories,
+                            :id, :category_name, {include_blank: 'Select Category'},
+                            {class: 'select'} %>
+                      <p class="help">Event Category</p>
+                      <%= error_message_on(form.object, :category_id) %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <header class="card-header">
+                  <p class="card-header-title">Create New Category</p>
+                  <a class="card-header-icon card-toggle" id="newCategoryToggle">
+                    <i class="fa fa-angle-down"></i>
+                  </a>
+                </header>
+                <div class="card-content is-hidden" id="newCategoryContent">
+                  <div class="content">
+
+                    <div class="field is-horizontal">
+                      <div class="control has-icons-left">
+                        <%= form.text_field :category_name,
+                                            placeholder: "Category Name",
+                                            class: "input" %>
+                        <span class="icon is-small is-left">
+                          <i class="fas fa-user"></i>
+                        </span>
+                        <p class="help">Category Name - Required</p>
+                        <%= error_message_on(form.object, :category_name) %>
+                      </div>
+                      <div class="control has-icons-left">
+                        <%= form.text_field :category_description,
+                                            placeholder: "Category Description (Optional)",
+                                            class: "input" %>
+                        <span class="icon is-small is-left">
+                          <i class="fas fa-user"></i>
+                        </span>
+                        <p class="help">Description Optional</p>
+                        <%= error_message_on(form.object, :category_description) %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </section>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">Space</div>
+      <div class="field-body">
+        <div class="field has-addons is-grouped is-grouped-multiline">
+          <div class="control">
+            <%= form.collection_select :space_id, tenant.spaces,
+                      :id, :space_name, {selected: reservation.space.id},
+                      {class: 'select'} %>
+            <p class="help">Required</p>
+            <%= error_message_on(form.object, :space_id) %>
+          </div>
+          <div class="control has-icons-left">
+            <%= form.text_field :host, placeholder: "Host (Optional)", class: "input" %>
+            <span class="icon is-small is-left">
+              <i class="fas fa-user"></i>
+            </span>
+            <p class="help">Optional</p>
+            <%= error_message_on(form.object, :host) %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">Start Info</div>
+      <div class="field-body">
+        <div class="field has-addons is-grouped is-grouped-multiline">
+          <div class="control">
+            <%= form.date_field :start_date, class: "input" %>
+            <p class="help">Required</p>
+            <%= error_message_on(form.object, :date) %>
+          </div>
+          <div class="control is-expanded">
+            <%= form.collection_select :start_time_slot_id, space.allowed_time_slots,
+                      :id, :time_slot_name, { include_blank: 'Please Select',
+                                              selected: reservation.start_time_slot.id },
+                      {class: 'select'} %>
+            <p class="help">Required</p>
+            <%= error_message_on(form.object, :space_id) %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        End info
+      </div>
+      <div class="field-body">
+        <div class="field has-addons is-grouped is-grouped-multiline">
+          <div class="control">
+            <%= form.date_field :end_date, class: "input" %>
+            <p class="help">Defaults to Start Info</p>
+            <%= error_message_on(form.object, :date) %>
+          </div>
+
+          <div class="control is-expanded">
+            <%= form.collection_select :end_time_slot_id, space.allowed_time_slots,
+                      :id, :time_slot_name, { include_blank: 'Please Select',
+                                              selected: reservation.end_time_slot.id },
+                      {class: 'select'} %>
+            <p class="help">Defaults to Start Info</p>
+            <%= error_message_on(form.object, :space_id) %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">Cancelled?</div>
+      <div class="field-body">
+        <div class="field has-addons is-grouped is-grouped-multiline">
+          <div class="control">
+            <%= form.check_box :is_cancelled, value: reservation.is_cancelled, class: "checkbox" %>
+            <%= error_message_on(form.object, :is_cancelled) %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">Change Notice</div>
+      <div class="field-body">
+        <div class="field has-addons is-grouped is-grouped-multiline">
+          <div class="control">
+            <%= form.text_area :change_notice, class: "textarea" %>
+            <%# form.text_area :change_notice, value: reservation.change_notice, class: "textarea" %>
+            <p class="help">Explain changes or needed info about the event</p>
+            <%= error_message_on(form.object, :change_notice) %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
+      <div class="field-label is-normal"></div>
+      <div class="field-body">
+        <div class="field is-grouped is-grouped-multiline">
+          <div class="control">
+            <%= form.submit("Save", class: "button is-link is-info is-outlined is-light") %>
+          </div>
+          <div class="control">
+            <%= link_to 'Back', tenant_path(tenant), class: 'button is-link is-danger is-outlined' %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+'use strict';
+
+document.getElementById("newEventToggle").onclick = function(){
+  var $target
+
+  // open the new event card
+  $target = document.getElementById("newEventContent");
+  $target.setAttribute('class', 'card-content');
+
+  // clear the previous event_id
+  $target = document.getElementById("reservation_event_id")
+  $target.selectedIndex = 0;
+
+  // close the existing event card
+  $target = document.getElementById("existingEventContent");
+  $target.setAttribute('class', 'card-content is-hidden');
+
+  // prevent form submission
+  event.preventDefault();
+}
+
+document.getElementById("existingEventToggle").onclick = function(){
+  var $target
+
+  // open the existing event card
+  $target = document.getElementById("existingEventContent");
+  $target.setAttribute('class', 'card-content');
+
+  // clear the form when closing
+  $target = document.getElementById("reservation_event_name")
+  $target.value=''
+  $target = document.getElementById("reservation_event_description")
+  $target.value=''
+  // clear all sub-forms too
+  $target = document.getElementById("reservation_category_id")
+  $target.selectedIndex = 0;
+  $target = document.getElementById("reservation_category_name")
+  $target.value=''
+  $target = document.getElementById("reservation_category_description")
+  $target.value=''
+
+  // close the new event card
+  $target = document.getElementById("newEventContent");
+  $target.setAttribute('class', 'card-content is-hidden');
+
+  // prevent form submission
+  event.preventDefault();
+}
+
+document.getElementById("newCategoryToggle").onclick = function(){
+  var $target
+
+  // open the new category card
+  $target = document.getElementById("newCategoryContent");
+  $target.setAttribute('class', 'card-content');
+
+  // clear existing categories
+  $target = document.getElementById("reservation_category_id")
+  $target.selectedIndex = 0;
+
+  // close the existing category card
+  $target = document.getElementById("existingCategoryContent");
+  $target.setAttribute('class', 'card-content is-hidden');
+
+  // prevent form submission
+  event.preventDefault();
+}
+
+document.getElementById("existingCategoryToggle").onclick = function(){
+  var $target
+
+  // open the existing category card
+  $target = document.getElementById("existingCategoryContent");
+  $target.setAttribute('class', 'card-content');
+
+  // clear the new category form
+  $target = document.getElementById("reservation_category_name")
+  $target.value=''
+  $target = document.getElementById("reservation_category_description")
+  $target.value=''
+
+  // close the new category card
+  $target = document.getElementById("newCategoryContent");
+  $target.setAttribute('class', 'card-content is-hidden');
+
+  // prevent form submission
+  event.preventDefault();
+}
+</script>

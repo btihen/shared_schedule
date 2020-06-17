@@ -1,0 +1,7 @@
+<p hidden id='show-space-<%= space_view.id %>' class='pageName'>
+  Show Space <%= space_view.id %>
+</p>
+
+<h1 class="title"><small>Space:</small> <%= space_view.space_name %></h1>
+
+<%= render 'spaces/calendar_maxi', space_view: space_view %>

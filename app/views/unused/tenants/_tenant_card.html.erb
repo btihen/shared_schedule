@@ -1,0 +1,28 @@
+<div class="card">
+
+  <div class="card-content">
+    <div class="media">
+      <div class="media-left">
+        <figure class="image is-48x48">
+          <img src="<%= tenant.tenant_logo_url %>" alt="<%= tenant.tenant_name %> logo">
+        </figure>
+      </div>
+      <div class="media-content">
+        <p class="title is-4"><%= tenant.tenant_name %></p>
+        <p class="subtitle is-6"><%= tenant.tenant_tagline %></p>
+      </div>
+    </div>
+
+    <div class="content">
+      <%= tenant.tenant_description.truncate(100, separator: ' ', omission: '...') %>
+      <br>
+      Next Event Start:<br><b><time datetime="2016-1-1"><%= tenant.next_event_formated %></time></b>
+    </div>
+  </div>
+
+  <footer class="card-footer">
+    <%= link_to 'Calendar', tenant_path(tenant), class: "card-footer-item" %>
+    <%# link_to 'Configure', edit_tenant_path(tenant), class: "card-footer-item" %>
+    <%# link_to 'Destroy', tenant, method: :delete, data: { confirm: 'Are you sure?' }, class: "card-footer-item" %>
+  </footer>
+</div>

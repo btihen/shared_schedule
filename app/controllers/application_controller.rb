@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::Base
 
-  # before_action :authenticate_user_or_guest
   before_action :tenant_count
 
   protected
