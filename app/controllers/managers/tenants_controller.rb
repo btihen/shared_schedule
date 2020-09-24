@@ -4,9 +4,9 @@ class Managers::TenantsController < Managers::AppController
 
   def index
     user          = current_user || GuestUser.new
-    user_view     = UserView.new(user)
+    user_view     = Managers::UserView.new(user)
     tenants       = Tenant.viewable_by(user) || user.tenant
-    tenants_views = TenantView.collection(tenants)
+    tenants_views = Managers::TenantView.collection(tenants)
     respond_to do |format|
       format.html { render 'managers/tenants/index',
                             locals: {tenants_view: tenants_views} }
@@ -19,12 +19,12 @@ class Managers::TenantsController < Managers::AppController
     tenant        = Tenant.find(params[:id])
     unauthorized_view(user, tenant); return if performed?
 
-    user_view     = UserView.new(user)
-    tenant_view   = TenantView.new(tenant)
+    user_view     = Managers::UserView.new(user)
+    tenant_view   = Managers::TenantView.new(tenant)
     spaces        = Space.viewable_by(user, tenant)
-    space_views   = SpaceView.collection(spaces)
+    space_views   = Managers::SpaceView.collection(spaces)
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
-    calendar_view = CalendarView.new(tenant_view, user_view, date)
+    calendar_view = Managers::CalendarView.new(tenant_view, user_view, date)
 
     respond_to do |format|
       format.html { render 'managers/tenants/show',

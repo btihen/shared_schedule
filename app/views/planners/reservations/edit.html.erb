@@ -5,6 +5,6 @@
               url: space_reservation_path(space_id: space, id: reservation),    # PATH MUST BE SINGULAR!!!
               id: "edit-reservation-form", class: "reservation" ) do |form|  %>
 
-  <%= render 'form', form: form, reservation: reservation, space: space, tenant: tenant %>
+  <%= render 'planners/reservations/form', form: form, reservation: reservation, space: space, tenant: tenant %>
 
 <% end %>

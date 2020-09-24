@@ -24,12 +24,13 @@ Rails.application.routes.draw do
   namespace :planners do
     # root to: "home#index"
     root to: 'tenants#index'
-  #   resources :tenants,  only: [:index, :show] do
-  #     resources :spaces, only: [:index]
-  #   end
-  #   resources :spaces, only: [] do
-  #     resources :reservations, only: [:index, :new, :create, :edit, :update]
-  #   end
+    resources :tenants,  only: [:index]
+    # resources :tenants,  only: [:index] do
+    #   resources :spaces, only: [:index]
+    # end
+    resources :spaces, only: [] do
+      resources :reservations, only: [:index, :new, :create, :edit, :update]
+    end
   end
 
   # # https://devblast.com/b/rails-5-routes-scope-vs-namespace

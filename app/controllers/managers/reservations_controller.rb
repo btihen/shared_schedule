@@ -7,13 +7,13 @@ class Managers::ReservationsController < Managers::AppController
     unauthorized_view(user, tenant, space); return if performed?
 
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
-    tenant_view   = TenantView.new(tenant)
-    space_view    = SpaceView.new(space)
+    tenant_view   = Managers::TenantView.new(tenant)
+    space_view    = Managers::SpaceView.new(space)
     reservations  = Reservation.where(space_id: space.id)
                               .where('start_date <= :date AND end_date >= :date', date: date)
-    reservation_views = ReservationView.collection(reservations)
-    user_view     = UserView.new(user)
-    calendar_view = CalendarView.new(tenant_view, user_view, date)
+    reservation_views = Managers::ReservationView.collection(reservations)
+    user_view     = Managers::UserView.new(user)
+    calendar_view = Managers::CalendarView.new(tenant_view, user_view, date)
 
     respond_to do |format|
       format.html { render 'managers/spaces/show', locals: { user: user_view,
@@ -32,9 +32,9 @@ class Managers::ReservationsController < Managers::AppController
     unauthorized_change(user, tenant, space); return if performed?
 
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
-    tenant_view   = TenantView.new(tenant)
-    space_view    = SpaceView.new(space)
-    user_view     = UserView.new(user)
+    tenant_view   = Managers::TenantView.new(tenant)
+    space_view    = Managers::SpaceView.new(space)
+    user_view     = Managers::UserView.new(user)
 
     reservation   = Reservation.new(space: space, start_date: date)
     reservation_form = ReservationForm.new_from(reservation)
@@ -53,9 +53,9 @@ class Managers::ReservationsController < Managers::AppController
     tenant        = space.tenant
     unauthorized_change(user, tenant, space); return if performed?
 
-    tenant_view   = TenantView.new(tenant)
-    space_view    = SpaceView.new(space)
-    user_view     = UserView.new(user)
+    tenant_view   = Managers::TenantView.new(tenant)
+    space_view    = Managers::SpaceView.new(space)
+    user_view     = Managers::UserView.new(user)
 
     reservation_form = ReservationForm.new(reservation_params)
     if reservation_form.valid?
@@ -84,9 +84,9 @@ class Managers::ReservationsController < Managers::AppController
     unauthorized_change(user, tenant, space, reservation); return if performed?
 
     reservation_form = ReservationForm.new_from(reservation)
-    tenant_view   = TenantView.new(tenant)
-    space_view    = SpaceView.new(space)
-    user_view     = UserView.new(user)
+    tenant_view   = Managers::TenantView.new(tenant)
+    space_view    = Managers::SpaceView.new(space)
+    user_view     = Managers::UserView.new(user)
 
     respond_to do |format|
       format.html { render 'managers/reservations/edit',
@@ -107,9 +107,9 @@ class Managers::ReservationsController < Managers::AppController
     reservation_form = ReservationForm.new(udpated_attrs)
     unauthorized_change(user, tenant, space, reservation_form.reservation); return if performed?
 
-    tenant_view   = TenantView.new(tenant)
-    space_view    = SpaceView.new(space)
-    user_view     = UserView.new(user)
+    tenant_view   = Managers::TenantView.new(tenant)
+    space_view    = Managers::SpaceView.new(space)
+    user_view     = Managers::UserView.new(user)
 
     if reservation_form.valid?
       reservation = reservation_form.reservation

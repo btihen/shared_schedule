@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Landing", type: :request do
+RSpec.describe "Planners Landing", type: :request do
 
 
   let(:today)             { Date.today }
@@ -62,7 +62,7 @@ RSpec.describe "Landing", type: :request do
       expect(middle_event).to     be
       expect(end_event).to        be
 
-      get root_path
+      get planners_root_path
 
       expect(response).to       have_http_status(200)
       expect(response.body).to  match "<p hidden id='landing_index' class='pageName'>"

@@ -1,4 +1,4 @@
-class TenantView < ViewObject
+class Planners::TenantView < ViewObject
 
   # alias method allows use to rename view_object to a clear name without the initializer
   alias_method :tenant,      :root_model
@@ -27,7 +27,7 @@ class TenantView < ViewObject
   end
 
   def next_event(date_time = Time.now)
-    Reservation.tenant_next(tenant, date_time).first
+    Planners::Reservation.tenant_next(tenant, date_time).first
   end
 
   def next_event_formated(date_time = Time.now)
@@ -39,30 +39,30 @@ class TenantView < ViewObject
 
   # relationships
   def users
-    @users   ||= UserView.collection(tenant.users)
+    @users   ||= Planners::UserView.collection(tenant.users)
   end
 
   def spaces
-    @spaces  ||= SpaceView.collection(tenant.spaces)
+    @spaces  ||= Planners::SpaceView.collection(tenant.spaces)
   end
 
   def spaces_viewable_by(user)
     # only show spaces if not logged in
     # guest user only sees public, logged in sees public and private in own tenant
     spaces        = Space.viewable_by(user, tenant)
-    @spaces     ||= SpaceView.collection(spaces)
+    @spaces     ||= Planners::SpaceView.collection(spaces)
   end
 
   def categories
-    @categories ||= CategoryView.collection(tenant.categories)
+    @categories ||= Planners::CategoryView.collection(tenant.categories)
   end
 
   def events
-    @events     ||= EventView.collection(tenant.events)
+    @events     ||= Planners::EventView.collection(tenant.events)
   end
 
   def time_slots
-    @time_slots ||= TimeSlotView.collection(tenant.events)
+    @time_slots ||= Planners::TimeSlotView.collection(tenant.events)
   end
 
 end

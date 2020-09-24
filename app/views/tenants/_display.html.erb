@@ -21,6 +21,13 @@
               <% end %>
               <%= tenant_view.tenant_tagline %>
             </p>
+            <p class="subtitle is-6">
+              <%= tenant_view.tenant_description %>
+            </p>
+            <% if tenant_view.is_demo? %>
+              <%= link_to "Other Groups", tenants_path,
+                          class: "button hero-button is-light" %>
+            <% end %>
           </div>
         </div>
       </div>

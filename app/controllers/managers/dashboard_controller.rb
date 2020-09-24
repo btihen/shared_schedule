@@ -3,7 +3,8 @@ class Managers::DashboardController < Managers::AppController
   def index
     user          = current_user
     tenant        = current_user.tenant
-    tenant_view   = TenantView.new(tenant)
+
+    tenant_view   = Managers::TenantView.new(tenant)
 
     unauthorized_manager_view(user, tenant); return if performed?
 

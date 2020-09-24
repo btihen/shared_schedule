@@ -7,13 +7,14 @@ class Guests::ReservationsController < Guests::AppController
     unauthorized_view(user, tenant, space); return if performed?
 
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
-    tenant_view   = TenantView.new(tenant)
-    space_view    = SpaceView.new(space)
     reservations  = Reservation.where(space_id: space.id)
                               .where('start_date <= :date AND end_date >= :date', date: date)
-    reservation_views = ReservationView.collection(reservations)
-    user_view     = UserView.new(user)
-    calendar_view = CalendarView.new(tenant_view, user_view, date)
+
+    user_view     = Guests::UserView.new(user)
+    space_view    = Guests::SpaceView.new(space)
+    tenant_view   = Guests::TenantView.new(tenant)
+    calendar_view = Guests::CalendarView.new(tenant_view, user_view, date)
+    reservation_views = Guests::ReservationView.collection(reservations)
 
     respond_to do |format|
       format.html { render 'guests/spaces/show',
@@ -33,11 +34,12 @@ class Guests::ReservationsController < Guests::AppController
     unauthorized_change(user, tenant, space); return if performed?
 
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
-    tenant_view   = TenantView.new(tenant)
-    space_view    = SpaceView.new(space)
-    user_view     = UserView.new(user)
-
     reservation   = Reservation.new(space: space, start_date: date)
+
+    user_view     = Guests::UserView.new(user)
+    space_view    = Guests::SpaceView.new(space)
+    tenant_view   = Guests::TenantView.new(tenant)
+
     reservation_form = ReservationForm.new_from(reservation)
     respond_to do |format|
       format.html { render 'guests/reservations/new',
@@ -55,9 +57,9 @@ class Guests::ReservationsController < Guests::AppController
     tenant        = space.tenant
     unauthorized_change(user, tenant, space); return if performed?
 
-    tenant_view   = TenantView.new(tenant)
-    space_view    = SpaceView.new(space)
-    user_view     = UserView.new(user)
+    tenant_view   = Guests::TenantView.new(tenant)
+    space_view    = Guests::SpaceView.new(space)
+    user_view     = Guests::UserView.new(user)
 
     reservation_form = ReservationForm.new(reservation_params)
     if reservation_form.valid?
@@ -86,10 +88,10 @@ class Guests::ReservationsController < Guests::AppController
     reservation   = Reservation.find(params[:id])
     unauthorized_change(user, tenant, space, reservation); return if performed?
 
+    user_view     = Guests::UserView.new(user)
+    space_view    = Guests::SpaceView.new(space)
+    tenant_view   = Guests::TenantView.new(tenant)
     reservation_form = ReservationForm.new_from(reservation)
-    tenant_view   = TenantView.new(tenant)
-    space_view    = SpaceView.new(space)
-    user_view     = UserView.new(user)
 
     respond_to do |format|
       format.html { render 'guests/reservations/edit',
@@ -107,12 +109,12 @@ class Guests::ReservationsController < Guests::AppController
     tenant        = space.tenant
 
     udpated_attrs = reservation_params.merge(id: params[:id])
-    reservation_form = ReservationForm.new(udpated_attrs)
     unauthorized_change(user, tenant, space, reservation_form.reservation); return if performed?
 
-    tenant_view   = TenantView.new(tenant)
-    space_view    = SpaceView.new(space)
-    user_view     = UserView.new(user)
+    user_view     = Guests::UserView.new(user)
+    space_view    = Guests::SpaceView.new(space)
+    tenant_view   = Guests::TenantView.new(tenant)
+    reservation_form = ReservationForm.new(udpated_attrs)
 
     if reservation_form.valid?
       reservation = reservation_form.reservation

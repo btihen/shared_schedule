@@ -2,7 +2,7 @@ require 'rails_helper'
 # support for: .at_beginning_of_month & .next_month
 require 'active_support'
 
-RSpec.describe "Reservation Create", type: :request do
+RSpec.describe "Planners Reservation Create", type: :request do
 
   let(:today)             { Date.today }
   # let(:end_last_month)    { today.at_beginning_of_month - 1.day }
@@ -35,7 +35,7 @@ RSpec.describe "Reservation Create", type: :request do
 
   describe "GET space/space_id/reservations/new" do
     it "New reservation - with an existing event" do
-      get new_space_reservation_path(space_id: space.id), params: {date: Date.today.to_s}
+      get new_planners_space_reservation_path(space_id: space.id), params: {date: Date.today.to_s}
       expect(response).to have_http_status(302)
       follow_redirect!
       expect(response).to have_http_status(200)

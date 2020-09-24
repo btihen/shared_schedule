@@ -4,12 +4,12 @@ class Guests::LandingController < Guests::AppController
     user          = current_user || GuestUser.new
     date          = params[:date].nil? ? Date.today : params[:date].to_s.to_date
     tenant        = Tenant.landing_page(user) || user.tenant
-    tenant_view   = TenantView.new(tenant)
-
     spaces        = Space.unscoped.viewable_by(user, tenant)
-    spaces_view   = SpaceView.collection(spaces)
-    user_view     = UserView.new(user)
-    calendar_view = CalendarView.new(tenant_view, user_view, date)
+
+    user_view     = Guests::UserView.new(user)
+    tenant_view   = Guests::TenantView.new(tenant)
+    spaces_view   = Guests::SpaceView.collection(spaces)
+    calendar_view = Guests::CalendarView.new(tenant_view, user_view, date)
 
     respond_to do |format|
       format.html { render 'guests/landing/index',

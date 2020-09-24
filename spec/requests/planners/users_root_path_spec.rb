@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "RootPath", type: :request do
+RSpec.describe "Planners RootPath", type: :request do
 
   let(:today)             { Date.today }
   let(:end_last_month)    { today.at_beginning_of_month - 1.day }
@@ -53,7 +53,7 @@ RSpec.describe "RootPath", type: :request do
                             event.reload }
   describe "GET /" do
     it "shows blank landing page when no data present" do
-      get root_path
+      get planners_root_path
 
       expect(response).to           have_http_status(200)
       expect(response.body).to      match "<p hidden id='landing_index' class='pageName'>Landing Index</p>"
@@ -72,7 +72,7 @@ RSpec.describe "RootPath", type: :request do
     it "shows landing page without DemoGroup" do
       expect(tenant).to be_truthy
       expect(space1).to be_truthy
-      get root_path
+      get planners_root_path
 
       expect(response).to           have_http_status(200)
       expect(response.body).to      match "<p hidden id='landing_index' class='pageName'>Landing Index</p>"
@@ -92,7 +92,7 @@ RSpec.describe "RootPath", type: :request do
       expect(middle_event).to     be
       expect(end_event).to        be
 
-      get root_path
+      get planners_root_path
 
       expect(response).to         have_http_status(200)
       expect(response.body).to    match "<p hidden id='landing_index' class='pageName'>Landing Index</p>"

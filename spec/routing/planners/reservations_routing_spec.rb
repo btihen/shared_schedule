@@ -2,36 +2,36 @@ require "rails_helper"
 
 RSpec.describe Planners::TenantsController, type: :routing do
   describe "routing" do
-    # it "routes to #index" do
-    #   expect(:get => "/tenants").to route_to("planners/reservations#index")
-    # end
-    #
-    # it "routes to #new" do
-    #   expect(:get => "/tenants/new").to route_to("planners/reservations#new")
-    # end
-    #
+    it "routes to #index" do
+      expect(:get => "/planners/spaces/1/reservations").to route_to("planners/reservations#index", :space_id => "1")
+    end
+
+    it "routes to #new" do
+      expect(:get => "/planners/spaces/1/reservations/new").to route_to("planners/reservations#new", :space_id => "1")
+    end
+
     # it "routes to #show" do
-    #   expect(:get => "/tenants/1").to route_to("planners/reservations#show", :id => "1")
+    #   expect(:get => "/planners/spaces/1/reservations/1").to route_to("planners/reservations#show", :space_id => "1", :id => "1")
     # end
-    #
-    # it "routes to #edit" do
-    #   expect(:get => "/tenants/1/edit").to route_to("planners/reservations#edit", :id => "1")
-    # end
-    #
-    # it "routes to #create" do
-    #   expect(:post => "/tenants").to route_to("planners/reservations#create")
-    # end
-    #
-    # it "routes to #update via PUT" do
-    #   expect(:put => "/tenants/1").to route_to("planners/reservations#update", :id => "1")
-    # end
-    #
-    # it "routes to #update via PATCH" do
-    #   expect(:patch => "/tenants/1").to route_to("planners/reservations#update", :id => "1")
-    # end
-    #
+
+    it "routes to #edit" do
+      expect(:get => "/planners/spaces/1/reservations/1/edit").to route_to("planners/reservations#edit", :space_id => "1", :id => "1")
+    end
+
+    it "routes to #create" do
+      expect(:post => "/planners/spaces/1/reservations").to route_to("planners/reservations#create", :space_id => "1")
+    end
+
+    it "routes to #update via PUT" do
+      expect(:put => "/planners/spaces/1/reservations/1").to route_to("planners/reservations#update", :space_id => "1", :id => "1")
+    end
+
+    it "routes to #update via PATCH" do
+      expect(:patch => "/planners/spaces/1/reservations/1").to route_to("planners/reservations#update", :space_id => "1", :id => "1")
+    end
+
     # it "routes to #destroy" do
-    #   expect(:delete => "/tenants/1").to route_to("planners/reservations#destroy", :id => "1")
+    #   expect(:delete => "/planners/spaces/1/reservations/1").to route_to("planners/reservations#destroy", :space_id => "1", :id => "1")
     # end
   end
 end
